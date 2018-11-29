@@ -343,7 +343,7 @@ class calendario {
         else{
             $json_retorno[0]['estado']=0;
         }
-    }
+    }    
     
     public static function eliminar_dia_feriado($id_dia){
         $bd = connection::getInstance()->getDb();        

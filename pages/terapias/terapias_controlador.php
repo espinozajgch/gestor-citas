@@ -92,7 +92,8 @@ else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
     echo $json_listo;
 }
 else if ($id_operacion == 7){//Cargar opciones previas
-    
+    $id_paciente = $_POST["terapia"];
+    echo json_encode(terapias::terapias_paciente($id_paciente));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     $id_paciente = $_POST["id_paciente"];
@@ -103,4 +104,62 @@ else if ($id_operacion == 9){//CARGA TERAPIAS POR PROGRAMA
     $id_programa = $_POST["id_pt"];
     $json = terapias::lista_terapias_programa($id_programa);
     echo json_encode($json);
+}
+else if ($id_operacion == 10){//Carga lista de terapias
+     //Devolver eventos para medicos para formato de tabla
+    $json_temp = (terapias::lista_terapias_configurar());
+    //print_r($json_temp);
+    $json_final["data"]=$json_temp;
+    $json_listo= json_encode($json_final);
+    //echo "<br>";
+    echo $json_listo;
+}
+else if ($id_operacion == 11){//Actualizar programa terapeutico
+    $id_terapia             =   $_POST["id_terapia"];
+    $json;  
+    $id_paciente            =   $_POST["id_paciente"];
+    $lista_terapias         =   $_POST["terapias_previas"];        
+    $json[0]["estado"]      =   1;
+    $str_debug              =   "Inicio ";
+    
+    //Encontrar el id del programa
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    //Actualizar información basica
+    if (terapias::actualizar_programa_terapeutico_basico($id_programa, date("y-m-d"))){
+        //Eliminar citas existentes
+        if (terapias::eliminar_terapias_programa($id_programa)){
+            //Ingresar las que se quedaron
+            if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
+                //echo json_encode($json);
+                $str_debug.="Procesado con exito";
+            }
+            else{
+                $str_debug.="Error en asignacion de terapia";
+                $json[0]["estado"]      =   0;
+            }
+        }
+        else{
+            $str_debug.="Error en eliminacion de terapias";
+            $json[0]["estado"]      =   0;
+        }        
+    }
+    else{
+        $str_debug.="Error en actualizacion de informacion basica";
+        $json[0]["estado"]      =   0;
+    }
+    $json[0]["str_debug"]= $str_debug;
+    echo json_encode($json);
+    
+    
+}
+else if ($id_operacion){
+     //Devolver eventos para medicos para formato de tabla
+    $id_paciente = $_GET["id_paciente"];
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    $json_temp = (terapias::lista_terapias_programa($id_programa));
+    //print_r($json_temp);
+    $json_final["data"]=$json_temp;
+    $json_listo= json_encode($json_final);
+    //echo "<br>";
+    echo $json_listo;
 }

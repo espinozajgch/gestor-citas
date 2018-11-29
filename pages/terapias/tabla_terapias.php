@@ -29,7 +29,7 @@ require_once '../assets/class/calendario.php';
 
             <div class="row ">
                 <br>
-                <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_terapias">
                         <thead>
                             <tr>
                                 <th>N</th>

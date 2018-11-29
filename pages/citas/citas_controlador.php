@@ -8,6 +8,7 @@
 require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/calendario.php';
 require_once '../../assets/class/citas.php';
+require_once '../../assets/class/terapias.php';
 
 $id_operacion = -1;
 if (isset($_POST["id_operacion"])){
@@ -74,9 +75,12 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         //Insertamos el registro de que el paciente tiene una reserva
         $id_insercion = $bd->lastInsertId();        
         if(citas::asignar_paciente_cita($id_paciente, $id_insercion)&&citas::asignar_medicos_cita($medicos, $id_insercion)){
-            if (isset($_POST["id_programa"])){//Si esta puesto, estamos reservando terapia
+            if (isset($_POST["id_terapia"])){//Si esta puesto, estamos reservando terapia
                 //echo "reservar";
-                citas::asignar_reserva_terapia($_POST["id_programa"], $_POST["id_terapia"], $id_insercion);
+                $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+                if (!citas::asignar_reserva_terapia($id_programa, $_POST["id_terapia"], $id_insercion)){
+                    $json_retorno[0]['estado'] = 0;
+                }
             }
             else{
                 //echo "no reservar";

@@ -41,7 +41,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
 
                 </div>
                 <div class="col-lg-12">
-                   <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+                   <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=5" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

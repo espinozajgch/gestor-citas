@@ -83,7 +83,7 @@
                             <a href="terapias.php?opcion=3">Programas terapeuticos</a>
                         </li>
                         <li>
-                            <a href="terapias.php?opcion=2">Configurar terapias</a>
+                            <a href="terapias.php?opcion=5">Configurar terapias</a>
                         </li>
                         <li>
                             <a href="terapias.php?opcion=4">Reservar cita para terapia</a>

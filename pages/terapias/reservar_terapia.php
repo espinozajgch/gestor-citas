@@ -56,27 +56,20 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
         </div>
     </div>    
-   <div class="form-group col-6 col-sm-6 col-md-6">
-        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
-        ?>
-        <small><strong><label for="terapia">Programa terapeutico</label></strong></small>
-        <select class="form-control" id="terapia" onchange="cargar_terapias()">
-                <option value="-1">Seleccione un paciente</option>
-            </select>
-            <div id="error_iva" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-            </div>
-    </div>
-    <div class="form-group col-6 col-sm-6 col-md-6">
-        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
-        ?>
-        <small><strong><label for="terapia">Terapia</label></strong></small>
-            <select class="form-control" id="terapia_t">
-                <option value="-1">Seleccione un programa</option>
-            </select>
-            <div id="error_iva" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-            </div>
+    <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
+       <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_paciente">
+            <thead>
+                <tr>
+                    <th>N</th>
+                    <th>Terapias</th>
+                    <th>Precio</th>                                
+                    <th>Estado</th>
+                </tr>
+            </thead>                                            
+            <tbody >
+
+            </tbody>
+       </table>
     </div>
     <div class="col-md-12 col-sm-12 col-xs-12 py-2 margin-bottom-20 pull-right text-right ">
         <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="redirigir_terapia()">Proceder</button>
@@ -133,7 +126,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             $("#name").val(json[0].nombre);
                             $("#last_name").val(json[0].apellido);                            
                             $("#id_oculto").val(json[0].id_paciente);
-                            obtener_terapias_paciente();
+                            cargar_tabla_terapias();
+                            $("#tabla_paciente").show();
                         }
                         else{
                             $("#name").val("");
@@ -158,7 +152,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             alert ("Seleccione al menos un medico");
         }
         if (bandera){
-           window.location = "agregar_citas.php?id_terapia="+$("#terapia_t").val()+"&programa="+$("#terapia").val()+"&rut="+$("#rut_paciente").val();
+           window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val();
         }
     }
     
