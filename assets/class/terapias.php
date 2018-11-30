@@ -94,6 +94,38 @@ class terapias {
         return $pdo->execute(array($nombre, $descripcion, $precio));
     }
     
+    public static function actualizar_programa_terapeutico_basico ($id_programa, $descripcion){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET descripcion_programa_terapeutico=?
+            WHERE id_programa_terapeutico = ".$id_programa;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array($descripcion));
+    }
+    
+    public static function eliminar_terapias_programa($id_programa){
+        $bd = connection::getInstance()->getDb();        
+        $sql = "DELETE FROM programa_tiene_terapia
+            WHERE programa_terapeutico_id_programa_terapeutico=".$id_programa;
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        return $pdo->execute();
+    }
+    
+    public static function obtener_id_programa_paciente ($id_paciente){
+        $sql = "SELECT DISTINCT * FROM `programa_terapeutico` WHERE `paciente_id_paciente`=5";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["id_programa_terapeutico"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
     public static function crear_programa_terapeutico($id_paciente, $retornar_id=false){
         $bd = connection::getInstance()->getDb();
         //echo "aaa".$id_paciente;
@@ -139,7 +171,7 @@ class terapias {
          //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT pt.id_programa_terapeutico as programa, p.nombre as nombre, COUNT(t.id_terapia) Terapias \n"
+        $sql = "SELECT p.id_paciente as id_p, pt.id_programa_terapeutico as programa, p.nombre as nombre, COUNT(t.id_terapia) Terapias \n"
     . "FROM paciente p \n"
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
@@ -165,7 +197,7 @@ class terapias {
             
         }
         for ($i=0; $i<$longitud; $i++){
-            $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["programa"]."\">".($i+1)."</a>";
+            $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
             $json[$i]['Paciente'] = $resultados[$i]["nombre"];
             $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
             
@@ -209,7 +241,7 @@ class terapias {
     }
     
     public static function lista_terapias_programa($id_programa){
-        $sql = "SELECT terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t FROM terapia\n"
+        $sql = "SELECT terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t FROM terapia\n"
     . "INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia\n"
     . "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa
                 AND programa_tiene_terapia.estado LIKE \"pendiente\"";
@@ -221,14 +253,94 @@ class terapias {
         if ($resultado){
             $longitud = count($resultado);
             //echo $longitud;
+            //$json[0]["estado"] = 1;
+            $str="";
+            if ($longitud<1){
+                $json[0]['N'] = "No hay información que mostrar";
+                $json[0]['Terapias'] = "";
+                $json[0]['Precio'] = "";
+                $json[0]['Estado'] = "";
+
+            }
+            for ($i=0; $i<$longitud; $i++){
+                $str_a ="href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."";
+                $json[$i]['N'] = "<a href=# onclick= seleccionar_terapia(".$resultado[$i]["id_terapia"].")>".($i+1)."</a>";
+                $json[$i]['Terapias'] = "<a href=# onclick= seleccionar_terapia(".$resultado[$i]["id_terapia"].")>".$resultado[$i]["nombre_t"]."</a>";
+                $json[$i]['Precio'] = "<a href=# onclick= seleccionar_terapia(".$resultado[$i]["id_terapia"].")>".$resultado[$i]["precio_t"]."</a>";
+                $json[$i]['Estado'] = "<a href=# onclick= seleccionar_terapia(".$resultado[$i]["id_terapia"].")>".$resultado[$i]["estado_t"]."</a>";                
+
+            }   
+            //$json[1]['html'] = $str;
+            return $json;
+        }
+        else{
+            //$json[0]["estado"] = 1;
+            return $json;
+        }
+    }
+    
+    public static function terapias_paciente ($id_paciente, $format = 'JSON'){
+        $bd = connection::getInstance()->getDb();
+        
+        $sql = "SELECT t.id_terapia as id_t, t.nombre_terapia as nombre_t FROM paciente p\n"
+    . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
+    . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
+    . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
+    . "WHERE ptt.estado NOT LIKE 'asignado' AND p.id_paciente = ".$id_paciente;
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+
+        $pdo->execute();    
+        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);    
+        $longitud = count($resultados);
+        $json_retorno;
+        if ($longitud>0) 
+        {
+            $json_retorno[0]['estado']      =   1;
+            $json_retorno[0]['cantidad']    =   $longitud;
+            
+            for ($i=0; $i<$longitud; $i++){
+                $json_retorno[$i+1]['id']   =   $resultados[$i]['id_t'];
+                $json_retorno[$i+1]['text'] =   $resultados[$i]["nombre_t"];
+
+            }         
+            if ($format = 'array'){
+                return $json_retorno;
+            }
+            else{
+                return json_encode($json_retorno);
+            }
+        }
+        else{
+            $json_retorno[0]['estado']=0;
+        }
+    }
+    
+    public static function lista_terapias_configurar(){
+        $sql = "SELECT * FROM `terapia`";        
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $json;
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            $longitud = count($resultado);
+            //echo $longitud;
             $json[0]["estado"] = 1;
             $str="";
+            if ($longitud<1){
+                $json[0]['N'] = "No hay información que mostrar";
+                $json[0]['Nombre'] = "";
+                $json[0]['Descripcion'] = "";
+                $json[0]['Precio'] = "";
+
+            }
             for ($i=0; $i<$longitud; $i++){
-                $id             = $resultado[$i]["id_t"];
-                $nombre         = $resultado[$i]["nombre_t"];
-                $precio         = $resultado[$i]["precio_t"];
-                $str.="<option value=".$id.">Nombre: ".$nombre." - Precio: ".$precio."</option>";
-                
+                $json[$i]['N'] = "<a href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\">".($i+1)."</a>";
+                $json[$i]['Nombre'] = $resultado[$i]["nombre_terapia"];
+                $json[$i]['Descripcion'] = $resultado[$i]["descripcion_terapia"];
+                $json[$i]['Precio'] = $resultado[$i]["precio_terapia"];
+
             }   
             $json[1]['html'] = $str;
             return $json;

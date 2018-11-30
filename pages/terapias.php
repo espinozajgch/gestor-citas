@@ -85,6 +85,9 @@ $usuario  = "";
                         else if ($_GET["opcion"]==4){
                             include_once("terapias/reservar_terapia.php");
                         }
+                        else if ($_GET["opcion"]==5){
+                            include_once("terapias/lista_terapias.php");
+                        }
                     }                    
                     
                     ?>
@@ -268,6 +271,7 @@ $usuario  = "";
 
 <script type="text/javascript"> 
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
+     var terapia_seleccionada = 0;
             $('#tabla_dinamica').DataTable({  
                 responsive: true,
                 "ajax":"terapias/terapias_controlador.php?id_operacion=6",
@@ -277,7 +281,37 @@ $usuario  = "";
                     {"data": "Terapias"}
                 ]
             });
+            
+             $('#tabla_terapias').DataTable({  
+                responsive: true,
+                "ajax":"terapias/terapias_controlador.php?id_operacion=10",
+                "columns": [
+                    {"data": "N"},
+                    {"data": "Nombre"},                    
+                    {"data": "Descripcion"},                    
+                    {"data": "Precio"}
+                ]
+            });
+            
+            
     });
+    
+    function cargar_tabla_terapias(){
+        $('#tabla_paciente').DataTable({  
+                responsive: true,
+                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val(),
+                "columns": [
+                    {"data": "N"},
+                    {"data": "Terapias"},                    
+                    {"data": "Precio"},                    
+                    {"data": "Estado"}
+                ]
+            });
+    }
+    
+    function seleccionar_terapia(id_terapia){
+        terapia_seleccionada = id_terapia;        
+    }
 </script>
 
 </body>

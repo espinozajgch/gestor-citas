@@ -32,8 +32,7 @@ $hash = "";
         }
         if (isset($_GET["id_terapia"])){
             $id_terapia         = $_GET["id_terapia"];
-            $rut                = $_GET["rut"];
-            $id_programa        = $_GET["programa"];
+            $rut                = $_GET["rut"];            
             $etiqueta           = "Reservar cita para terapia";
         }            
 
@@ -124,8 +123,8 @@ $hash = "";
             }
         ?>)
         {
-            $("#rut_paciente").val(<?php echo $rut; ?>).prop('disabled', "true");
-            $("#btn_buscar").trigger('click').prop('disabled', "true");
+            $("#rut_paciente")<?php if (isset($_GET["rut"])) echo ".val(".$rut.")"; ?>.prop('disabled', "true");
+            $("#btn_buscar")<?php if (isset($_GET["rut"])) echo ".trigger('click')"; ?>.prop('disabled', "true");
         }
         
     });
@@ -509,8 +508,7 @@ $hash = "";
                                 }
                                 if (isset($_GET["id_terapia"])){
                                     echo ",terapia: true,
-                                        id_terapia: ".$_GET["id_terapia"].",
-                                            id_programa: ".$_GET["programa"]."";
+                                        id_terapia: ".$_GET["id_terapia"]."";
                                 }
                             ?>,
                             fecha_inicio: $("#fecha_a").val(),                            

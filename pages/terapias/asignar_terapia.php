@@ -2,7 +2,7 @@
 $etiqueta = "Crear programa terapéutico";
 $id_terapia;
 if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a modificar
-    $etiqueta = "Modificar Terapias";
+    $etiqueta = "Modificar programa terapéutico";
     $id_terapia = $_GET["terapia"];
 }
 ?>
@@ -15,11 +15,11 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         if (<?php 
         if (isset($_GET["terapia"])){
             echo "true";    
-            $id_operacion = "3";
+            $id_operacion = "11";
         }
         else{
             echo "false";
-            $id_operacion = "1";
+            $id_operacion = "5";
         }
         ?>)
         {
@@ -80,6 +80,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
     </div>
+    
+    
 <!--    <div class="form-group col-6 col-sm-6 col-md-6">
         <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
         ?>
@@ -113,6 +115,18 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
 
 </div>
+<div id="alert_ok" class="alert alert-success alert-dismissible fade" role="alert" style="display:none">
+      <strong>¡Exito!</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div id="alert_fail" class="alert alert-danger alert-dismissible fade" role="alert" style="display:none">
+      <strong>¡Error!</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
             
 <script type="text/javascript">
     function buscar_info_paciente(){
@@ -156,16 +170,32 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             alert ("Seleccione al menos un medico");
         }
         if (bandera){
+            $("#alert_ok").hide();
+            $("#alert_fail").hide();
+            
             $.post("terapias/terapias_controlador.php",
             {
-                id_operacion: 5,
+                <?php
+                if (isset($_GET["terapia"])){
+                    echo "
+                        id_operacion: $id_operacion,
+                            terapias_previas: $(\"#terapias\").val(),
+                            id_terapia: ".$_GET["terapia"];
+                }
+                else{
+                    echo "
+                        id_operacion: $id_operacion";
+                }
+                ?>,                
                 id_paciente: $("#id_oculto").val(),
                 terapias: $("#terapias").val(),
+                descripcion: $("#descripcion").val(),
                 id: $("#id_oculto").val(),
             },function (result){
                 var json = JSON.parse(result);                        
                 if (json[0].estado == 1){
-                    
+                    console.log(json[0].str_debug);
+                    $("#alert_ok").show(500);
                 }
                 else{
                     alert ("ERROR");
@@ -201,12 +231,25 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             }).ready(function (){
                 //En cuanto se cargue esto verificamos si se está verificando
                 //en cuyo caso cargaremos las opciones que se necesitan
-                if (1==<?php if (isset($_GET["terapia"])){echo "1";}else{echo "0";}?>){                    
+                if (1==<?php 
+                if (isset($_GET["terapia"])){
+                    echo "1";            
+                    $terapia = $_GET["terapia"];
+                }
+                else{
+                    echo "0";
+                    $terapia = " ";
+                    
+                }?>){ 
+                    
+                    $("#rut_paciente").val("<?php echo $terapia;?>");
+                    $("#btn_buscar").trigger('click');
+                    
                     $.post("terapias/terapias_controlador.php",
                     {
                         id_operacion : 7
                         <?php 
-                            if (isset($_GET["cita"])){
+                            if (isset($_GET["terapia"])){
                                 echo ", terapia:".$_GET["terapia"];
                             }
                         ?>
