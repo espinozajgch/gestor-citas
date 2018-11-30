@@ -1,9 +1,8 @@
 <?php
 //require_once("../../../../vendor/class/usuario/usuarios_data.php");
 require_once './usuarios_data.php';
-require_once("../../../../vendor/class/propiedad/propiedad_data.php");
 require_once('../../bin/connection.php');
-require_once('../../../../vendor/mail/mailer.php');
+require_once('../../mail/mailer.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_POST["accion"])){
@@ -22,48 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$res = "Email registrado";
 			}
 			else{
-				$tipo  = $_POST["tipo"];
+				$nombre = $_POST["nombre"];
+				$apellido = $_POST["apellido"];
+				$identificacion = $_POST["identificacion"];
 				$telefono = $_POST["telefonos"];
 				$direccion = $_POST["direccion"];
-				$localidad = $_POST["localidad"];
-				$cond_iva = $_POST["cond_iva"];
-				$logo = $_POST["logo"];
-				$password = $_POST["password"];
+				$celular = $_POST["phone"];
 
-				$hash = password_hash($password,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
-				$estatus = 0;
+				$usuario = $nombre ." ". $apellido;
+
+				//$hash = password_hash($identificacion,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
+				//$estatus = 0;
 
 				$estado=1;
-				$res = pacientes::agregar($bd, $email, $password, $hash, $estatus, $tipo);
-				$res= pacientes::editar($bd, $logo, $email, $telefono, $direccion, $cond_iva, $localidad ,$hash);
+				$res = pacientes::agregar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estado);
+				
+				//$res =  Mailer::correo_registro_usuario($bd, $usuario, $email, $celular, $hash);
+				//$res = $accion;
 
-				if($tipo == 1){
-					$nombre = $_POST["nombre"];
-					$apellido = $_POST["apellido"];
-					$identificacion = $_POST["identificacion"];
-					$tipo_doc = $_POST["tipo_documento"];
-					$usuario = $nombre ." ". $apellido;
-
-					$res = pacientes::agregar_particular($bd, $nombre, $apellido, $hash);
-					$res = pacientes::editar_particular($bd, $nombre, $apellido, $identificacion, $tipo_doc, $hash);
-				}
-				else
-				if($tipo == 2){
-					$nombre = $_POST["nombre"];
-					$usuario = $nombre;
-					$rs = $_POST["rs"];
-					$cuit = $_POST["cuit"];
-
-
-					$res = pacientes::agregar_inmobiliaria($bd, $nombre, $hash);
-					$res = pacientes::editar_inmobiliaria($bd, $nombre, $rs, $cuit, $hash);
-				}
-
-				//if($res != ""){
-					$res =  Mailer::correo_registro_usuario($bd, $usuario, $email, $password, $hash);
-					$estado=1;
-					//$res = "Registro exitoso";
-				//}/**/
 			}
 		}
 		else
@@ -71,14 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
 			//EDITAR
 			$email = $_POST["email"];
+			$nombre = $_POST["nombre"];
+			$apellido = $_POST["apellido"];
+			$identificacion = $_POST["identificacion"];
 			$telefono = $_POST["telefonos"];
 			$direccion = $_POST["direccion"];
+			$celular = $_POST["phone"];
 			$hash = $_POST["hash"];
-			$logo = $_POST["logo"];
-			$localidad = $_POST["localidad"];
-			$password = $_POST["password"];
-			$cond_iva = $_POST["cond_iva"];
-			$tipo  = $_POST["tipo"];
 
 		 	$old =  pacientes::obtener_email($bd, $hash);
 
@@ -86,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 		$res = pacientes::validar_email($bd, $email);
 		 		if($res == null){
 		 			$estado=1;
-		 			$res= pacientes::editar($bd, $logo, $email, $telefono, $direccion, $cond_iva, $localidad ,$hash);
-					$res=pacientes::cambiar_contraseña($bd, $email, $password, $hash);	
+		 			$res= pacientes::editar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $hash);
 		 		}
 		 		else{
 		 			$estado=0;
@@ -96,32 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 	}
 		 	else{
 				$estado=1;
-				$res= pacientes::editar($bd, $logo, $email, $telefono, $direccion, $cond_iva, $localidad ,$hash);
-				$res=pacientes::cambiar_contraseña($bd, $email, $password, $hash);
+				$res= pacientes::editar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $hash);
 		 	}/**/
 
-		 	if($res){
-			 	if($tipo == 1){
-					$nombre = $_POST["nombre"];
-					$apellido = $_POST["apellido"];
-					$identificacion = $_POST["identificacion"];
-					$tipo_doc = $_POST["tipo_documento"];
-
-					$res = pacientes::editar_particular($bd, $nombre, $apellido, $identificacion, $tipo_doc, $hash);
-				}
-				else{
-					$nombre = $_POST["nombre"];
-					$usuario = $nombre;
-					$rs = $_POST["rs"];
-					$cuit = $_POST["cuit"];
-					$res = pacientes::editar_inmobiliaria($bd, $nombre, $rs, $cuit, $hash);
-
-				}/**/
-
-				if($res){
-					$res = "Perfil Actualizado!";
-				}
+			if($res){
+				$res = "Perfil Actualizado!";
 			}
+			
 
 		}
 		else
@@ -217,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 			$hash = pacientes::obtener_hash_by_id($bd, $codigo);
 
-			Prop::cambiar_estatus_by_hash_usuario($bd, $estatus, $hash);
+			//Prop::cambiar_estatus_by_hash_usuario($bd, $estatus, $hash);
 		}
 
 		echo json_encode(array("estado"=>$estado, "mensaje"=>$res), JSON_FORCE_OBJECT);	

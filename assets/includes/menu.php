@@ -71,7 +71,12 @@
 
                 <?php if(Admin::verificar_acciones_by_rol($bd, 3, $id_rol)){ ?>                
                 <li>
-                    <a href="reportes.php"><i class="fa fa-bar-chart-o fa-fw"></i> Reportes</a>
+                    <a href="terapias.php"><i class="fa fa-bar-chart-o fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="terapias.php?opcion=3">Programas terapeuticos</a>
+                        </li>
+                    </ul>
                 </li>
                 <?php } ?>
 
@@ -80,11 +85,12 @@
                     <a href="terapias.php"><i class="fa fa-group fa-fw"></i> Terapias<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="terapias.php?opcion=3">Programas terapeuticos</a>
+                            <a href="terapias.php?opcion=5">Terapias</a>
                         </li>
                         <li>
-                            <a href="terapias.php?opcion=5">Configurar terapias</a>
+                            <a href="terapias.php?opcion=1">Crear Programas terapeuticos</a>
                         </li>
+                        
                         <li>
                             <a href="terapias.php?opcion=4">Reservar cita para terapia</a>
                         </li>

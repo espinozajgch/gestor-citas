@@ -1,7 +1,7 @@
 <?php
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
-//require_once("../../vendor/class/usuario/usuarios_data.php");
+require_once("../assets/class/usuario/usuarios_data.php");
 
 $user = "";
 $tipo = "";
@@ -75,7 +75,7 @@ $estilo_par = "";
     <link href="../vendor/dropzone/dropzone.css" rel="stylesheet"> 
     
     <link href="../dist/css/estilos.css" rel="stylesheet"> 
-    
+     <link href="../dist/css/preloader.css" rel="stylesheet">
     
 
     <style type="text/css">
@@ -85,7 +85,9 @@ $estilo_par = "";
 </head>
 
   <body>
-
+  <div id="loader-wrapper" class="loader-wrapper">
+    <div id="loader" class="loader"></div>
+  </div>
     <!-- Navigation -->
     <?php include_once("../assets/includes/menu.php") ?>
 
@@ -115,60 +117,22 @@ $estilo_par = "";
                 <div class="col-md-12">  
                     <form>
                         <div class="row">
-                            <div class="col-lg-4 upload-btn-wrapper text-center pull-center">
-                               
-<!--                                    <form method="post" id="formFoto" enctype="multipart/form-data">
-                                        <button class="btn ">Seleccionar Foto</button>
-                                        <input type="file" name="fileToUpload" id="fileToUpload" multiple accept=".jpg,.png,.jpeg" lang="es" class="custom-file-input col-md-12">
-
-                                    </form>-->
-                                
-<!--                                <div class="fotoPerfil cvf_uploaded_files rounded text-center pull-center">
-                                    <?php // if($foto == ""){ ?>
-                                        <strong class="text-info" ><p>Cargar Foto <?php //echo $foto ?></p></strong>
-                                    <?php // }else
-                                    { ?>
-                                        <img class="img_perfil imgPhotoItem" src="../../img/users/<?php // echo $foto ?>">
-                                    <?php }?>    
-                                </div>
-                                <input id="fp" type="hidden" value="<?php // echo $foto ?>"></input>-->
-                                <div class="body-nest" id="drop">
-                                    <div name="myDropZone" id="myDropZone" class="dropzone">
-                                    <!--Esto se carga desde jscript-->
-                                    </div>
-                                    
-                                </div>  
-                            </div> 
 
                             <div class="col-sm-12 col-md-8 my-3"> 
 
                                 <div class="form-row">
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="name">RUT</label></strong></small>
-                                         <input id="doc" type="text" class="form-control" value="<?php  //echo Usuarios::obtener_identificacion($bd,$hash_usuario) ?>">
+                                        <small><strong><label for="name">Identificacion</label></strong></small>
+                                         <input id="doc" type="text" class="form-control" placeholder="Identificacion" value="<?php echo Pacientes::obtener_identificacion($bd,$hash_usuario) ?>">
                                         <div id="error_doc" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
 
-                                    <!--div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="doc">Tipo de Identificacion</label></strong></small>
-                                        <?php  //$tipo_doc = Usuarios::obtener_tipo_doc($bd,$hash_usuario) ?>
-                                        <select class="form-control" id="doc_sel">
-                                            <option value="1" <?php if($tipo_doc==1) echo "selected"; ?>>Documento Único</option>
-                                            <option value="2" <?php if($tipo_doc==2) echo "selected"; ?>>CUIT</option>
-                                            <option value="3" <?php if($tipo_doc==3) echo "selected"; ?>>Libreta de Enrolamiento</option>
-                                            <option value="4" <?php if($tipo_doc==4) echo "selected"; ?>>Libreta cívica</option>
-                                        </select>
-                                        <div id="error_doc" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
-                                        </div>
-                                    </div-->
-
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="name">Nombre</label></strong></small>
-                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash_usuario) ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo Pacientes::obtener_nombre($bd,$hash_usuario) ?>" autocomplete="off">
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
                                         </div>
@@ -176,7 +140,7 @@ $estilo_par = "";
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="last_name">Apellido</label></strong></small>
-                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellido($bd,$hash_usuario); ?>" autocomplete="off">
                                         <div id="error_last_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
@@ -186,32 +150,32 @@ $estilo_par = "";
                                 <div class="form-row">
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="rs">Email</label></strong></small>
-                                        <input type="text" class="form-control" id="rs" placeholder="Email" value="<?php //echo Usuarios::obtener_rs($bd,$hash_usuario); ?>" autocomplete="off">
-                                        <div id="error_rs" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa la razon social</small>
+                                        <small><strong><label for="email">Email</label></strong></small>
+                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php echo Pacientes::obtener_email($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div id="error_email" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <small><strong><label for="cuit">Telefono Fijo</label></strong></small>
-                                        <input type="text" class="form-control" id="cuit" placeholder="Telefono Fijo" value="<?php //echo Usuarios::obtener_cuit($bd,$hash_usuario); ?>" autocomplete="off">
-                                        <div id="error_cuit" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa el CUIT</small>
+                                        <small><strong><label for="fijo">Telefono Fijo</label></strong></small>
+                                        <input type="text" class="form-control" id="fijo" placeholder="Telefono Fijo" value="<?php echo Pacientes::obtener_telefono($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div id="error_fijo" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Ingresa el Telefono Fijo</small>
                                         </div>
                                     </div>
 
                                     <div class="form-group col-6 col-md-6">
-                                        <small><strong><label for="email">Celular</label></strong></small>
-                                        <input type="email" class="form-control" id="email" placeholder="Celular" value="<?php //echo Usuarios::obtener_email($bd,$hash_usuario); ?>" autocomplete="off">
-                                        <div id="error_email" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
+                                        <small><strong><label for="phone">Celular</label></strong></small>
+                                        <input type="phone" class="form-control" id="phone" placeholder="Celular" value="<?php echo Pacientes::obtener_celular($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div id="error_phone" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Ingresa tu Celular</small>
                                         </div>
 
                                     </div>
 
                                     <div class="form-group col-12 col-sm-12 col-md-12">
                                         <small><strong><label for="direccion">Direccion</label></strong></small>
-                                        <textarea row="3" class="form-control" id="direccion"><?php //echo Usuarios::obtener_direccion($bd,$hash_usuario); ?></textarea>
+                                        <textarea row="3" class="form-control" id="direccion"><?php echo Pacientes::obtener_direccion($bd,$hash_usuario); ?></textarea>
                                         <div id="error_direccion" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
@@ -266,12 +230,12 @@ $estilo_par = "";
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
-    <script src="../vendor/html5imageupload/html5imageupload.js"></script>
-    
-    <script src="../vendor/dropzone/dropzone.js"></script>
-
     <script type="text/javascript">
         var error;
+
+        $(document).ready(function() {
+            $("#loader-wrapper").fadeOut("slow");
+        });
 
         function validar_inputs(input, div_error){
             if($(input).val().trim() == ""){
@@ -304,76 +268,62 @@ $estilo_par = "";
             //e.preventDefault();
             error = false;
 
-            validar_inputs("#email", "#error_email");
-            validar_inputs("#pass", "#error_pass");
-            validar_inputs("#phone", "#error_phone"); 
-            validar_inputs("#direccion", "#error_direccion");
-            validar_inputs("#localidad", "#error_localidad");
 
-            tipo = $("#tipo").val();
-            console.log(tipo);
-            if(tipo == 1){
-                //validar_inputs("#doc", "#error_doc");
-                validar_inputs("#name", "#error_name");
-                validar_inputs("#last_name", "#error_last_name");
-            }
-            else{
-                validar_inputs("#inmobiliaria", "#error_inmobiliaria");
-                validar_inputs("#rs", "#error_rs");
-                validar_inputs("#cuit", "#error_cuit");
-            }
+            validar_inputs("#doc", "#error_doc");
+            validar_inputs("#name", "#error_name");
+            validar_inputs("#last_name", "#error_last_name");
+            validar_inputs("#email", "#error_email");
+            validar_inputs("#phone", "#error_phone"); 
+            validar_inputs("#fijo", "#error_fijo"); 
+            validar_inputs("#direccion", "#error_direccion");
+
 
             if(!error){
+                $("#loader-wrapper").fadeIn("fast");
                 accion = $("#accion").val();
                 hash_usuario = "";
 
+                identificacion  = $("#doc").val();
+                nombre = $("#name").val();
+                apellido = $("#last_name").val();
                 email = $("#email").val();
-                password = $("#pass").val();
-                cond_iva = $("#iva_sel").val();
-                
-                telefonos = $("#phone").val();
+                telefonos = $("#fijo").val();
                 direccion = $("#direccion").val();
-                localidad = $("#localidad").val();
+                phone = $("#phone").val();
 
                 //EDITAR
                 if(accion == 2){
                     hash_usuario = $("#hash_usuario").val();
                 }
+                
+                guardar_particular(accion, identificacion, nombre, apellido, email, hash_usuario, telefonos, direccion, phone);
 
-                if(tipo == 1){
-                    identificacion  = $("#doc").val();
-                    tipo_documento = $("#doc_sel").val();
-                    nombre = $("#name").val();
-                    apellido = $("#last_name").val();
-                    logo = "";
-
-                    guardar_particular(accion, identificacion, tipo_documento, nombre, apellido, email, password, hash_usuario, logo, telefonos, direccion, localidad, cond_iva, tipo);
-
-                }
-                else{
-                    nombre = $("#inmobiliaria").val();
-                    rs = $("#rs").val();
-                    cuit = $("#cuit").val();
-                    logo = $("#fp").val();
-
-                    //console.log(logo);
-
-                    guardar_inmobiliaria(accion, nombre, rs, cuit, email, password, hash_usuario, logo, telefonos, direccion, localidad, cond_iva, tipo);
-                }
             }
 
         });
 
-        function guardar_inmobiliaria(accion, nombre, rs, cuit, email, password, hash_usuario, logo, telefonos, direccion, localidad, cond_iva, tipo){
+
+        function guardar_particular(accion, identificacion, nombre, apellido, email, hash_usuario, telefonos, direccion, phone){
+            /*
+                console.log(accion);
+                console.log(identificacion);
+                console.log(nombre);
+                console.log(apellido);
+                console.log(email);
+                console.log(hash_usuario);
+                console.log(telefonos);
+                console.log(direccion);
+                console.log(phone);
+            /**/
 
                 $.ajax({
-                    data:  {accion : accion, nombre : nombre, rs : rs, cuit : cuit,  email : email, password : password, hash: hash_usuario, logo : logo, telefonos: telefonos, direccion : direccion, localidad : localidad, cond_iva, tipo : tipo},
+                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellido : apellido,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
                     url:   '../assets/class/usuario/usuario_acciones.php',
                     type:  'post',
-                    dataType: "json",
+                    //dataType: "json",
                     success:  function (data) {
-                        //respuesta = JSON.stringify(data);
-                        //console.log(data);
+                        respuesta = JSON.stringify(data);
+                        console.log(data);
                         //console.log(data.estado);
 
                         if(data.estado == 0){
@@ -384,110 +334,16 @@ $estilo_par = "";
                         else{
                             $("#msg_ok").show();
                             $("#msgerror_danger").hide();
-                            window.location.href="inmobiliaria.php";
+                            window.location.href="pacientes.php";
                         }
                     },
                     error: function(data){
                         console.log(data);
-                       $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
-                    }
-                });/**/
-        }
-
-        function guardar_particular(accion, identificacion, tipo_documento, nombre, apellido, email, password, hash_usuario, logo, telefonos, direccion, localidad, cond_iva, tipo){
-            //console.log(id_rol);
-
-                $.ajax({
-                    data:  {accion : accion, identificacion : identificacion, tipo_documento : tipo_documento,  nombre : nombre, apellido : apellido,  email : email, password : password, hash: hash_usuario, logo : logo, telefonos: telefonos, direccion : direccion, localidad : localidad, cond_iva : cond_iva, tipo : tipo},
-                    url:   '../assets/class/usuario/usuario_acciones.php',
-                    type:  'post',
-                    dataType: "json",
-                    success:  function (data) {
-                        //respuesta = JSON.stringify(data);
-                        //console.log(data);
-                        //console.log(data.estado);
-
-                        if(data.estado == 0){
-                            $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b> ' + data.mensaje);
-                            $("#msgerror_danger").show();
-                            $("#msg_ok").hide();
-
-                        }
-                        else{
-                            $("#msg_ok").show();
-                            $("#msgerror_danger").hide();
-                            window.location.href="particular.php";
-                        }
-                    },
-                    error: function(data){
-                        console.log(data);
+                        $("#loader-wrapper").fadeOut("fast");
                         $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
                     }
                 });/**/
         }
-
-        $("input[id='fileToUpload']").on("change", function(){
-            var files = this.files;
-            var file = files[0];
-
-            if(file){
-                id = file.lastModified+file.size;
-                    if (file.type.match('image.*')){
-                        cargar_imagen(file);
-                    }
-            }
-        });/**/
-
-        function cargar_imagen(foto){
-            var ruta = "../assets/class/simple_upload.php";
-
-            var formData = new FormData();
-            formData.append('fileToUpload', foto);
-
-            $.ajax({
-                url: ruta,
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                cache: false,
-                success: function(datos)
-                {
-                    console.log(datos)
-                    $('.cvf_uploaded_files').html(
-                        '<img class = "imgPhotoItem" src = "../../img/users/' + datos + '" />'+
-                        '<a href ="#" class="cvf_delete_image" title="Eliminar"></a>'
-                    );
-
-                    $("#fp").val(datos);
-                }
-            });/**/
-        }
-
-
-
-
-            //$("#myDropZone").prop("class","dropzone");
-            $("#myDropZone").dropzone({
-                url : "../vendor/dropzone/carga_imagenes.php?url_imagen_predefinida=../assets/img/paciente/",
-                addRemoveLinks : true,
-                autoDiscover: false,
-                autoProcessQueue: false,
-                parallelUploads: 1,
-                maxFiles : 1,
-                error: function (file, errorMessage){
-                    errors = true;
-                    console.log("Error al subir el archivo:"+ errorMessage);
-                    this.removeFile(file);
-                    //this.options.autoProcessQueue =true;
-                },
-                success: function (file){
-                    errors = false;
-                    console.log("Archivo cargado con éxito");
-                    this.removeFile(file);
-                    //this.options.autoProcessQueue =true;
-                }
-            });        
 
     </script>
   </body>
