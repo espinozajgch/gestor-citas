@@ -3,6 +3,7 @@
 require_once './usuarios_data.php';
 require_once('../../bin/connection.php');
 require_once('../../mail/mailer.php');
+require_once '../historico.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_POST["accion"])){
@@ -34,8 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				//$estatus = 0;
 
 				$estado=1;
-				$res = pacientes::agregar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estado);
 				
+				//AQUI AGREGAREMOS LA ENTRADA AL HISTORICO
+                                //COMENZANDO CON LA CREACION DEL MISMO
+                                $id = historico::crear_historico("paciente", date("ym")."-".$identificacion, true);
+                                if ($id!=0){
+                                    $tipo_entrada   =   "CREAR";
+                                    $descripcion    =   "Se creó la historia clinica del paciente";
+                                    $nivel          =   2;
+                                    $id_historia    =   $id;
+                                    historico::agregar_entrada($id_historia, $tipo_entrada, $descripcion, $nivel);                                    
+                                    $res = pacientes::agregar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estado, $id);
+                                }
+                                else{
+                                    echo "ERROR AL CREAR LA HISTORIA. CONTACTE AL ADMIN";
+                                } //*/                               
+                                
 				//$res =  Mailer::correo_registro_usuario($bd, $usuario, $email, $celular, $hash);
 				//$res = $accion;
 

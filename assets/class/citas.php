@@ -181,4 +181,34 @@ class citas {
         //echo $sql." - $id_programa - $id_terapia";
         return $pdo->execute(array($id_reserva, "asignado"));
     }
+    
+    public static function obtener_nombre_medicos ($id_cita){
+        $bd = connection::getInstance()->getDb();
+        $sql = "SELECT ad.nombre as nombre_m \n"
+    . "FROM reserva_medica rm \n"
+    . "INNER JOIN medico_tiene_reserva mtr ON mtr.reserva_medica_id_rm=rm.id_rm\n"
+    . "INNER JOIN admin ad ON mtr.admin_id_admin=ad.id_admin\n"
+    . "WHERE rm.id_rm = $id_cita";
+        $pdo = $bd->prepare($sql);        
+        $pdo->execute();        
+        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        $longitud = count($resultados);        
+        $str_nombre_medicos =" ";
+        if ($longitud>0){                            
+            for ($i=0; $i<$longitud;$i++){
+                $str_nombre_medicos.="".$resultados[$i]["nombre_m"];
+                if ($i==$longitud-2){
+                    $str_nombre_medicos.=" y ";
+                }
+                else{
+                    $str_nombre_medicos.=",";
+                }
+            }
+            return $str_nombre_medicos;
+        }
+        else{
+            
+            return false;
+        }
+    }
 }

@@ -9,6 +9,7 @@ require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/calendario.php';
 require_once '../../assets/class/citas.php';
 require_once '../../assets/class/terapias.php';
+require_once '../../assets/class/historico.php';
 
 $id_operacion = -1;
 if (isset($_POST["id_operacion"])){
@@ -60,7 +61,8 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $medio_contac   =   $_POST["medio_contacto"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
-    
+    $id_historico = historico::obtener_id_historico_paciente($id_paciente);
+    $tipo_insercion =   1;
     $json_retorno[0]['estado'] = 1;
     //Primero debemos ingresar la reserva como tal
     $bd = connection::getInstance()->getDb();
@@ -79,11 +81,22 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
                 //echo "reservar";
                 $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
                 if (!citas::asignar_reserva_terapia($id_programa, $_POST["id_terapia"], $id_insercion)){
-                    $json_retorno[0]['estado'] = 0;
+                    $json_retorno[0]['estado'] = 0;                    
+                }else{
+                    $nom_terapia = terapias::obtener_nombre_terapia($_POST["id_terapia"]);
+                    $nombre_medicos = citas::obtener_nombre_medicos($id_insercion);
+                    historico::agregar_entrada($id_historico,
+                            "RESERVAR",
+                            "Se reservó cita para el dia $fecha_inicio para una terapia de $nom_terapia, con los médicos: ".$nombre_medicos,
+                            2);
                 }
             }
             else{
-                //echo "no reservar";
+                $nombre_medicos = citas::obtener_nombre_medicos($id_insercion);
+                historico::agregar_entrada($id_historico,
+                        "RESERVAR",
+                        "Se reservó la primera cita del paciente para el día $fecha_inicio con los medicos: ".$nombre_medicos,
+                        2);
             }
         }
         else{
@@ -227,5 +240,47 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
         $json_retorno[0]["estado"]=0;        
     }    
     echo json_encode($json_retorno);
+}
+else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA
+    $id_paciente = $_GET["id_paciente"];
+    $sql = "SELECT entrada_historico.fecha_entrada as fecha_ent, entrada_historico.tipo_entrada as tipo_ent, entrada_historico.descripcion_entrada as descp_ent \n"
+    . "FROM entrada_historico \n"
+    . "INNER JOIN historico h ON h.id_historico=entrada_historico.historico_id_historico\n"
+    . "INNER JOIN paciente p on p.historico_id_historico = h.id_historico\n"
+    . "WHERE p.id_paciente = ".$id_paciente;
+    $bd = connection::getInstance()->getDb();
+    //echo $sql;
+    $pdo = $bd->prepare($sql);
+        
+        
+        $pdo->execute();
+        //Creamos el arreglo asociativo con el cual trabajaremos
+        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+        //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria
+        //para el calendario de FULLCALENDAR
+        //print_r($resultados);
+        //echo "<br>";
+        //print_r($resultados);
+        $longitud = count($resultados);
+        //echo $longitud;   
+        if ($longitud<1){
+            $json[0]['N'] = "No hay información que mostrar";
+            $json[0]['Fecha'] = "";
+            $json[0]['Tipo'] = "";
+            $json[0]['Descripcion'] = "";            
+        }
+        for ($i=0; $i<$longitud; $i++){            
+            $json[$i]['Descripcion'] = $resultados[$i]["descp_ent"];
+            $json[$i]['Tipo'] = $resultados[$i]["tipo_ent"];
+            $json[$i]['Fecha'] = $resultados[$i]["fecha_ent"];
+            $json[$i]['N'] = ($i+1);
+            //$json[$i]['N'] =  $i;
+        }
+        //FORMATO de json
+        //descripcion, fecha inicio, fecha fin
+        //$json = json_encode($json);
+        $json_final;
+        $json_final["data"]=$json;
+        echo json_encode($json_final);
 }
     

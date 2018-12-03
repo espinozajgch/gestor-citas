@@ -7,6 +7,7 @@
  */
 require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/terapias.php';
+require_once '../../assets/class/historico.php';
 
 $id_operacion = -1;
 if (isset($_POST["id_operacion"])){
@@ -69,11 +70,15 @@ else if ($id_operacion == 4){//Obtener las terapias para el pillbox
 else if ($id_operacion == 5){//Crear un programa terapeutico
     $json;
     $id_paciente = $_POST["id_paciente"];
+    //Obtener el ID del historial del paciente
+    $id_historico = historico::obtener_id_historico_paciente($id_paciente);
     $lista_terapias = $_POST["terapias"];
     $json[0]["estado"]=1;
-    $id_insert = terapias::crear_programa_terapeutico($id_paciente, true);
+    $id_insert = terapias::crear_programa_terapeutico($id_paciente, true);    
     if ($id_insert!=0){
         if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
+            $cantida_terapias = count($lista_terapias);
+            historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
             $json[0]["estado"]=0;
         }
     }
@@ -92,13 +97,20 @@ else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
     echo $json_listo;
 }
 else if ($id_operacion == 7){//Cargar opciones previas
-    $id_paciente = $_POST["terapia"];
-    echo json_encode(terapias::terapias_paciente($id_paciente));
+    $id_paciente = $_POST["paciente"];    
+    //echo "a";
+    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',true));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     $id_paciente = $_POST["id_paciente"];
     $json = terapias::lista_programa_paciente($id_paciente);
-    echo json_encode($json);
+    if ($json!=null){
+        echo json_encode($json);
+    }
+    else{        
+        $json[0]["estado"] = 0;
+        echo json_encode($json);
+    }
 }
 else if ($id_operacion == 9){//CARGA TERAPIAS POR PROGRAMA
     $id_programa = $_POST["id_pt"];
@@ -108,14 +120,13 @@ else if ($id_operacion == 9){//CARGA TERAPIAS POR PROGRAMA
 else if ($id_operacion == 10){//Carga lista de terapias
      //Devolver eventos para medicos para formato de tabla
     $json_temp = (terapias::lista_terapias_configurar());
-    //print_r($json_temp);
+    
     $json_final["data"]=$json_temp;
     $json_listo= json_encode($json_final);
-    //echo "<br>";
+    
     echo $json_listo;
 }
-else if ($id_operacion == 11){//Actualizar programa terapeutico
-    $id_terapia             =   $_POST["id_terapia"];
+else if ($id_operacion == 11){//Actualizar programa terapeutico    
     $json;  
     $id_paciente            =   $_POST["id_paciente"];
     $lista_terapias         =   $_POST["terapias_previas"];        
@@ -127,11 +138,14 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     //Actualizar información basica
     if (terapias::actualizar_programa_terapeutico_basico($id_programa, date("y-m-d"))){
         //Eliminar citas existentes
-        if (terapias::eliminar_terapias_programa($id_programa)){
+        if (terapias::eliminar_terapias_programa($id_programa, true)){
             //Ingresar las que se quedaron
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";
+                $id_historico = historico::obtener_id_historico_paciente($id_paciente);
+                //print_r($id_historico);
+                historico::agregar_entrada($id_historico, "MODIFICAR", "Se modificarón las terapias activas del paciente.", 2);
             }
             else{
                 $str_debug.="Error en asignacion de terapia";
@@ -152,7 +166,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     
     
 }
-else if ($id_operacion){
+else if ($id_operacion = 12){
      //Devolver eventos para medicos para formato de tabla
     $id_paciente = $_GET["id_paciente"];
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
@@ -160,6 +174,6 @@ else if ($id_operacion){
     //print_r($json_temp);
     $json_final["data"]=$json_temp;
     $json_listo= json_encode($json_final);
-    //echo "<br>";
+    
     echo $json_listo;
 }

@@ -97,8 +97,17 @@ $usuario  = "";
                
         <br>
                 <div class="col-lg-12 mx-4">
-                <br>
-                    <?php include_once("pacientes/lista_pacientes.php") ?>
+                <br>                
+                
+                    <?php
+                    if (isset($_GET["opcion"])==1){
+                        include_once("pacientes/historial_paciente_tabla.php");
+                    }
+                    else{
+                        include_once("pacientes/lista_pacientes.php") ;
+                    }
+                    
+                    ?>
                 </div>
             </div>
 
@@ -135,6 +144,22 @@ $usuario  = "";
     <script>
 
         $(document).ready(function() {
+            
+           
+            $('#tabla_dinamica').DataTable({  
+                responsive: true,
+                "ajax":"citas/citas_controlador.php?id_operacion=9&id_paciente="+<?php echo $_GET["id_paciente"];?>,
+                "columns": [
+                    {"data": "N"},
+                    {"data": "Fecha"},                    
+                    {"data": "Tipo"},                    
+                    {"data": "Descripcion"}
+                ]
+            });
+    
+            
+            
+            
             $('#dataTables-example').DataTable({
                 responsive: true
             });

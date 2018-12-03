@@ -115,7 +115,7 @@ $estilo_par = "";
             <div class="row ">
             <br>
                 <div class="col-md-12">  
-                    <form>
+                    <div>
                         <div class="row">
 
                             <div class="col-sm-12 col-md-8 my-3"> 
@@ -202,7 +202,7 @@ $estilo_par = "";
                             <button type="button" id="btnguardar" class="btn btn-info btn-cons">Guardar</button>
                         </div>
 
-                    </form>
+                    </div>
                 </div>    
        
 

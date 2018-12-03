@@ -459,7 +459,7 @@
 		/**
 		retorna 
 		*/
-		public static function agregar($bd, $RUT, $nombre, $apellido,  $email, $telefono, $celular, $direccion, $estatus)
+		public static function agregar($bd, $RUT, $nombre, $apellido,  $email, $telefono, $celular, $direccion, $estatus, $historico)
 		{
 			// Sentencia INSERT
 			$consulta = "INSERT INTO paciente ( " .
@@ -470,13 +470,14 @@
 				" fijo,".
 				" celular,".
 				" direccion,".
-				" estado_paciente)".
-				" VALUES(?,?,?,?,?,?,?,?)";
+				" estado_paciente,
+                                    historico_id_historico)".
+				" VALUES(?,?,?,?,?,?,?,?,?)";
 
 		   try {
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
-				$resultado = $comando->execute(array($RUT, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estatus));
+				$resultado = $comando->execute(array($RUT, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estatus, $historico));
 				
 				if($resultado){
 					return true;
@@ -602,7 +603,14 @@
 			}
 		}
 
-
+                public static function editar_historico($id_paciente, $id_historico){
+                    $bd = connection::getInstance()->getDb();
+                    //Consulta para obtener los dias feriados
+                    $sql = "UPDATE `paciente` SET `historico_id_historico`=?
+                        WHERE `id_paciente`=?";
+                    $pdo = $bd->prepare($sql);
+                    return $pdo->execute([$id_historico, $id_paciente]);
+                }
 
 		
 

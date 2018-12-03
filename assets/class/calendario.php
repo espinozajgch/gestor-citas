@@ -156,44 +156,7 @@ class calendario {
     ";
         
         return $string_codigo;
-    }
-    
-//    public static function tabla_dias_feriados(){
-//        //Establecer la conexion con la base de datos
-//        $bd = connection::getInstance()->getDb();
-//        //Consulta para obtener los dias feriados
-//        $sql = "SELECT `fecha_feriados`, `descripcion_feriados` FROM `feriados`";
-//        $pdo = $bd->prepare($sql);
-//        //echo $sql;
-//        //Declaramos dos variables que vincularemos a la consulta
-//        $fechas;
-//        $descripciones;
-//        //Vinculamos las variables
-//        $pdo->bindParam(':descripcion_feriados', $descripciones, PDO::PARAM_STR);
-//        $pdo->bindParam(':fecha_feriados', $fechas, PDO::PARAM_STR);
-//        $pdo->execute();
-//        //Creamos el arreglo asociativo con el cual trabajaremos
-//        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
-//        //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria
-//        //para el calendario de FULLCALENDAR
-//        //print_r($resultados);
-//        //echo "<br>";
-//        //print_r($resultados);
-//        $longitud = count($resultados);
-//        //echo $longitud;        
-//        $cadena_tabla='';
-//        for ($i=0; $i<$longitud; $i++){
-//           $cadena_tabla.="
-//               <tr>
-//                    <th>".($i+1)."</th>
-//                    <th>".$resultados[$i]["fecha_feriados"]."</th>
-//                    <th>".$resultados[$i]["descripcion_feriados"]."</th>
-//                </tr>";           
-//        }
-//        
-//        
-//        return $cadena_tabla;
-//    }
+    }    
     
  public static function tabla_dias_feriados(){
         //Establecer la conexion con la base de datos

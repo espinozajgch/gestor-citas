@@ -103,10 +103,13 @@ class terapias {
         return $pdo->execute(array($descripcion));
     }
     
-    public static function eliminar_terapias_programa($id_programa){
+    public static function eliminar_terapias_programa($id_programa, $solo_activas = false){
         $bd = connection::getInstance()->getDb();        
         $sql = "DELETE FROM programa_tiene_terapia
             WHERE programa_terapeutico_id_programa_terapeutico=".$id_programa;
+        if ($solo_activas){
+            $sql.= " AND estado LIKE \"pendiente\"";
+        }
         $pdo = $bd->prepare($sql);
         //echo $sql;
         return $pdo->execute();
@@ -120,6 +123,22 @@ class terapias {
         $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
         if ($resultado){
             return $resultado[0]["id_programa_terapeutico"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
+    public static function obtener_nombre_terapia ($id_terapia){
+        $sql = "SELECT DISTINCT * 
+            FROM `terapia` 
+            WHERE `id_terapia`=$id_terapia";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["nombre_terapia"];
         }
         else{            
             return false;
@@ -249,6 +268,7 @@ class terapias {
         $bd = connection::getInstance()->getDb();
         $pdo = $bd->prepare($sql);
         $pdo->execute();
+        //echo $sql;
         $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
         if ($resultado){
             $longitud = count($resultado);
@@ -275,11 +295,15 @@ class terapias {
         }
         else{
             //$json[0]["estado"] = 1;
+            $json[0]['N'] = "No hay terapias pendientes por cita";
+            $json[0]['Terapias'] = "";
+            $json[0]['Precio'] = "";
+            $json[0]['Estado'] = "";
             return $json;
         }
     }
     
-    public static function terapias_paciente ($id_paciente, $format = 'JSON'){
+    public static function terapias_paciente ($id_paciente, $format = 'JSON', $solo_activas = false){
         $bd = connection::getInstance()->getDb();
         
         $sql = "SELECT t.id_terapia as id_t, t.nombre_terapia as nombre_t FROM paciente p\n"
@@ -287,6 +311,9 @@ class terapias {
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
     . "WHERE ptt.estado NOT LIKE 'asignado' AND p.id_paciente = ".$id_paciente;
+        if ($solo_activas){
+            $sql.= " AND ptt.estado LIKE \"pendiente\"";
+        }
         $pdo = $bd->prepare($sql);
         //echo $sql;
 
@@ -294,6 +321,7 @@ class terapias {
         $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);    
         $longitud = count($resultados);
         $json_retorno;
+        $json_retorno[0]['estado']=0;
         if ($longitud>0) 
         {
             $json_retorno[0]['estado']      =   1;
@@ -308,6 +336,7 @@ class terapias {
                 return $json_retorno;
             }
             else{
+                $json_retorno[0]["eatado"] = 1;
                 return json_encode($json_retorno);
             }
         }

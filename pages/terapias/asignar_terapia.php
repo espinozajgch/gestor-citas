@@ -9,9 +9,10 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
 <link href="../vendor/select2/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript">
     
-    
+    var operacion = 5;
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         inicializar_lista_terapias();
+        
         if (<?php 
         if (isset($_GET["terapia"])){
             echo "true";    
@@ -115,18 +116,18 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
 
 </div>
-<div id="alert_ok" class="alert alert-success alert-dismissible fade" role="alert" style="display:none">
-      <strong>¡Exito!</strong>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div id="alert_fail" class="alert alert-danger alert-dismissible fade" role="alert" style="display:none">
-      <strong>¡Error!</strong>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+<div id="alert_ok" class="alert alert-success alert-dismissible" role="alert" style="display:none">
+  <strong>¡Exito!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div id="alert_fail" class="alert alert-danger alert-dismissible" role="alert" style="display:none">
+  <strong>¡Error!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
             
 <script type="text/javascript">
     function buscar_info_paciente(){
@@ -135,6 +136,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 $("#error_rut").hide(5000);
             }
             else{
+                
                 $.post("citas/citas_controlador.php",{
                     id_operacion: 1,
                     rut: $("#rut_paciente").val()},
@@ -146,6 +148,10 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             $("#name").val(json[0].nombre);
                             $("#last_name").val(json[0].apellido);                            
                             $("#id_oculto").val(json[0].id_paciente);
+                            //Verificar si el paciente ya tiene terapias asignadas 
+                            //alert ($("#id_oculto").val());
+                            agregar_terapias_existentes($("#id_oculto").val());
+                            operacion = 11;
                         }
                         else{
                             $("#name").val("");
@@ -167,30 +173,21 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         }     
         if ($("#terapias").val()==""){
             bandera = false;
-            alert ("Seleccione al menos un medico");
+            alert ("Seleccione al menos una terapia");
         }
+        
         if (bandera){
             $("#alert_ok").hide();
-            $("#alert_fail").hide();
+            $("#alert_fail").hide();            
             
             $.post("terapias/terapias_controlador.php",
             {
-                <?php
-                if (isset($_GET["terapia"])){
-                    echo "
-                        id_operacion: $id_operacion,
-                            terapias_previas: $(\"#terapias\").val(),
-                            id_terapia: ".$_GET["terapia"];
-                }
-                else{
-                    echo "
-                        id_operacion: $id_operacion";
-                }
-                ?>,                
-                id_paciente: $("#id_oculto").val(),
-                terapias: $("#terapias").val(),
-                descripcion: $("#descripcion").val(),
-                id: $("#id_oculto").val(),
+                id_operacion:       operacion,
+                terapias_previas:   $("#terapias").val(),                
+                id_paciente:        $("#id_oculto").val(),
+                terapias:           $("#terapias").val(),
+                descripcion:        $("#descripcion").val(),
+                id:                 $("#id_oculto").val()
             },function (result){
                 var json = JSON.parse(result);                        
                 if (json[0].estado == 1){
@@ -244,30 +241,45 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     
                     $("#rut_paciente").val("<?php echo $terapia;?>");
                     $("#btn_buscar").trigger('click');
-                    
-                    $.post("terapias/terapias_controlador.php",
-                    {
-                        id_operacion : 7
-                        <?php 
+                    agregar_terapias_existentes(<?php 
                             if (isset($_GET["terapia"])){
-                                echo ", terapia:".$_GET["terapia"];
+                                echo $_GET["terapia"];
                             }
-                        ?>
-                    },
-                    function (result){                        
-                        var json = JSON.parse(result);                        
-                        if(json[0].estado == 1){                            
-                            for (i=0; i<json[0].cantidad; i++){                                
-                                var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
-                                $("#terapias").append(n_opcion);                                
-                            }                            
-                            $("#terapias").trigger('change');
-                            preseleccion = $("#terapias").val();
-                            //alert (preseleccion);
-                        }                               
-                    });                       
+                        ?>);
+                                     
                 }
             });
+        }
+        
+        function agregar_terapias_existentes(id_paciente){
+        
+                    $.post("terapias/terapias_controlador.php",
+                    {
+                        id_operacion :  7,
+                        paciente:       id_paciente
+                    },
+                    function (result){                        
+                        var json = JSON.parse(result);       
+                        //alert (result);
+                        if (json!=null){
+                            
+                            if(json[0].estado == 1){                            
+                                for (i=0; i<json[0].cantidad; i++){                                
+                                    var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
+                                    $("#terapias").append(n_opcion);                                
+                                }                            
+                                $("#terapias").trigger('change');
+                                preseleccion = $("#terapias").val();
+                                //alert (preseleccion);
+                            }      
+                            else{
+                                //NADA
+                            }
+                        }
+                        else{
+                            //NADA
+                        }
+                    });
         }
 </script>
 
