@@ -148,7 +148,7 @@ $usuario  = "";
            
             $('#tabla_dinamica').DataTable({  
                 responsive: true,
-                "ajax":"citas/citas_controlador.php?id_operacion=9&id_paciente="+<?php echo $_GET["id_paciente"];?>,
+                "ajax":"citas/citas_controlador.php?id_operacion=9&id_paciente="<?php if (isset($_GET["id_paciente"]))echo "+".$_GET["id_paciente"];?>,
                 "columns": [
                     {"data": "N"},
                     {"data": "Fecha"},                    
