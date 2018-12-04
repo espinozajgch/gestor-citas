@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-11-2018 a las 03:52:24
--- Versión del servidor: 10.1.19-MariaDB
--- Versión de PHP: 7.0.13
+-- Tiempo de generación: 04-12-2018 a las 13:46:08
+-- Versión del servidor: 10.1.36-MariaDB
+-- Versión de PHP: 7.2.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `premiun`
 --
-CREATE DATABASE IF NOT EXISTS `premiun` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `premiun`;
 
 -- --------------------------------------------------------
 
@@ -69,6 +69,36 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id_admin`, `nombre`, `password`, `email`, `telefono`, `hash`, `id_eu`, `id_rol`, `estado`) VALUES
 (1, 'admin', 'admin', 'admin@admin.com', NULL, 'admin', 1, 1, 'activo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `entrada_historico`
+--
+
+CREATE TABLE `entrada_historico` (
+  `id_entrada_historico` int(10) UNSIGNED NOT NULL,
+  `tipo_entrada` varchar(45) NOT NULL,
+  `historico_id_historico` int(10) UNSIGNED NOT NULL,
+  `fecha_entrada` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `nivel_entrada` int(11) NOT NULL DEFAULT '2',
+  `descripcion_entrada` varchar(500) NOT NULL,
+  `tabla_relacionada` varchar(45) DEFAULT NULL,
+  `indice_tabla` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `entrada_historico`
+--
+
+INSERT INTO `entrada_historico` (`id_entrada_historico`, `tipo_entrada`, `historico_id_historico`, `fecha_entrada`, `nivel_entrada`, `descripcion_entrada`, `tabla_relacionada`, `indice_tabla`) VALUES
+(0, 'MODIFICAR', 0, '2018-12-04 09:00:46', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:00:52', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:02:28', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:03:32', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:03:39', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:05:26', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL),
+(0, 'MODIFICAR', 0, '2018-12-04 09:05:44', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -163,6 +193,19 @@ INSERT INTO `feriados` (`id_feriados`, `fecha_feriados`, `descripcion_feriados`)
 (14, '2018-11-02', 'a2'),
 (15, '2018-11-02', 'a3'),
 (16, '2018-11-08', '849616516');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historico`
+--
+
+CREATE TABLE `historico` (
+  `id_historico` int(10) UNSIGNED NOT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tipo_historico` varchar(45) DEFAULT 'paciente',
+  `codigo_historico` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -270,16 +313,17 @@ CREATE TABLE `paciente` (
   `imagen_id_imagen` int(10) UNSIGNED DEFAULT NULL,
   `apellido` varchar(50) NOT NULL,
   `ficha_paciente_id_fp` int(11) NOT NULL,
-  `estado_paciente` varchar(45) NOT NULL DEFAULT 'activo'
+  `estado_paciente` varchar(45) NOT NULL DEFAULT 'activo',
+  `historico_id_historico` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `paciente`
 --
 
-INSERT INTO `paciente` (`id_paciente`, `RUT`, `nombre`, `fijo`, `celular`, `email`, `direccion`, `clave`, `imagen_id_imagen`, `apellido`, `ficha_paciente_id_fp`, `estado_paciente`) VALUES
-(5, '1', 'a', 'aaa', 'a', 'aaa', 'a', 'aaaa', NULL, 'b', 0, 'activo'),
-(6, '5', 'qdaqsdasda', 'sdasda', 'sdasda', 'sdasdas', 'dasdasd', 'asdasd', NULL, 'asdasd', 0, 'activo');
+INSERT INTO `paciente` (`id_paciente`, `RUT`, `nombre`, `fijo`, `celular`, `email`, `direccion`, `clave`, `imagen_id_imagen`, `apellido`, `ficha_paciente_id_fp`, `estado_paciente`, `historico_id_historico`) VALUES
+(5, '1', 'a', 'aaa', 'a', 'aaa', 'a', 'aaaa', NULL, 'b', 0, 'activo', 0),
+(6, '5', 'qdaqsdasda', 'sdasda', 'sdasda', 'sdasdas', 'dasdasd', 'asdasd', NULL, 'asdasd', 0, 'activo', 0);
 
 -- --------------------------------------------------------
 
@@ -341,9 +385,9 @@ CREATE TABLE `programa_terapeutico` (
 --
 
 INSERT INTO `programa_terapeutico` (`id_programa_terapeutico`, `paciente_id_paciente`, `descripcion_programa_terapeutico`) VALUES
-(14, 5, '18-11-29'),
-(15, 6, '"6-2018-Nov-Sat"'),
-(18, 6, '"6-2018-Nov-Thu"');
+(14, 5, '18-12-04'),
+(15, 6, '\"6-2018-Nov-Sat\"'),
+(18, 6, '\"6-2018-Nov-Thu\"');
 
 -- --------------------------------------------------------
 
@@ -366,10 +410,10 @@ CREATE TABLE `programa_tiene_terapia` (
 INSERT INTO `programa_tiene_terapia` (`id_programa_tiene_terapia`, `programa_terapeutico_id_programa_terapeutico`, `terapia_id_terapia`, `reserva_medica_id_rm`, `estado`) VALUES
 (19, 15, 1, NULL, 'pendiente'),
 (20, 15, 6, NULL, 'pendiente'),
-(55, 14, 4, NULL, 'pendiente'),
 (56, 18, 4, NULL, 'pendiente'),
 (57, 18, 6, NULL, 'pendiente'),
-(58, 18, 7, NULL, 'pendiente');
+(58, 18, 7, NULL, 'pendiente'),
+(75, 14, 5, NULL, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -645,111 +689,133 @@ ALTER TABLE `tratamientos`
 --
 ALTER TABLE `acciones`
   MODIFY `id_accion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
   MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
 ALTER TABLE `especialidad`
   MODIFY `id_especialidad` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `estatus_pago`
 --
 ALTER TABLE `estatus_pago`
   MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `estatus_usuario`
 --
 ALTER TABLE `estatus_usuario`
   MODIFY `id_eu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `facturacion`
 --
 ALTER TABLE `facturacion`
   MODIFY `id_facturacion` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `feriados`
 --
 ALTER TABLE `feriados`
   MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_especialidad`
 --
 ALTER TABLE `medico_tiene_especialidad`
   MODIFY `id_medico_tiene_especialidad` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_reserva`
 --
 ALTER TABLE `medico_tiene_reserva`
   MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
 --
 -- AUTO_INCREMENT de la tabla `medio_contacto`
 --
 ALTER TABLE `medio_contacto`
   MODIFY `id_mc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
 --
 ALTER TABLE `metodos_pago`
   MODIFY `id_mp` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
   MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente`
 --
 ALTER TABLE `paciente`
   MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_reserva`
 --
 ALTER TABLE `paciente_tiene_reserva`
   MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_tratamiento`
 --
 ALTER TABLE `paciente_tiene_tratamiento`
   MODIFY `id_paciente_tiene_tratamiento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
   MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
 --
 -- AUTO_INCREMENT de la tabla `programa_tiene_terapia`
 --
 ALTER TABLE `programa_tiene_terapia`
-  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
 --
 -- AUTO_INCREMENT de la tabla `reserva_medica`
 --
 ALTER TABLE `reserva_medica`
   MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
   MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `rol_accion`
 --
 ALTER TABLE `rol_accion`
   MODIFY `id_ra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT de la tabla `terapia`
 --
 ALTER TABLE `terapia`
   MODIFY `id_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT de la tabla `tratamientos`
 --
 ALTER TABLE `tratamientos`
   MODIFY `id_tratamiento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- Restricciones para tablas volcadas
 --
@@ -801,6 +867,7 @@ ALTER TABLE `programa_tiene_terapia`
 --
 ALTER TABLE `reserva_medica`
   ADD CONSTRAINT `fk_reserva_medica_medio_contacto1` FOREIGN KEY (`medio_contacto_id_mc`) REFERENCES `medio_contacto` (`id_mc`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

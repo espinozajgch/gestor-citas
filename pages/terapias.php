@@ -289,7 +289,8 @@ $usuario  = "";
                     {"data": "N"},
                     {"data": "Nombre"},                    
                     {"data": "Descripcion"},                    
-                    {"data": "Precio"}
+                    {"data": "Precio"},
+                    {"data": "Acciones"}
                 ]
             });
             

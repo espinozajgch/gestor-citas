@@ -28,10 +28,10 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
 </div>
 
 <div class="row">
-    <div class="form-group col-12 col-sm-12 col-md-12">
+    <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
         <small><strong><label for=name_>RUT</label></strong></small>
 
-        <div class="input-group">
+        <div class="input-group col-3 col-sm-3 col-md-3">
             <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off">
           <span class="input-group-btn" >
               <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
@@ -42,21 +42,24 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         </div>
         <input id="id_oculto" type="text" hidden="">
     </div>
-    <div class="form-group col-6 col-sm-6 col-md-6">
+    <div class="form-group col-4 col-sm-4 col-md-4">
         <small><strong><label for="name">Nombre</label></strong></small>
         <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
         <div id="error_name" class="text-danger" style="display:none">
             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
         </div>
     </div>
-    <div class="form-group col-6 col-sm-6 col-md-6">
+    <div class="form-group col-4 col-sm-4 col-md-4">
         <small><strong><label for="last_name">Apellido</label></strong></small>
         <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
         <div id="error_last_name" class="text-danger" style="display:none">
             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
         </div>
-    </div>    
+    </div>  
+
+     
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
+        <hr>
        <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_paciente">
             <thead>
                 <tr>

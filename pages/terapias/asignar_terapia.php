@@ -30,91 +30,64 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         
         
     });
-</script>
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header"><?php echo $etiqueta; ?></h1>
+    </script>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><?php echo $etiqueta; ?></h1>
 
-    </div>
-    <div class="col-lg-12">
-       <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
-    </div>
-    <!-- /.col-lg-12 -->
-</div>
-
-<div class="row">
-    <div class="form-group col-12 col-sm-12 col-md-12">
-        <small><strong><label for=name_>RUT</label></strong></small>
-
-        <div class="input-group">
-            <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off">
-          <span class="input-group-btn" >
-              <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
-          </span>
-        </div><!-- /input-group -->
-        <div id="error_rut" class="text-danger" style="display:none">
-            <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
         </div>
-        <input id="id_oculto" type="text" hidden="">
+        <!--div class="col-lg-12">
+           <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+        </div-->
+        <!-- /.col-lg-12 -->
     </div>
-    <div class="form-group col-6 col-sm-6 col-md-6">
-        <small><strong><label for="name">Nombre</label></strong></small>
-        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
-        <div id="error_name" class="text-danger" style="display:none">
-            <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
-        </div>
-    </div>
-    <div class="form-group col-6 col-sm-6 col-md-6">
-        <small><strong><label for="last_name">Apellido</label></strong></small>
-        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
-        <div id="error_last_name" class="text-danger" style="display:none">
-            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
-        </div>
-    </div>
-    <div class="form-group col-12 col-sm-12 col-md-12">                                        
-        <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
-        <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias" >  
 
-        </select>
-
-            <div id="error_iva" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+    <div class="row">
+        <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
+            <small><strong><label for=name_>RUT</label></strong></small>
+            <div class="input-group col-3 col-sm-3 col-md-3">
+                <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off">
+              <span class="input-group-btn" >
+                  <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
+              </span>
+            </div><!-- /input-group -->
+            <div id="error_rut" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
             </div>
-    </div>
-    
-    
-<!--    <div class="form-group col-6 col-sm-6 col-md-6">
-        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
-        ?>
-        <small><strong><label for="terapia">Terapia</label></strong></small>
-            <select class="form-control" id="terapia">
-                <?php
-//                $bd = connection::getInstance()->getDb();
-//                $sql = "SELECT * FROM `terapia`";
-//                $pdo = $bd->prepare($sql);
-//                $pdo->execute();
-//                $resultado = $pdo->fetchall(pdo::FETCH_ASSOC);
-//                if ($resultado){
-//                    $longitud = count($resultado);
-//                    $string = "";                                                            
-//                    for ($i=0; $i < $longitud; $i++){
-//                        $string .="<option value=\"".$resultado[$i]["id_terapia"]."\"><strong>Nombre</strong>:".$resultado[$i]["nombre_terapia"]." - <strong>Precio</strong>:".$resultado[$i]["precio_terapia"]."</option>";
-//                    }
-//                    echo $string;
-//                }
-//                else{
-//                        echo "<option> Ocurrío un error </option>";
-//                }
-                ?>
+            <input id="id_oculto" type="text" hidden="">
+        </div>
+
+        <div class="form-group col-4 col-sm-4 col-md-4">
+            <small><strong><label for="name">Nombre</label></strong></small>
+            <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
+            <div id="error_name" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
+            </div>
+        </div>
+        <div class="form-group col-4 col-sm-4 col-md-4">
+            <small><strong><label for="last_name">Apellido</label></strong></small>
+            <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
+            <div id="error_last_name" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+            </div>
+        </div>
+
+        <div class="form-group col-8 col-sm-8 col-md-8">                                        
+            <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
+            <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias" >  
+
             </select>
-            <div id="error_iva" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-            </div>
-    </div>-->
-    <div class="col-md-12 col-sm-12 col-xs-12 py-2 margin-bottom-20 pull-right text-right ">
-        <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="redirigir_terapia()">Proceder</button>
-    </div>
 
+                <div id="error_iva" class="text-danger" style="display:none">
+                    <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                </div>
+        </div>
+     
+
+        <div class="col-md-8 col-sm-8 col-xs-8 py-2 margin-bottom-20 text-right ">
+            <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="redirigir_terapia()">Guardar</button>
+        </div>
+   
 </div>
 <div id="alert_ok" class="alert alert-success alert-dismissible" role="alert" style="display:none">
   <strong>¡Exito!</strong>

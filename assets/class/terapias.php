@@ -362,6 +362,7 @@ class terapias {
                 $json[0]['Nombre'] = "";
                 $json[0]['Descripcion'] = "";
                 $json[0]['Precio'] = "";
+                $json[0]['Acciones'] = "";
 
             }
             for ($i=0; $i<$longitud; $i++){
@@ -369,6 +370,7 @@ class terapias {
                 $json[$i]['Nombre'] = $resultado[$i]["nombre_terapia"];
                 $json[$i]['Descripcion'] = $resultado[$i]["descripcion_terapia"];
                 $json[$i]['Precio'] = $resultado[$i]["precio_terapia"];
+                $json[$i]['Acciones'] = "Editar - Eliminar";
 
             }   
             $json[1]['html'] = $str;

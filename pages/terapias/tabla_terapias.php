@@ -20,9 +20,9 @@ require_once '../assets/class/calendario.php';
                     <h1 class="page-header">Listado de terapias por paciente</h1>
 
                 </div>
-                <div class="col-lg-1 text-right pull-right">
+                <!--div class="col-lg-1 text-right pull-right">
                    <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=1" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
-                </div>                                
+                </div-->                                
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
