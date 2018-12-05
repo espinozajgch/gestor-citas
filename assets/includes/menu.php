@@ -76,6 +76,9 @@
                         <li>
                             <a href="terapias.php?opcion=3">Programas terapeuticos</a>
                         </li>
+                        <li>
+                            <a href="historia_medica.php">Historia Medica</a>
+                        </li>
                     </ul>
                 </li>
                 <?php } ?>

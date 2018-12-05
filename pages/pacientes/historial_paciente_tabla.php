@@ -17,7 +17,7 @@ require_once '../assets/class/calendario.php';
             <input type="hidden" id="hash" name="hash" value="<?php echo $hash ?>">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Listado de terapias por paciente</h1>
+                    <h1 class="page-header">Historico</h1>
 
                 </div>
                 <div class="col-lg-1 text-right pull-right">

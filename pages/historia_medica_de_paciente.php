@@ -27,7 +27,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -59,11 +59,11 @@ $usuario  = "";
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Preguntas Frecuentes</h1>
+                    <h1 class="page-header">Historias Medicas</h1>
 
                 </div>
                 <div class="col-lg-12 text-right pull-right">
-                   <a class="btn btn-sm btn-success shared" href="agregar_pregunta.php" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
+                   <a class="btn btn-sm btn-success shared" href="agregar_historia_de_paciente.php" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -73,7 +73,7 @@ $usuario  = "";
                 <br>
                 <div class="col-lg-12 mx-4">
                 <br>
-                    <?php include_once("preguntas/lista_preguntas.php") ?>
+                    <?php include_once("historia_medica/lista_historia_medica_de_paciente.php") ?>
                 </div>
             </div>
 

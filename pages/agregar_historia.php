@@ -5,14 +5,14 @@ require_once("../assets/class/utilidades.php");
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
-
+$terminos = "";
     session_start();
     if(isset($_SESSION["recuerdame_admin"])){
         $bd = connection::getInstance()->getDb();
         $hash = $_SESSION["recuerdame_admin"];
         $usuario = $_SESSION["buscahogar_admin"];
         $id_rol = Admin::obtener_rol($bd, $hash);
-        $terminos = utilidades::obtener_terminos($bd);
+        //$terminos = utilidades::obtener_terminos($bd);
     }
     else{
         header("Location:../index.php");
@@ -29,7 +29,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -63,8 +63,11 @@ $usuario  = "";
 
         <div id="page-wrapper">
             <div class="row">
+
                 <div class="col-lg-12">
-                    <h1 class="page-header">Terminos y Condiciones</h1>
+                    <br>
+                    <a class="btn btn-sm btn-success shared" href="historia_medica.php" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+                    <h1 class="page-header">Historia Medica</h1>
 
                 </div>
 
@@ -75,7 +78,7 @@ $usuario  = "";
             <div class="row">
                 <form id="form_terminos">
                     <div class="form-group">
-                    <label> Terminos y Condiciones</label>
+                    <!--label> Terminos y Condiciones</label-->
 
                         <textarea id='summernote'">
                             <?php echo $terminos ?>
