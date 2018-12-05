@@ -129,6 +129,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             $("#name").val(json[0].nombre);
                             $("#last_name").val(json[0].apellido);                            
                             $("#id_oculto").val(json[0].id_paciente);
+                            $("#tabla_paciente").DataTable().destroy();
                             cargar_tabla_terapias();
                             $("#tabla_paciente").show();
                         }

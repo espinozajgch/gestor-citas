@@ -169,6 +169,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
 else if ($id_operacion = 12){
      //Devolver eventos para medicos para formato de tabla
     $id_paciente = $_GET["id_paciente"];
+    //echo $id_paciente;
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     $json_temp = (terapias::lista_terapias_programa($id_programa));
     //print_r($json_temp);

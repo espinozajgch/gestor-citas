@@ -124,7 +124,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             agregar_terapias_existentes($("#id_oculto").val());
-                            operacion = 11;
+                            //operacion = 11;
                         }
                         else{
                             $("#name").val("");
@@ -235,7 +235,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         var json = JSON.parse(result);       
                         //alert (result);
                         if (json!=null){
-                            
+                            operacion = 11;
                             if(json[0].estado == 1){                            
                                 for (i=0; i<json[0].cantidad; i++){                                
                                     var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);

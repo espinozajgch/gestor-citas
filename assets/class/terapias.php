@@ -116,9 +116,10 @@ class terapias {
     }
     
     public static function obtener_id_programa_paciente ($id_paciente){
-        $sql = "SELECT DISTINCT * FROM `programa_terapeutico` WHERE `paciente_id_paciente`=5";
+        $sql = "SELECT DISTINCT * FROM `programa_terapeutico` WHERE `paciente_id_paciente`=".$id_paciente;
         $bd = connection::getInstance()->getDb();
         $pdo = $bd->prepare($sql);
+        //echo $sql;
         $pdo->execute();
         $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
         if ($resultado){
@@ -234,6 +235,7 @@ class terapias {
     . " GROUP BY id_pt\n"
     . " HAVING id_paciente = ".$id_paciente;
         $bd = connection::getInstance()->getDb();
+        //echo $sql;
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
@@ -266,6 +268,7 @@ class terapias {
                 AND programa_tiene_terapia.estado LIKE \"pendiente\"";
         
         $bd = connection::getInstance()->getDb();
+        //echo $sql;
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //echo $sql;

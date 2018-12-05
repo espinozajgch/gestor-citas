@@ -77,6 +77,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         //Insertamos el registro de que el paciente tiene una reserva
         $id_insercion = $bd->lastInsertId();        
         if(citas::asignar_paciente_cita($id_paciente, $id_insercion)&&citas::asignar_medicos_cita($medicos, $id_insercion)){
+            //echo "asignado";
             if (isset($_POST["id_terapia"])){//Si esta puesto, estamos reservando terapia
                 //echo "reservar";
                 $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
