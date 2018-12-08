@@ -1,6 +1,8 @@
 <?php
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
+require_once '../assets/class/usuario/usuarios_data.php';
+//require_once '../assets/class/citas.php';
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
@@ -149,6 +151,29 @@ $usuario  = "";
             $('#dataTables-example').DataTable({
                 responsive: true
             });
+            
+            if (1==
+            <?php 
+            $ref;
+            if (isset($_GET["rut_paciente"])||(isset($_GET["id_paciente"]))){
+                echo "1";
+                if (isset($_GET["id_paciente"])){
+                    $rut_get = pacientes::obtener_identificacion(connection::getInstance()->getDb(), $_GET["id_paciente"]);
+                    $ref = "terapias.php?opcion=1";
+                }
+                else{
+                    $rut_get=$_GET["rut_paciente"];    
+                }
+                
+            }
+            else{
+                echo "2";
+                $rut_get=0;
+            }
+            ?>){
+                    $("#rut_paciente").val(<?php echo $rut_get; ?>);
+                    $("#btn_buscar").trigger('click');
+                }
         });
 
         $("a.eliminar").click(function(e){
@@ -263,7 +288,28 @@ $usuario  = "";
             });/**/
         }
         
-        
+        function modificar_terapia(terapia, modo){
+            if (confirm("¿Está seguro de querer hacer esto?")){
+                $.post("terapias/terapias_controlador.php",
+                {
+                    id_operacion: 13,
+                    id_terapia: terapia,
+                    modo_: modo
+                },
+                function(result){
+                    if (result == "1"){
+                        alert ("Modificado con éxito");
+                    }
+                    else{
+                        alert ("Ha ocurrido un error");
+                    }
+                    window.location = "terapias.php?opcion=5";
+                });
+            }
+            else{
+                
+            }
+        }
 
           
     </script>
@@ -290,6 +336,7 @@ $usuario  = "";
                     {"data": "Nombre"},                    
                     {"data": "Descripcion"},                    
                     {"data": "Precio"},
+                    {"data": "Estado"},
                     {"data": "Acciones"}
                 ]
             });
@@ -305,13 +352,30 @@ $usuario  = "";
                     {"data": "N"},
                     {"data": "Terapias"},                    
                     {"data": "Precio"},                    
-                    {"data": "Estado"}
+                    {"data": "Estado"},
+                    {"data": "Acciones"}
                 ]
             });
     }
     
-    function seleccionar_terapia(id_terapia){
-        terapia_seleccionada = id_terapia;        
+    function seleccionar_terapia(id_terapia, estado){
+        terapia_seleccionada = id_terapia;
+        //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"
+        var mensaje_confirm;
+        if (estado == 1){//Se reserva por primera vez
+            mensaje_confirm = "Se reservará cita para la terapia seleccionada, por favor confirme";
+        }
+        else if (estado == 2){//Se modificará la reservación de la cita
+            mensaje_confirm = "Está a punto de modificar la reservación de una cita pagada, confirmar";
+        }
+        if (confirm(mensaje_confirm)){
+            if (estado == 1){
+                redirigir_terapia();
+            }
+            else{
+                window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
+            }
+        }
     }
 </script>
 

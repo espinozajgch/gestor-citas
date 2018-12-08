@@ -34,7 +34,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
-
+            <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
         </div>
         <!--div class="col-lg-12">
            <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
@@ -43,6 +43,14 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
 
     <div class="row">
+        <div class="form-group col-8 col-sm-8 col-md-8 mt-5">
+            <small><strong><label for=name_>Nombre del programa</label></strong></small>
+            <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">
+            <div id="error_name_pt" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa un nombre válido</small>
+            </div>
+        </div>
+        
         <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
             <small><strong><label for=name_>RUT</label></strong></small>
             <div class="input-group col-3 col-sm-3 col-md-3">
@@ -55,17 +63,17 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
             </div>
             <input id="id_oculto" type="text" hidden="">
+            <input id="id_programa_oculto" type="text" hidden="">
         </div>
-
         <div class="form-group col-4 col-sm-4 col-md-4">
-            <small><strong><label for="name">Nombre</label></strong></small>
+            <small><strong><label for="name">Nombre del paciente</label></strong></small>
             <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
             <div id="error_name" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
             </div>
         </div>
         <div class="form-group col-4 col-sm-4 col-md-4">
-            <small><strong><label for="last_name">Apellido</label></strong></small>
+            <small><strong><label for="last_name">Apellido del paciente</label></strong></small>
             <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
             <div id="error_last_name" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
@@ -104,12 +112,12 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             
 <script type="text/javascript">
     function buscar_info_paciente(){
+        
             if ($("#rut_paciente").val()==""){
                 $("#error_rut").show(1500);
                 $("#error_rut").hide(5000);
             }
-            else{
-                
+            else{                
                 $.post("citas/citas_controlador.php",{
                     id_operacion: 1,
                     rut: $("#rut_paciente").val()},
@@ -120,21 +128,26 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         if (json[0].estado == true){
                             $("#name").val(json[0].nombre);
                             $("#last_name").val(json[0].apellido);                            
-                            $("#id_oculto").val(json[0].id_paciente);
+                            $("#id_oculto").val(json[0].id_paciente);                            
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
-                            agregar_terapias_existentes($("#id_oculto").val());
+                            agregar_terapias_existentes($("#id_oculto").val());                                                        
                             //operacion = 11;
                         }
                         else{
                             $("#name").val("");
                             $("#last_name").val("");                            
+                            $("#terapias").val(null).trigger('change');
+                            $("#name_programa").val("");
+                            $("#btn_cancelar").hide();
+                            alert ("No hay registros de este paciente");
                         }
-                    }
+                    }                
                 );
             }
             
-        }
+        }        
+        
     function redirigir_terapia(){
         regex = /[a-zA-Z0-9]+/;
         bandera = true;
@@ -160,7 +173,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 id_paciente:        $("#id_oculto").val(),
                 terapias:           $("#terapias").val(),
                 descripcion:        $("#descripcion").val(),
-                id:                 $("#id_oculto").val()
+                id:                 $("#id_oculto").val(),
+                nombre_programa:    $("#name_programa").val()
             },function (result){
                 var json = JSON.parse(result);                        
                 if (json[0].estado == 1){
@@ -235,24 +249,62 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         var json = JSON.parse(result);       
                         //alert (result);
                         if (json!=null){
-                            operacion = 11;
+                            operacion = 11;                            
                             if(json[0].estado == 1){                            
-                                for (i=0; i<json[0].cantidad; i++){                                
-                                    var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
-                                    $("#terapias").append(n_opcion);                                
-                                }                            
-                                $("#terapias").trigger('change');
-                                preseleccion = $("#terapias").val();
-                                //alert (preseleccion);
+                                if (confirm("El paciente ya tiene un programa terapeutico activo ¿Desea modificarlo?")){
+                                    for (i=0; i<json[0].cantidad; i++){                                
+                                        var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
+                                        $("#terapias").append(n_opcion);                                
+                                    }                            
+                                    $("#terapias").trigger('change');
+                                    preseleccion = $("#terapias").val();
+                                    $("#name_programa").val(json[0].desc_pt);
+                                    $("#id_programa_oculto").val(json[0].id_programa);
+                                    $("#btn_cancelar").show();
+                                    //alert (preseleccion);
+                                }
+                                else{
+                                    if (confirm ("Será redirigido al formulario para reservar citas para este paciente ¿Está de acuerdo?")){
+                                        window.location = "terapias.php?opcion=4&id_paciente="+id_paciente;
+                                    }
+                                    else{
+                                        alert ("Los campos serán reiniciados");
+                                        window.location = "terapias.php?opcion=1";
+                                    }
+                                }
+                                
                             }      
                             else{
                                 //NADA
+                                return null;
                             }
                         }
                         else{
                             //NADA
+                            return null;
                         }
                     });
+        }
+        
+        function cancelar_programa(){
+            $.post("terapias/terapias_controlador.php",
+            {
+                id_operacion: 14,
+                id_programa : $("#id_programa_oculto").val()
+            },function (result){
+                var json = JSON.parse(result);       
+                //alert (result);
+                if (json!=null){
+                    operacion = 11;                            
+                    if(json[0].estado == 1){   
+                        alert ("Procesado con exito");
+                    }
+                    else{
+                        alert ("Ocurrió un error");
+                    }
+                }
+            }
+            );
         }
 </script>
 

@@ -8,6 +8,7 @@
 require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/terapias.php';
 require_once '../../assets/class/historico.php';
+require_once '../../assets/class/citas.php';
 
 $id_operacion = -1;
 if (isset($_POST["id_operacion"])){
@@ -70,11 +71,12 @@ else if ($id_operacion == 4){//Obtener las terapias para el pillbox
 else if ($id_operacion == 5){//Crear un programa terapeutico
     $json;
     $id_paciente = $_POST["id_paciente"];
+    $nombre_programa = $_POST["nombre_programa"];
     //Obtener el ID del historial del paciente
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
     $lista_terapias = $_POST["terapias"];
     $json[0]["estado"]=1;
-    $id_insert = terapias::crear_programa_terapeutico($id_paciente, true);    
+    $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
     if ($id_insert!=0){
         if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
             $cantida_terapias = count($lista_terapias);
@@ -129,6 +131,7 @@ else if ($id_operacion == 10){//Carga lista de terapias
 else if ($id_operacion == 11){//Actualizar programa terapeutico    
     $json;  
     $id_paciente            =   $_POST["id_paciente"];
+    $nombre_programa        =   $_POST["nombre_programa"];
     $lista_terapias         =   $_POST["terapias_previas"];        
     $json[0]["estado"]      =   1;
     $str_debug              =   "Inicio ";
@@ -136,7 +139,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
-    if (terapias::actualizar_programa_terapeutico_basico($id_programa, date("y-m-d"))){
+    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa)){
         //Eliminar citas existentes
         if (terapias::eliminar_terapias_programa($id_programa, true)){
             //Ingresar las que se quedaron
@@ -166,15 +169,76 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     
     
 }
-else if ($id_operacion = 12){
+else if ($id_operacion == 12){
      //Devolver eventos para medicos para formato de tabla
     $id_paciente = $_GET["id_paciente"];
     //echo $id_paciente;
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
-    $json_temp = (terapias::lista_terapias_programa($id_programa));
+    if ($id_programa){
+        $json_temp = (terapias::lista_terapias_programa($id_programa));
+    }
+    else{
+        $json_temp[0]['N'] = "No hay información que mostrar";
+        $json_temp[0]['Terapias'] = "";
+        $json_temp[0]['Precio'] = "";
+        $json_temp[0]['Estado'] = "";
+        $json_temp[0]['Acciones']   = "";
+        $json_final[0]["estado"]=false;
+    }
     //print_r($json_temp);
     $json_final["data"]=$json_temp;
     $json_listo= json_encode($json_final);
     
     echo $json_listo;
+}
+else if ($id_operacion == 13){//Modificar terapias
+    $id_terapia = $_POST["id_terapia"];
+    $modo = $_POST["modo_"];
+    //Cancelamos la terapia 
+    if ($modo == 1){//Cancelar
+        if (terapias::cancelar_terapia($id_terapia)){
+            echo "1";
+        }
+        else{
+            echo "0";
+        }
+    }
+    else if ($modo == 2){//Habilitar
+        $id_terapia = $_POST["id_terapia"];
+        //Cancelamos la terapia    
+        if (terapias::habilitar_terapia($id_terapia)){
+            echo "1";
+        }
+        else{
+            echo "0";
+        }
+    }
+    else{
+        echo "0";
+    }
+    
+}
+else if ($id_operacion == 14){//Cancelar un programa terapeutico
+    $id_programa = $_POST["id_programa"];
+    //Colocar el programa como cancelado
+    $json;
+    $json[0]["estado"]="1";
+    if (terapias::cancelar_programa_terapeutico($id_programa)){
+        //Colocar las instancias de terapias como canceladas
+        if (terapias::cancelar_terapias_programa($id_programa)){
+            //Colocar las citas relacionadas con el programa como canceladas
+           if (!terapias::cancelar_citas_programa($id_programa)){
+               $json[0]["estado"]="0";
+           }           
+        }
+        else{
+            $json[0]["estado"]="0";
+        }
+    }
+    else{
+        $json[0]["estado"]="0";
+    }
+    echo json_encode($json);
+    
+    //Colocar las reservas como canceladas
 }

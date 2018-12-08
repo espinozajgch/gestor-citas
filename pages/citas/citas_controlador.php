@@ -71,7 +71,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         (fecha_inicio, medio_contacto_id_mc,  observaciones, hora_inicio, hora_fin, estado) 
         VALUES (?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, "activo"));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, "pagado"));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -234,12 +234,21 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     echo json_encode($json_retorno);
 }
 else if ($id_operacion == 8){//CANCELAR UNA CITA
-    $id_cita= $_POST["cita"];
+    $id_cita= $_POST["cita"];    
+    $id_programa = terapias::obtener_id_programa_paciente($_POST["id_paciente"]);
     $json_retorno[0]["estado"]=1;
     //Colocamos el estado de la cita en "CANCELADO"
-    if (!citas::cancelar_cita($id_cita)){
-        $json_retorno[0]["estado"]=0;        
+    if (citas::cancelar_cita($id_cita)){
+        if (terapias::cancelar_cita($id_programa, $id_cita)){
+            //NADA
+        }        
+        else{
+            $json_retorno[0]["estado"]=0;        
+        }
     }    
+    else{
+        $json_retorno[0]["estado"]=0;        
+    }
     echo json_encode($json_retorno);
 }
 else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA

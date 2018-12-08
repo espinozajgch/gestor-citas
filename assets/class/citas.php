@@ -211,4 +211,25 @@ class citas {
             return false;
         }
     }
+    
+    public static function obtener_id_cita_de_terapia ($id_terapia, $id_programa){
+        $sql = "SELECT rm.id_rm as id_rm, ptt.id_programa_tiene_terapia, t.id_terapia, ptt.programa_terapeutico_id_programa_terapeutico\n"
+    . "FROM reserva_medica rm\n"
+    . "INNER JOIN programa_tiene_terapia ptt ON rm.id_rm = ptt.reserva_medica_id_rm\n"
+    . "INNER JOIN terapia t ON ptt.terapia_id_terapia = t.id_terapia\n"
+    . "WHERE ptt.programa_terapeutico_id_programa_terapeutico = $id_programa AND\n"
+    . "ptt.terapia_id_terapia = $id_terapia";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);        
+        $pdo->execute();        
+        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        $longitud = count($resultados);                
+        if ($longitud>0){                                                    
+            return $resultados[0]["id_rm"];
+        }
+        else{
+            
+            return false;
+        }
+    }
 }

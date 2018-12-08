@@ -21,7 +21,8 @@
                                 <th>N</th>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
-                                <th>Precio</th>        
+                                <th>Precio</th>   
+                                <th>Estado</th>
                                 <th>Acciones</th>                        
                             </tr>
                         </thead>                                            

@@ -67,6 +67,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     <th>Terapias</th>
                     <th>Precio</th>                                
                     <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>                                            
             <tbody >
@@ -74,10 +75,6 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             </tbody>
        </table>
     </div>
-    <div class="col-md-12 col-sm-12 col-xs-12 py-2 margin-bottom-20 pull-right text-right ">
-        <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="redirigir_terapia()">Proceder</button>
-    </div>
-
 </div>
             
 <script type="text/javascript">
@@ -135,7 +132,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         }
                         else{
                             $("#name").val("");
-                            $("#last_name").val("");                            
+                            $("#last_name").val("");  
+                            alert ("Este paciente no existe");
                         }
                     }
                 );
@@ -156,7 +154,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             alert ("Seleccione al menos un medico");
         }
         if (bandera){
-           window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val();
+           window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val()+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
         }
     }
     

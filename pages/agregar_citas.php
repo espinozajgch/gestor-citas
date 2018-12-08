@@ -34,7 +34,10 @@ $hash = "";
             $id_terapia         = $_GET["id_terapia"];
             $rut                = $_GET["rut"];            
             $etiqueta           = "Reservar cita para terapia";
-        }            
+        }        
+        if (isset($_GET["ref"])){
+            $link = $_GET["ref"]."&rut_paciente=".$_GET["rut_paciente"];
+        }
 
 ?>
 <!DOCTYPE html>
@@ -123,7 +126,7 @@ $hash = "";
             }
         ?>)
         {
-            $("#rut_paciente")<?php if (isset($_GET["rut"])) echo ".val(".$rut.")"; ?>.prop('disabled', "true");
+            $("#rut_paciente")<?php if (isset($_GET["rut"])) echo ".val(\"".$rut."\")"; ?>.prop('disabled', "true");
             $("#btn_buscar")<?php if (isset($_GET["rut"])) echo ".trigger('click')"; ?>.prop('disabled', "true");
         }
         
@@ -284,7 +287,7 @@ $hash = "";
                                 </div>
 
                                 <div class="form-row">    
-                                    <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="form-group col-6 col-sm-6 col-md-6" id="contacto">
                                         <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
                                         ?>
                                         <small><strong><label for="medio_contacto">Medio de Contacto</label></strong></small>
@@ -677,9 +680,10 @@ $hash = "";
                 var respuesta = JSON.parse(result);
                 console.log(respuesta[0].str_debug);
                 if (respuesta[0].estado == 1){
-                    $("#rut_paciente").val(respuesta[1].rut);
-                    $("#btn_buscar").trigger('click');
-                    $("#medio_contacto").val(respuesta[1].medio_contacto);
+                    $("#rut_paciente").val(respuesta[1].rut).prop("disabled",true);
+                    $("#btn_buscar").trigger('click').prop("disabled",true);
+                    $("#medio_contacto").val(respuesta[1].medio_contacto).prop("disabled", true);
+                    $("#contacto").hide();
                     $("#observaciones").val(respuesta[1].observaciones).trigger('change');
                     $("#fecha_a").val(respuesta[1].fecha_inicio);
                     $("#fecha_a").val(respuesta[1].fecha_inicio);
@@ -698,7 +702,8 @@ $hash = "";
 
             $.post("citas/citas_controlador.php",
             {
-                id_operacion: 8
+                id_operacion: 8,
+                id_paciente: $("#id_oculto").val()
                 <?php if (isset($_GET["cita"])){
                     echo ",cita:".$_GET["cita"];
                 }?>
