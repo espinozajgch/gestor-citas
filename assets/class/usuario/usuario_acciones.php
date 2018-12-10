@@ -188,6 +188,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 			//Prop::cambiar_estatus_by_hash_usuario($bd, $estatus, $hash);
 		}
+		else
+		if($accion==8){
+			
+			//AGREGAR HISTORIA
+			$id_paciente = $_POST["id"];
+			$historia = $_POST["historia"];
+			$res=pacientes::agregar_historia($bd, $id_paciente, $historia);
+			$estado = 1;
+		}
+		if($accion==9){
+			
+			//EDITAR HISTORIA
+			$id_hm = $_POST["id"];
+			$historia = $_POST["historia"];
+			$res=pacientes::editar_historia($bd, $id_hm, $historia);
+			$estado = 1;
+		}
+		if($accion==10){
+			
+			//ELIMINAR HISTORIA
+			$id_hm = $_POST["id"];
+			
+			$res=pacientes::eliminar_historia($bd, $id_hm);
+			$estado = 1;
+		}
 
 		echo json_encode(array("estado"=>$estado, "mensaje"=>$res), JSON_FORCE_OBJECT);	
     		

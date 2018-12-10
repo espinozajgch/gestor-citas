@@ -786,4 +786,199 @@
 
 		}
 
+		/**
+		retorna 
+		*/
+		public static function agregar_historia($bd, $id_paciente, $historico)
+		{
+			// Sentencia INSERT
+			$consulta = "INSERT INTO historias_medicas ( " .
+				" descripcion,".
+				" id_paciente)".
+				" VALUES(?,?)";
+
+		   try {
+
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute(array($historico,$id_paciente));
+
+				return $resultado;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			} 	
+		}
+
+		/**
+		retorna 
+		*/
+		public static function editar_historia($bd, $id_hm, $historico)
+		{
+			// Sentencia INSERT
+			$consulta = "UPDATE historias_medicas SET" .
+				" descripcion = ?" .
+				" WHERE id_hm = ?";
+
+		   try {
+
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute(array($historico, $id_hm));
+
+				return $resultado;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			} 	
+		}
+
+		/**
+		retorna 
+		*/
+		public static function obtener_historia($bd, $id_hm){
+
+			$consulta = "SELECT descripcion FROM historias_medicas WHERE id_hm = ?";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute(array($id_hm));
+				$row = $comando->fetch(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row["descripcion"];								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
+
+		/**
+		retorna 
+		*/
+		public static function obtener_fecha_historia($bd, $id_hm){
+
+			$consulta = "SELECT fecha FROM historias_medicas WHERE id_hm = ?";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute(array($id_hm));
+				$row = $comando->fetch(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row["fecha"];								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
+		/**
+		retorna 
+		*/
+		public static function obtener_historias_de_pacientes($bd, $id_paciente){
+
+			$consulta = "SELECT * FROM historias_medicas WHERE id_paciente = ?";
+
+			//echo $consulta;
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute(array($id_paciente));
+				$row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row;								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
+		/**
+		retorna 
+		*/
+		public static function obtener_lista_historias($bd){
+
+			$consulta = "SELECT * FROM historias_medicas";
+
+			//echo $consulta;
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute();
+				$row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row;								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
+		/**
+		retorna 
+		*/
+		public static function eliminar_historia($bd, $id_hm)
+		{
+			// Sentencia INSERT
+		   	$consulta = "DELETE FROM historias_medicas WHERE id_hm = ". $id_hm;
+		   	//echo $consulta;
+		   	
+		   	try {
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute();
+
+				if($resultado){
+					return 1;       	
+				}
+				return 0;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			}
+		}
+
+		/**
+		retorna 
+		*/
+		public static function obtener_id_paciente_by_historia($bd, $id_hm){
+
+			$consulta = "SELECT id_paciente FROM historias_medicas WHERE id_hm = ?";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute(array($id_hm));
+				$row = $comando->fetch(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row["id_paciente"];								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
+
+
 }

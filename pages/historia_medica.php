@@ -2,6 +2,8 @@
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
 require_once("../assets/class/utilidades.php");
+require_once("../assets/class/usuario/usuarios_data.php");
+
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
@@ -44,7 +46,11 @@ $usuario  = "";
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
     <link href="../dist/css/estilos.css" rel="stylesheet"> 
+        <!-- DataTables CSS -->
+    <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
 
+    <!-- DataTables Responsive CSS -->
+    <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
     <style type="text/css">
 
     </style>
@@ -117,50 +123,40 @@ $usuario  = "";
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
+    <!-- DataTables JavaScript -->
+    <script src="../vendor/datatables/js/jquery.dataTables.js"></script>
+    <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
 
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('#dataTables-example').DataTable({
+                responsive: true
+            });
+        });
+                
         var id_pregunta = 0;
-        $('.button_on').click(function() {
-            idrow = $(this).attr("cod");
 
-            if($('#' + idrow).find(".button_off").css("display")=="none"){
-                estado=1;
-                $('#' + idrow).find(".button_on").css("display","none");
-                $('#' + idrow).find(".button_off").css("display","");
-                cambiar_estatus(idrow,estado);
-            }
-        });
-
-        $('.button_off').click(function() {
-            idrow = $(this).attr("cod");
-
-            if($('#' + idrow).find(".button_on").css("display")=="none"){
-                estado=0;
-                $('#' + idrow).find(".button_off").css("display","none");
-                $('#' + idrow).find(".button_on").css("display","");
-                cambiar_estatus(idrow,estado);
-            }
-        });
 
         $('.delete').click(function() {
             id_pregunta=$(this).attr("cod");
             //console.log(id_pregunta);
-            $("#body_trash").html("<strong>Pregunta #"+id_pregunta+"</strong>");
+            $("#body_trash").html("<strong>Elemento #"+id_pregunta+"</strong>");
             $("#modal_trash").modal('show');
         });
 
         $('#erase').click(function() {
 
             $.ajax({
-                data:  {accion: 8 ,id : id_pregunta},
-                url:   '../assets/class/ajustes_acciones.php',
+                data:  {accion: 10 ,id : id_pregunta},
+                url:   '../assets/class/usuario/usuario_acciones.php',
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
                     //respuesta = JSON.stringify(data);
                     console.log(data);
                     $("#modal_trash").modal('hide');
-                     window.location.href="preguntas_global.php";
+                     window.location.href="historia_medica.php";
 
                     /*if(data.estado == 0){
                     }

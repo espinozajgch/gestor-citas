@@ -52,6 +52,7 @@ $recuerdame=0;
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="dist/css/estilos.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -63,6 +64,15 @@ $recuerdame=0;
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <style type="text/css">
+        .img-responsive {
+            display: block;
+            max-width: 100%;
+            /*height: 170px;/**/
+            margin: 0 auto;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -70,7 +80,9 @@ $recuerdame=0;
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
+                
                 <div class="login-panel panel panel-default">
+                    <img src="dist/img/logo1.png" class="img-responsive">
                     <div class="panel-heading">
                         <h3 class="panel-title">Inicio de Sesión</h3>
                     </div>
@@ -89,7 +101,7 @@ $recuerdame=0;
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button id="sign_in" class="btn btn-lg btn-info btn-block">Ingresar</button>
+                                <button id="sign_in" class="btn btn-lg btn-success btn-block">Ingresar</button>
                             </fieldset>
                         </form>
                     </div>

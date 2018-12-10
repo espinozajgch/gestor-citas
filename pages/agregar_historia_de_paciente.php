@@ -1,21 +1,39 @@
 <?php
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
+require_once("../assets/class/usuario/usuarios_data.php");
 require_once("../assets/class/utilidades.php");
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
-$terminos = "";
+$historia = "";
+$id_paciente = "";
+$id_hm = "";
+
     session_start();
     if(isset($_SESSION["recuerdame_admin"])){
         $bd = connection::getInstance()->getDb();
         $hash = $_SESSION["recuerdame_admin"];
         $usuario = $_SESSION["buscahogar_admin"];
         $id_rol = Admin::obtener_rol($bd, $hash);
-        //$terminos = utilidades::obtener_terminos($bd);
+
     }
     else{
         header("Location:../index.php");
+    }
+
+
+    if(isset($_GET["id_hm"])){
+        $id_hm = $_GET["id_hm"];
+        $historia = pacientes::obtener_historia($bd,$id_hm);
+        $accion = 9;
+
+    }
+
+    if(isset($_GET["id_paciente"])){
+        $id_paciente = $_GET["id_paciente"];
+        $accion = 8;
+
     }
 
 ?>
@@ -66,7 +84,7 @@ $terminos = "";
 
                 <div class="col-lg-12">
                     <br>
-                    <a class="btn btn-sm btn-success shared" href="historia_medica_de_paciente.php" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+                    <a class="btn btn-sm btn-success shared" href="historia_medica_de_paciente.php?id=<?php echo $id_paciente ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                     <h1 class="page-header">Historia Medica</h1>
 
                 </div>
@@ -76,12 +94,15 @@ $terminos = "";
             <!-- /.row -->
 
             <div class="row">
-                <form id="form_terminos">
+                <input type="hidden" id="id_paciente" name="id_paciente" value="<?php echo $id_paciente ?>">
+                <input type="hidden" id="id_hm" name="id_hm" value="<?php echo $id_hm ?>">
+                <input type="hidden" id="accion" name="accion" value="<?php echo $accion ?>">
+                <form id="form_historia">
                     <div class="form-group">
-                    <!--label> Terminos y Condiciones</label-->
+                    <!--label> historia y Condiciones</label-->
 
                         <textarea id='summernote'">
-                            <?php echo $terminos ?>
+                            <?php echo $historia ?>
                         </textarea>
                         </div>
 
@@ -131,33 +152,32 @@ $terminos = "";
           });
         });
 
-        /*$(".form-control").on("keyup",function(e){
-            var id=$(this).attr("id");
-
-            if(id != null)
-                if(id=="place" || id=="street"){
-                    $("#"+id).removeClass('is-invalid').addClass('is-valid'); 
-                    ocultar_err_msg("#error_"+id); 
-                }
-        });/**/
-
         $("#btnguardar").click(function(e){
             e.preventDefault();
 
-            //console.log("prueba" + $('#summernote').val());
+            accion = $("#accion").val();
 
-            terminos = $('#summernote').val();
+            if(accion == 8){
+                id = $("#id_paciente").val();
+                id_paciente = id;
+            }
+            else{
+                id = $("#id_hm").val();
+            }
+
+            historia = $('#summernote').val();
 
             $.ajax({
-                data:  {accion:5,terminos : terminos},
-                url:   '../assets/class/ajustes_acciones.php',
+                data:  {accion:accion, historia : historia, id : id},
+                url:   '../assets/class/usuario/usuario_acciones.php',
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
                     console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
-                    //window.location.href="listado_global.php";
+                    
+                    window.location.href="historia_medica_de_paciente.php?id="+id_paciente;
                 },
                 error: function(data){
                     $("#msgerror_danger").show();

@@ -4,8 +4,6 @@
             <tr>
                 <th>Fecha</th>
                 <th>Resumen</th>
-                <th>Rut</th>
-                <th>Paciente</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -13,8 +11,6 @@
             <tr>
                 <th>Fecha</th>
                 <th>Resumen</th>
-                <th>Rut</th>
-                <th>Paciente</th>
                 <th>Acciones</th>
             </tr>
         </tfoot>
@@ -22,40 +18,31 @@
 
 
 		<?php
-			//$datos = Usuarios::obtener_lista_inmobiliarias($bd);
-			$datos = "";
-			$lista = "";
+            $datos = Pacientes::obtener_lista_historias($bd);
+            $lista = "";
 
-
-			/*foreach ($datos as $inmobiliarias) {
+            if($datos)
+            foreach ($datos as $historia) {
                 $des = "";
                 $hab = "";
+                $resumen =  substr($historia["descripcion"],0,50);
 
-                if($inmobiliarias["estatus"]==1){
-                    $hab = "display:none";
-                }
-                else{
-                    $des = "display:none";
-                }
+                //$hash_usuario =  $historia["hash"];
+                $cantidad = 1; //  Usuarios::obtener_cant_publicaciones_by_user($bd, $hash_usuario);
 
-                $hash_usuario =  $inmobiliarias["hash"];
-                $cantidad =  Usuarios::obtener_cant_publicaciones_by_user($bd, $hash_usuario);
-
-				$lista .= ' <tr id='.$inmobiliarias['id_usuario'].'>
-                            <td class="center text-center pull-center"><img src="../../img/users/'. $inmobiliarias["logo"] .'" class="logo_panel"></td>
-                            <td>'. $inmobiliarias["nombre"] .'</td>
-                            <td>'. $inmobiliarias["email"] .'</td>
-                            <td class=" text-center pull-center"><span class="badge badge-info">'. $cantidad .'</span></td>
+                $lista .= ' <tr id='.$historia['id_hm'].'>
+                            <td class="center text-center pull-center">'. $historia["fecha"] .'</td>
+                            <td>'. $resumen .'</td>
                             <td class="center text-center pull-center">
-								<btn class="btn btn-sm btn-success button_on" cod="'.  $inmobiliarias['id_usuario'] .'" title="Habilitar" style="'. $hab .'"><i class="fa fa-eye"></i></btn>
-								<!--btn class="btn btn-sm btn-danger button_off" cod="'.  $inmobiliarias['id_usuario'] .'" title="Deshabilitar" style="'. $des .'"><i class="fa fa-eye-slash"></i></btn>
-								<a class="btn btn-sm btn-info shared" href="agregar_usuario.php?accion=2&tipo=2&id='.  $inmobiliarias['hash'] .'" title="Editar"><i class="fa fa-edit"></i></a-->
+                                <a class="btn btn-sm btn-info shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'" target="_Blank" title="Descargar Reporte"><i class="fa fa-download"></i></a>
+                                <btn class="btn btn-sm btn-danger delete" cod="'.  $historia['id_hm'] .'" title="Eliminar"><i class="fa fa-trash"></i></btn>
+
                             </td>
                         </tr>';
 
-			}
-			echo $lista;**/
-		?>
+            }
+            echo $lista;/**/
+        ?>
 
         </tbody>
      </table>

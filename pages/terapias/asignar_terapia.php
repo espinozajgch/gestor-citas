@@ -176,14 +176,17 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 id:                 $("#id_oculto").val(),
                 nombre_programa:    $("#name_programa").val()
             },function (result){
-                var json = JSON.parse(result);                        
+                //window.location = ""
+                $("#alert_ok").show(500);
+                /*var json = JSON.parse(result); 
+                console.log(json);                       
                 if (json[0].estado == 1){
                     console.log(json[0].str_debug);
                     $("#alert_ok").show(500);
                 }
                 else{
                     alert ("ERROR");
-                }
+                }*/
             });
         }
     }
