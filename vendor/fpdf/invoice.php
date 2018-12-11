@@ -208,7 +208,7 @@ function addDate( $date )
 	$this->Line( $r1, $mid, $r2, $mid);
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1+3 );
 	$this->SetFont( "Arial", "B", 10);
-	$this->Cell(10,5, "DATE", 0, 0, "C");
+	$this->Cell(10,5, "FECHA", 0, 0, "C");
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1+9 );
 	$this->SetFont( "Arial", "", 10);
 	$this->Cell(10,5,$date, 0,0, "C");
@@ -225,7 +225,7 @@ function addClient( $ref )
 	$this->Line( $r1, $mid, $r2, $mid);
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1+3 );
 	$this->SetFont( "Arial", "B", 10);
-	$this->Cell(10,5, "CLIENT", 0, 0, "C");
+	$this->Cell(10,5, "CLIENTE", 0, 0, "C");
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1 + 9 );
 	$this->SetFont( "Arial", "", 10);
 	$this->Cell(10,5,$ref, 0,0, "C");
@@ -242,7 +242,7 @@ function addPageNumber( $page )
 	$this->Line( $r1, $mid, $r2, $mid);
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1+3 );
 	$this->SetFont( "Arial", "B", 10);
-	$this->Cell(10,5, "PAGE", 0, 0, "C");
+	$this->Cell(10,5, "PAG", 0, 0, "C");
 	$this->SetXY( $r1 + ($r2-$r1)/2 - 5, $y1 + 9 );
 	$this->SetFont( "Arial", "", 10);
 	$this->Cell(10,5,$page, 0,0, "C");
