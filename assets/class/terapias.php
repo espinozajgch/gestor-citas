@@ -257,12 +257,19 @@ class terapias {
             $json[0]['N'] = "No hay información que mostrar";
             $json[0]['Paciente'] = "";
             $json[0]['Cantidad de terapias'] = "";
+            $json[0]['Acciones'] = "";
             
         }
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
             $json[$i]['Paciente'] = $resultados[$i]["nombre"];
             $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
+            $json[$i]['Acciones'] = "
+                    <a title=\"Reservar\" 
+                        class=\"btn btn-info\"  
+                        onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
+                        <i class=\"fa fa-file-text-o\"></i>
+                    </a>";
             
         }        //FORMATO de json
         //descripcion, fecha inicio, fecha fin

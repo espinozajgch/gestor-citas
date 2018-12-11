@@ -242,3 +242,6 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
     
     //Colocar las reservas como canceladas
 }
+else if ($id_operacion == 15){//Generar invoice de terapias por paciente
+    include './reporte_programa.php';
+}

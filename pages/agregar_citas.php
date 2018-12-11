@@ -218,7 +218,7 @@ $hash = "";
                                         <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('b')"><i class="fa fa-calendar fa-bg"></i></a>
                                     </div>-->
                                     
-                                    <div id="contenedor_calendario" class="col-sm-12 col-md-12 my-3" style="max-width: 50%"> 
+                                    <div id="contenedor_calendario" class="col-sm-12 col-md-12 my-3" > 
                                         <div id="calendario">
                                         </div>
                                     </div>                                    
@@ -610,7 +610,12 @@ $hash = "";
                     left: 'prev,next today',
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
-                },                
+                },   
+                businessHours:{
+                    dow: [1,2,3,4,5],
+                    start: '8:00',
+                    end: '18:00'
+                },
                 editable: true,
                 navLinks: true, // can click day/week names to navigate views
                 eventLimit: true, // allow "more" link when too many events
@@ -618,7 +623,7 @@ $hash = "";
                     url: url,
                     method: 'GET'
                 },
-                locale : "es",
+                locale : "es-us",
                 responsive: true,
                 selectable: true,
                 select : function (arg){

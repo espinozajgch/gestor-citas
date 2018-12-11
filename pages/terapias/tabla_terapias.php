@@ -35,6 +35,7 @@ require_once '../assets/class/calendario.php';
                                 <th>N</th>
                                 <th>Paciente</th>
                                 <th>Terapias</th>                                
+                                <th>Acciones</th>      
                             </tr>
                         </thead>                                            
                         <tbody >

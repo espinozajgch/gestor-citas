@@ -2,6 +2,7 @@
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
 require_once '../assets/class/usuario/usuarios_data.php';
+require_once '../vendor/fpdf/invoice.php';
 //require_once '../assets/class/citas.php';
 /* RECUERDAME DE INDEX */
 
@@ -324,7 +325,8 @@ $usuario  = "";
                 "columns": [
                     {"data": "N"},
                     {"data": "Paciente"},                    
-                    {"data": "Terapias"}
+                    {"data": "Terapias"},
+                    {"data": "Acciones"}
                 ]
             });
             
@@ -376,6 +378,10 @@ $usuario  = "";
                 window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
             }
         }
+    }
+    
+    function generar_invoice(id_paciente){
+        window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
     }
 </script>
 

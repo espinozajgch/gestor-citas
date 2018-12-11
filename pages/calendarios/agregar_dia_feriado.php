@@ -115,7 +115,7 @@ function mostrar_calendario(){
             $("#fecha_feriado").val(info.dateStr);
             //$("#calendario").hide();
         },
-        locale: 'es'
+        locale: 'es-us'
         
     });
     

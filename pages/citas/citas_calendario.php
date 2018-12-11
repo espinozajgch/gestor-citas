@@ -77,7 +77,7 @@ require_once '../assets/class/calendario.php';
                         //alert ("Cargado");
                     }
                 },
-                locale : "es",
+                locale : "es-us",
                 responsive: true,
                 navLinks: true,
                 selectable: true

@@ -39,7 +39,7 @@ require_once '../assets/class/calendario.php';
                     $eventos_json = calendario::devolver_eventos_json("url");        
                     echo calendario::devolver_eventos_json("url");
                     ?>,
-                locale: 'es',
+                locale: 'es-us',
                 eventClick: function (info){
                     //alert ("ID:"+info.event.id);                    
                 },
