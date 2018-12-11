@@ -383,6 +383,10 @@ $usuario  = "";
     function generar_invoice(id_paciente){
         window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
     }
+    
+    function generar_invoice_individual(id_reserva){
+        window.open("terapias/terapias_controlador.php?id_operacion=15&reserva="+id_reserva, "_newtab");
+    }
 </script>
 
 </body>

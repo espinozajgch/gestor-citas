@@ -312,9 +312,10 @@ class terapias {
     }
     
     public static function lista_terapias_programa($id_programa){
-        $sql = "SELECT terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t FROM terapia\n"
-    . "INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia\n"
-    . "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa";
+        $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id, rm.id_rm as id_rm, terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t FROM terapia\n"
+    . "INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia\n
+        LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm"
+    . " WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa";
         
         $bd = connection::getInstance()->getDb();
         //echo $sql;
@@ -363,6 +364,14 @@ class terapias {
                         <i class=\"fa fa-edit\"></i>
                     </a>";
                 }
+                
+                $str_btn.="
+                    <a title=\"Generar INVOICE\" 
+                        class=\"btn btn-success\"
+                        onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
+                        <i class=\"fa fa-file\"></i>
+                    </a>
+                    ";
                 $json[$i]['N']          = ($i+1);
                 $json[$i]['Terapias']   = $resultado[$i]["id_terapia"];
                 $json[$i]['Precio']     = $resultado[$i]["precio_t"];

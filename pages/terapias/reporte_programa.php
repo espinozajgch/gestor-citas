@@ -7,12 +7,23 @@ require_once '../../assets/class/terapias.php';
 
 $numero_invoice             =   1;
 $fecha                      =   date("d/m/Y");
-$id_paciente                =   $_GET["id_paciente"];
+$id_paciente;
+$id_programa;
+if (isset($_GET["id_paciente"])){
+    $id_paciente                =   $_GET["id_paciente"];   
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    $condicion = "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;
+}
+else if (isset ($_GET["reserva"])){
+    $id_reserva = $_GET["reserva"];
+    $condicion = "WHERE programa_tiene_terapia.id_programa_tiene_terapia =".$id_reserva;
+}
+
 $modo_pago                  =   "MODO DE PAGO";
 $fecha_vencimiento          =   "02/01/2018";
 $nombre_paciente            =   "Nombre_paciente";
 
-$id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+
 /*$sql = "SELECT paciente.apellido as apellido_p, paciente.RUT as rut, paciente.nombre as nombre_p, 
 paciente.direccion as direccion_p,terapia.id_terapia as id_terapia,
 programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t,
@@ -25,7 +36,7 @@ INNER JOIN paciente ON programa_terapeutico.paciente_id_paciente = paciente.id_p
 WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;//*/
 
 $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p, rm.fecha_inicio as fecha_c, paciente.apellido as apellido_p, paciente.RUT as rut, paciente.nombre as nombre_p, paciente.direccion as direccion_p,terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t, programa_terapeutico.descripcion_programa_terapeutico as desc_p FROM terapia INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia INNER JOIN programa_terapeutico ON programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico = programa_terapeutico.id_programa_terapeutico INNER JOIN paciente ON programa_terapeutico.paciente_id_paciente = paciente.id_paciente LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm\n"
-    . "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;
+    .$condicion ;
 $bd = connection::getInstance()->getDb();
 //echo $sql;
 $pdo = $bd->prepare($sql);
