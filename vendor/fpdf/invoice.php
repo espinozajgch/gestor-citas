@@ -144,13 +144,15 @@ function addSociete( $nom, $adresse )
 	$this->SetXY( $x1, $y1 );
 	$this->SetFont('Arial','B',12);
 	$length = $this->GetStringWidth( $nom );
-	$this->Cell( $length, 2, $nom);
+	//$this->Cell( $length, 2, $nom);
 	$this->SetXY( $x1, $y1 + 4 );
 	$this->SetFont('Arial','',10);
 	$length = $this->GetStringWidth( $adresse );
 	//Coordonn�es de la soci�t�
+        $image1 = "../../dist/img/logo.jpg";
 	$lignes = $this->sizeOfText( $adresse, $length) ;
-	$this->MultiCell($length, 4, $adresse);
+        $this->Cell( 40, 40, $this->Image($image1, $this->GetX(), $this->GetY(), 100), 0, 0, 'L', false );
+	//$this->MultiCell($length, 4, $adresse);
 }
 
 // Label and number of invoice/estimate
@@ -162,7 +164,7 @@ function fact_dev( $libelle, $num )
     $y2  = $y1 + 2;
     $mid = ($r1 + $r2 ) / 2;
     
-    $texte  = $libelle . ":#" . $num;    
+    $texte  = $libelle;    
     $szfont = 12;
     $loop   = 0;
     
@@ -199,7 +201,7 @@ function addFacture( $numfact )
 
 function addDate( $date )
 {
-	$r1  = $this->w - 61;
+	$r1  = $this->w - 43;
 	$r2  = $r1 + 30;
 	$y1  = 17;
 	$y2  = $y1 ;
@@ -233,7 +235,7 @@ function addClient( $ref )
 
 function addPageNumber( $page )
 {
-	$r1  = $this->w - 80;
+	$r1  = $this->w - 75;
 	$r2  = $r1 + 19;
 	$y1  = 17;
 	$y2  = $y1;
@@ -251,7 +253,7 @@ function addPageNumber( $page )
 // Client address
 function addClientAdresse( $adresse )
 {
-	$r1     = $this->w - 80;
+	$r1     = 15;
 	$r2     = $r1 + 68;
 	$y1     = 40;
 	$this->SetXY( $r1, $y1);
@@ -315,13 +317,16 @@ function addNumTVA($tva)
 function addReference($ref)
 {
 	$this->SetFont( "Arial", "", 10);
-	$length = $this->GetStringWidth( "Paciente : " . $ref );
+	$length = $this->GetStringWidth( $ref );
+        $this->Line(10, 40, 10, 100);
+        $this->Line(10, 40, $this->GetPageWidth()-10, 40);
 	$r1  = 10;
 	$r2  = $r1 + $length;
-	$y1  = 92;
+	$y1  = 40;
 	$y2  = $y1+5;
 	$this->SetXY( $r1 , $y1 );
-	$this->Cell($length,4, "Referencia : " . $ref);
+	$this->MultiCell(100,4,$ref);
+        
 }
 
 function addCols( $tab )
