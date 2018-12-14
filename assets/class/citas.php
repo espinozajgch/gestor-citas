@@ -182,6 +182,17 @@ class citas {
         return $pdo->execute(array($id_reserva, "pagado"));
     }
     
+    public static function validar_cita($id_cita){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE reserva_medica
+        SET estado=?
+            WHERE id_rm = ".$id_cita;
+        $pdo = $bd->prepare($sql);        
+        //echo "<br>".$sql;
+        return $pdo->execute(array("atendida"));
+    }    
+    
+    
     public static function obtener_nombre_medicos ($id_cita){
         $bd = connection::getInstance()->getDb();
         $sql = "SELECT ad.nombre as nombre_m \n"

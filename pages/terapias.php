@@ -91,6 +91,9 @@ $usuario  = "";
                         else if ($_GET["opcion"]==5){
                             include_once("terapias/lista_terapias.php");
                         }
+                        else if ($_GET["opcion"]==6){
+                            include_once './terapias/detalle_programa.php';
+                        }
                     }                    
                     
                     ?>
@@ -356,7 +359,11 @@ $usuario  = "";
                     {"data": "Precio"},                    
                     {"data": "Estado"},
                     {"data": "Acciones"}
-                ]
+                ],
+                "initComplete": function (settings, json){
+                    $("#texto_programa").html(json.data[0].desc_prt);
+                    $("#botones_dinamicos").html(json.data[0].btn_validar_prg);
+                }
             });
     }
     
@@ -386,6 +393,41 @@ $usuario  = "";
     
     function generar_invoice_individual(id_reserva){
         window.open("terapias/terapias_controlador.php?id_operacion=15&reserva="+id_reserva, "_newtab");
+    }
+    
+    function validar_terapia(programa, terapia, cita){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion: 16,
+            programa    : programa,
+            terapia     : terapia,
+            cita        : cita
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){//Exito
+                alert ("La cita ha sido validada");
+                console.log (respuesta[0].str_debug);
+                $("#btn_buscar").trigger("click");
+            }
+            else{
+                alert ("Ocurrió un error al validar la terapia");
+                console.log (respuesta[0].str_debug);
+                
+            }
+        });
+    }
+    
+    function validar_programa(programa){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion: 17,
+            programa: programa
+        }, function(result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                alert ("Programa validado con exito");
+            }
+        });
     }
 </script>
 

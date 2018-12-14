@@ -246,3 +246,37 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
 else if ($id_operacion == 15){//Generar invoice de terapias por paciente
     include './reporte_programa.php';
 }
+else if ($id_operacion == 16){//Validar una terapia como culminada
+    $id_programa    = $_POST["programa"];
+    $id_terapia     = $_POST["terapia"];
+    $id_cita        = $_POST["cita"];
+    //Primero validamos en la tabla de programa tiene terapia
+    $json;
+    $str_debug=" ";
+    $json[0]["estado"] = 1;
+    //Luego validamos en la reserva
+    if (terapias::validar_terapia($id_programa, $id_terapia)){
+        $str_debug.="TERAPIA_VALIDADA $id_programa - $id_terapia ";
+        if (citas::validar_cita($id_cita)){
+            $str_debug.="CITA_VALIDADA: $id_cita";
+        }
+    }
+    else{
+        $str_debug .= "ERROR PARA LOS PAAMETROS programa=$id_programa, terapia=$id_terapia y cita=$id_cita";
+        $json[0]["str_debug"]=$str_debug;
+        $json[0]["estado"] = 0;
+    }
+    $json[0]["str_debug"]=$str_debug;
+    echo json_encode($json);    
+}
+else if ($id_operacion == 17){
+    $id_programa=$_POST["programa"];
+    $json;
+    $str_debug=" ";
+    $json[0]["estado"] = 1;
+    //Validar el programa
+    if (!terapias::validar_programa($id_programa)){
+        $json[0]["estado"] = 0;
+    }
+    echo json_encode($json);
+}

@@ -159,7 +159,9 @@ class terapias {
     }
     
     public static function obtener_id_programa_paciente ($id_paciente){
-        $sql = "SELECT * FROM `programa_terapeutico` WHERE `paciente_id_paciente`=".$id_paciente." AND estado NOT LIKE \"cancelado\"";
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `paciente_id_paciente`=".$id_paciente." 
+                AND estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\"";
         $bd = connection::getInstance()->getDb();
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -234,12 +236,14 @@ class terapias {
          //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT p.id_paciente as id_p, pt.id_programa_terapeutico as programa, p.nombre as nombre, COUNT(t.id_terapia) Terapias \n"
+        $sql = "SELECT p.id_paciente as id_p, pt.id_programa_terapeutico as programa,
+            p.nombre as nombre, COUNT(t.id_terapia) Terapias \n"
     . "FROM paciente p \n"
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "GROUP BY p.nombre";
+    . "WHERE pt.estado NOT LIKE \"%culminado\"
+        GROUP BY p.nombre";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         
@@ -265,10 +269,15 @@ class terapias {
             $json[$i]['Paciente'] = $resultados[$i]["nombre"];
             $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
             $json[$i]['Acciones'] = "
-                    <a title=\"Reservar\" 
+                    <a title=\"Generar invoice\" id=\"btn_reserva\" 
                         class=\"btn btn-info\"  
                         onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
                         <i class=\"fa fa-file-text-o\"></i>
+                    </a>
+                    <a title=\"Detalle programa\" 
+                        class=\"btn btn-info\"  
+                        href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."\">
+                        <i class=\"fa fa-eye\"></i>
                     </a>";
             
         }        //FORMATO de json
@@ -316,7 +325,7 @@ class terapias {
             rm.id_rm as id_rm, terapia.id_terapia as id_terapia, 
             programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, 
             terapia.precio_terapia as precio_t, terapia.id_terapia as id_t,
-            prt.descripcion_programa_terapeutico desc_prt
+            prt.descripcion_programa_terapeutico desc_prt, prt.id_programa_terapeutico as prt_id
             FROM terapia            
             INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
             INNER JOIN programa_terapeutico prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
@@ -331,6 +340,7 @@ class terapias {
         $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
         if ($resultado){
             $longitud = count($resultado);
+            $bandera_validar_programa = true;
             //echo $longitud;
             $json[0]["estado"] = 1;
             $json[0]["desc_prt"] = $resultado[0]["desc_prt"];
@@ -353,8 +363,9 @@ class terapias {
                         onclick = \"seleccionar_terapia($id_terapia, 1)\">
                         <i class=\"fa fa-edit\"></i>
                     </a>";
+                    $bandera_validar_programa = false;
                 }
-                else if($resultado[$i]["estado_t"]=="asignado"){
+                else if($resultado[$i]["estado_t"]=="pagado"){
                     $id_cita = citas::obtener_id_cita_de_terapia($id_terapia, $id_programa);
                     //Se puede modificar la cita que se habia reservado
                     $str_btn = "
@@ -362,7 +373,13 @@ class terapias {
                         class=\"btn btn-warning\"  
                         onclick = \"seleccionar_terapia($id_cita, 2)\">
                         <i class=\"fa fa-edit\"></i>
+                    </a>
+                            <a title=\"Validar terapia\" 
+                        class=\"btn btn-success\"
+                        onclick=\"validar_terapia(".$resultado[$i]["ptt_id"].", ".$resultado[$i]["id_terapia"].", ".$resultado[$i]["id_rm"].")\">
+                        <i class=\"fa fa-check\"></i>
                     </a>";
+                    $bandera_validar_programa = false;
                 }                
                 else if ($resultado[$i]["estado_t"]=="cancelado") {
                     $str_btn = "
@@ -370,6 +387,7 @@ class terapias {
                         class=\"btn btn-danger\">
                         <i class=\"fa fa-edit\"></i>
                     </a>";
+                    $bandera_validar_programa = false;
                 }
                 
                 $str_btn.="
@@ -378,6 +396,7 @@ class terapias {
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-file\"></i>
                     </a>
+                    
                     ";
                 $json[$i]['N']          = ($i+1);
                 $json[$i]['Terapias']   = $resultado[$i]["id_terapia"];
@@ -386,6 +405,14 @@ class terapias {
                 $json[$i]['Acciones']   = $str_btn;
 
             }   
+            if ($bandera_validar_programa){//Creamos un boton para validar el programa completo
+                $str_btn_validar ="<a title=\"Validar programa completo\" 
+                        class=\"btn btn-success\"
+                        onclick=\"validar_programa(".$resultado[0]["prt_id"].")\">
+                        <i class=\"fa fa-check\"></i>
+                    </a>";
+                $json[0]["btn_validar_prg"]=$str_btn_validar;
+            }
             //$json[1]['html'] = $str;
             return $json;
         }
@@ -398,6 +425,25 @@ class terapias {
             return $json;
         }
     }
+    public static function validar_terapia($id_programa){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_tiene_terapia
+        SET estado=?
+            WHERE id_programa_tiene_terapia = ".$id_programa;
+        $pdo = $bd->prepare($sql);       
+        //echo $sql;
+        return $pdo->execute(array("atendida"));
+    }
+    
+    public static function validar_programa($id_programa){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET estado=?
+            WHERE id_programa_terapeutico = ".$id_programa;
+        $pdo = $bd->prepare($sql);        
+        //echo "<br>".$sql;
+        return $pdo->execute(array("culminado"));
+    }
     
     public static function terapias_paciente ($id_paciente, $format = 'JSON', $solo_activas = false){
         $bd = connection::getInstance()->getDb();
@@ -408,7 +454,7 @@ class terapias {
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
     . "WHERE p.id_paciente = ".$id_paciente;
         if ($solo_activas){
-            $sql.= " AND ptt.estado NOT LIKE \"cancelado\"";
+            $sql.= " AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
         }
         $pdo = $bd->prepare($sql);
         //echo $sql;
