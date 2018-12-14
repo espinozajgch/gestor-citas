@@ -61,6 +61,7 @@ $hash = "";
 
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    //<link href="../dist/css/estilos.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
@@ -128,11 +129,74 @@ $hash = "";
         {
             $("#rut_paciente")<?php if (isset($_GET["rut"])) echo ".val(\"".$rut."\")"; ?>.prop('disabled', "true");
             $("#btn_buscar")<?php if (isset($_GET["rut"])) echo ".trigger('click')"; ?>.prop('disabled', "true");
+            $("#medio_contacto").val("1");
+            $("#contacto").hide();
+            $("#chequeo").hide();
         }
         
     });
     </script>
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
 
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #5cb85c;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
 </head>
 
   <body>
@@ -152,9 +216,15 @@ $hash = "";
                     <h1 class="page-header"><?php echo $etiqueta;?></h1>
 
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-7">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
-                   <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button>
+                   <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button>                   
+                </div>
+                <div class="col-lg-2" id="chequeo">
+                    <label class="switch" title="Alternar chequeo">                        
+                        <input type="checkbox" id="check_slider" onclick="ocultar_campos()">
+                        <span class="slider round"></span>
+                    </label>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -315,7 +385,35 @@ $hash = "";
                                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                             </div>
                                     </div>
-
+                                     <div class="form-row">    
+                                    <div class="form-group col-6 col-sm-6 col-md-6" id="pago">
+                                        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
+                                        ?>
+                                        <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
+                                            <select class="form-control" id="metodo_pago">
+                                                <?php
+                                                $bd = connection::getInstance()->getDb();
+                                                $sql = "SELECT * FROM `metodos_pago`";
+                                                $pdo = $bd->prepare($sql);
+                                                $pdo->execute();
+                                                $resultado = $pdo->fetchall(pdo::FETCH_ASSOC);
+                                                if ($resultado){
+                                                    $longitud = count($resultado);
+                                                    $string = "";                                                            
+                                                    for ($i=0; $i < $longitud; $i++){
+                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\">".$resultado[$i]["nombre"]."</option>";
+                                                    }
+                                                    echo $string;
+                                                }
+                                                else{
+                                                        echo "<option> Ocurrío un error </option>";
+                                                }
+                                                ?>
+                                            </select>
+                                            <div id="error_iva" class="text-danger" style="display:none">
+                                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                            </div>
+                                    </div>
                                     <div class="form-group col-12 col-sm-12 col-md-12">
                                         <small><strong><label for="observaciones">Observaciones</label></strong></small>
                                         <textarea row="3" class="form-control" id="observaciones"><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
@@ -443,6 +541,7 @@ $hash = "";
         }
         
         function enviar_formulario(){
+            //alert ($("#check_slider").prop("checked"));
             var regex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
             var bandera = true;
             //Comprobamos las fechas
@@ -497,8 +596,58 @@ $hash = "";
                     }
                 })
                 ).then(function(){
-                    if (bandera){                        
-                        $.post("citas/citas_controlador.php",
+                    if (bandera){  
+                        var nom_apellido = $("#name").val()+" "+$("#last_name").val();                        
+                        if ($("#check_slider").prop("checked")){//Si es un chequeo creamos un programa terapeutico
+                            bandera = false;
+                            var id_programa = false;
+                            $.when(
+                                $.post("terapias/terapias_controlador.php",
+                                {
+                                    id_operacion:       5,
+                                    terapias_previas:   false,                
+                                    id_paciente:        $("#id_oculto").val(),
+                                    terapias:           1,
+                                    descripcion:        "Diagnóstico preliminar de "+nom_apellido,
+                                    id:                 $("#id_oculto").val(),
+                                    nombre_programa:    "Diagnóstico preliminar de "+nom_apellido
+                                },function (result){               
+                                    var respuesta = JSON.parse(result);
+                                    if (respuesta[0].estado == 1){//Se creo el programa terapeutico
+                                        id_programa = respuesta[0].id_programa;
+                                    }
+                                })).then(function(){                                        
+                                        procesar_informacion(id_programa);
+                                });
+                        }
+                        else{
+                            procesar_informacion(false);
+                        }
+                        
+                    }//FIN IF BANDERA
+                    else{
+                        alert ("No se pudo reservar cita");
+                    }
+                });
+            }
+            else{
+                console.log("Verificar datos");
+            }
+        }
+        
+        function procesar_informacion(id_programa){
+            var terapias=false;
+            var id_terapias=false;
+            if (id_programa){
+                terapias = true;
+                id_terapias = 1;
+            }
+            else{
+                terapias =<?php if (isset($_GET["id_terapia"])){echo "true";}else echo "false";?>;
+                id_terapias = <?php if (isset($_GET["id_terapia"])){echo $_GET["id_terapia"];}else echo "false";?>;
+            }
+            
+            $.post("citas/citas_controlador.php",
                         {
                             id_operacion : <?php
                                 if (isset($_GET["cita"])){
@@ -509,22 +658,24 @@ $hash = "";
                                 else{
                                     echo "\"2\"";
                                 }
-                                if (isset($_GET["id_terapia"])){
-                                    echo ",terapia: true,
-                                        id_terapia: ".$_GET["id_terapia"]."";
-                                }
                             ?>,
-                            fecha_inicio: $("#fecha_a").val(),                            
-                            hora_inicio: $("#hora_a").val(),
-                            hora_fin: $("#hora_b").val(),
-                            id: $("#id_oculto").val(),
-                            medio_contacto: $("#medio_contacto").val(),
-                            observaciones: $("#observaciones").val(),                    
-                            medicos: bandera = $("#medicos").val()
+                            terapia         : terapias,
+                            id_terapia      : id_terapias,
+                            fecha_inicio    : $("#fecha_a").val(),
+                            hora_inicio     : $("#hora_a").val(),
+                            hora_fin        : $("#hora_b").val(),
+                            id              : $("#id_oculto").val(),
+                            medio_contacto  : $("#medio_contacto").val(),
+                            medio_pago      : $("#metodo_pago").val(),
+                            observaciones   : $("#observaciones").val(),                            
+                            medicos         : bandera = $("#medicos").val()
                             }, function (result){
                                 var respuesta = JSON.parse(result);
                                 if (respuesta[0].estado == 1){
                                     alert ("Cita guardada con éxito");
+                                    //Luego de creada la cita, si estamos creando un chequeo, procedemos a crear el programa con esta terapia
+                                   // agregar_chequeo();
+                                    //Luego
                                 }
                                 else{
                                     alert ("Error");
@@ -532,17 +683,7 @@ $hash = "";
                                 $("#alert_ok").show(500);
                                 $("#alert_ok").hide(5000);
                             });
-                    }//FIN IF BANDERA
-                    else{
-                        alert ("No se pudo reservar cita");
-                    }
-                });
-            }
-            else{
-                console.log("Vericar datos");
-            }
         }
-        
         
             
     </script>
@@ -694,6 +835,9 @@ $hash = "";
                     $("#fecha_a").val(respuesta[1].fecha_inicio);
                     $("#hora_a").val(respuesta[1].hora_inicio);
                     $("#hora_b").val(respuesta[1].hora_fin);
+                    $("#metodo_pago").val(respuesta[1].id_mp).prop("disabled", true);
+                    $("#pago").hide();
+                    $("#chequeo").hide();
                 }
                 else{
                     alert ("Error de sistema");
@@ -729,6 +873,17 @@ $hash = "";
         }
     }
             
+    function ocultar_campos(){
+    if ($("#contacto").css('display') == 'none' || $("#contacto").css("visibility") == "hidden"){
+        $("#medio_contacto").val("1");
+        $("#contacto").show();
+    }
+    else{
+        $("#medio_contacto").val("1");
+        $("#contacto").hide();
+    }
+        
+    }
   </script>
   <script src="../vendor/select2/js/select2.full.min.js"></script>
   

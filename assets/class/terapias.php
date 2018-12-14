@@ -312,10 +312,16 @@ class terapias {
     }
     
     public static function lista_terapias_programa($id_programa){
-        $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id, rm.id_rm as id_rm, terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, terapia.id_terapia as id_t FROM terapia\n"
-    . "INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia\n
-        LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm"
-    . " WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa";
+        $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id,
+            rm.id_rm as id_rm, terapia.id_terapia as id_terapia, 
+            programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, 
+            terapia.precio_terapia as precio_t, terapia.id_terapia as id_t,
+            prt.descripcion_programa_terapeutico desc_prt
+            FROM terapia            
+            INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
+            INNER JOIN programa_terapeutico prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
+            LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm"
+            . " WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa";
         
         $bd = connection::getInstance()->getDb();
         //echo $sql;
@@ -326,8 +332,9 @@ class terapias {
         if ($resultado){
             $longitud = count($resultado);
             //echo $longitud;
-            //$json[0]["estado"] = 1;
-            $str="";
+            $json[0]["estado"] = 1;
+            $json[0]["desc_prt"] = $resultado[0]["desc_prt"];
+            $str_btn="";
             if ($longitud<1){
                 $json[0]['N'] = "No hay información que mostrar";
                 $json[0]['Terapias'] = "";

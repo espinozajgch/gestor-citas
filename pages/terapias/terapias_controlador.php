@@ -78,6 +78,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $json[0]["estado"]=1;
     $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
     if ($id_insert!=0){
+        $json[0]["id_programa"] = $id_insert;
         if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
             $cantida_terapias = count($lista_terapias);
             historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);

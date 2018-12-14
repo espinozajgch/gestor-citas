@@ -84,7 +84,7 @@ class calendario {
     . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        WHERE ".$id_medico." AND reserva_medica.estado LIKE \"activo\" AND admin.estado LIKE \"activo\" GROUP BY reserva_medica.id_rm";
+        WHERE ".$id_medico." AND reserva_medica.estado NOT LIKE \"finalizada\" AND admin.estado LIKE \"activo\" GROUP BY reserva_medica.id_rm";
         }
         else{
             $sql = "SELECT id_admin, reserva_medica.id_rm, admin.nombre as nombre_medico, paciente.nombre, paciente.apellido, paciente. rut, reserva_medica.fecha_inicio,\n"
@@ -94,7 +94,7 @@ class calendario {
     . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        AND reserva_medica.estado LIKE \"activo\" AND admin.estado LIKE \"activo\"";
+        AND reserva_medica.estado NOT LIKE \"finalizada\" AND admin.estado LIKE \"activo\"";
         }
         
         $pdo = $bd->prepare($sql);
@@ -229,13 +229,13 @@ class calendario {
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
         $sql = "SELECT (id_admin), id_rm, admin.nombre as nombre_medico, paciente.nombre, paciente.apellido, paciente. rut, reserva_medica.fecha_inicio,\n"
-    . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
+    . "reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.estado as estado_rm \n"
     . "FROM `admin` \n"
     . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin\n"
     . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente\n
-        WHERE paciente.estado_paciente LIKE \"activo\" AND reserva_medica.estado LIKE \"activo\""
+        WHERE paciente.estado_paciente LIKE \"activo\" AND reserva_medica.estado NOT LIKE \"cancelado\""
     . "GROUP BY id_rm";
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -256,14 +256,17 @@ class calendario {
             $json[0]['Paciente'] = "";
             $json[0]['Hora'] = "";
             $json[0]['Fecha'] = "";
+            $json[0]['Estado'] = "";
+            $json[0]['Acciones'] = "";
         }
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['Medico'] = $resultados[$i]["nombre_medico"];
             $json[$i]['Paciente'] = $resultados[$i]["nombre"]." ".$resultados[$i]["apellido"];
             $json[$i]['Hora'] = $resultados[$i]["hora_inicio"];
             $json[$i]['Fecha'] = $resultados[$i]["fecha_inicio"];
+            $json[$i]['Estado'] = $resultados[$i]["estado_rm"];
             $json[$i]['N'] = "<a href=\"agregar_citas.php?cita=".$resultados[$i]["id_rm"]."\">".($i+1)."</a>";
-            //$json[$i]['N'] =  $i;
+            $json[$i]['Acciones'] = "";
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin

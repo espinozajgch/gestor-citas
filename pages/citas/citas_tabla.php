@@ -44,7 +44,9 @@ require_once '../assets/class/calendario.php';
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Paciente</th>
-                                <th>Medico</th>                                
+                                <th>Medico</th>    
+                                <th>Estado</th>
+                                <th>Acciones</th>  
                             </tr>
                         </thead>                                            
                         <tbody >

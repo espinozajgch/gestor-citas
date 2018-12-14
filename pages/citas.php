@@ -232,7 +232,9 @@ $usuario  = "";
                     {"data": "Fecha"},
                     {"data": "Hora"},
                     {"data": "Paciente"},
-                    {"data": "Medico"}
+                    {"data": "Medico"},
+                    {"data": "Estado"},
+                    {"data": "Acciones"}
                 ]
             });
     });

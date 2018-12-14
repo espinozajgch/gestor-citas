@@ -56,7 +56,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
         </div>
     </div>  
-
+    <div class="form-group col-12 col-sm-12 col-md-12">
+        <h2 class="page-header">Nombre del programa: <small id="texto_programa"></small></h2>
+    </div>  
      
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
         <hr>
@@ -88,6 +90,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){
                 $("#terapia_t").html(respuesta[1].html); 
+                $("#texto_programa").html(respuesta[0].desc_prt);
                 
             }
         });
@@ -139,7 +142,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 );
             }
             
-        }
+        }        
+    
     function redirigir_terapia(){
         regex = /[a-zA-Z0-9]+/;
         bandera = true;

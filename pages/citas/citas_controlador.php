@@ -59,8 +59,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
     $medio_contac   =   $_POST["medio_contacto"];
+    $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
+    //$chequeo        =   $_POST["chequeo"];
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
     $tipo_insercion =   1;
     $json_retorno[0]['estado'] = 1;
@@ -68,10 +70,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $bd = connection::getInstance()->getDb();
     
     $sql = "INSERT INTO reserva_medica 
-        (fecha_inicio, medio_contacto_id_mc,  observaciones, hora_inicio, hora_fin, estado) 
-        VALUES (?, ?, ?, ?, ?, ?)";
+        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, "pagado"));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, "pagado"));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -81,6 +83,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
             if (isset($_POST["id_terapia"])){//Si esta puesto, estamos reservando terapia
                 //echo "reservar";
                 $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+                //echo "$id_programa,".$_POST["id_terapia"].", $id_insercion";
                 if (!citas::asignar_reserva_terapia($id_programa, $_POST["id_terapia"], $id_insercion)){
                     $json_retorno[0]['estado'] = 0;                    
                 }else{
@@ -99,6 +102,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
                         "Se reservó la primera cita del paciente para el día $fecha_inicio con los medicos: ".$nombre_medicos,
                         2);
             }
+            //Verificamos si se está haciendo un chequeo, y entonces creamos un programa terapeutico con esa terapia
         }
         else{
             $json_retorno[0]['estado'] = 0;
@@ -165,13 +169,14 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
     
     $id_cita = $_POST["cita"];
     $bd = connection::getInstance()->getDb();
-    $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, 
+    $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, reserva_medica.metodos_pago_id_mp as id_mp,
         reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.observaciones, reserva_medica.medio_contacto_id_mc
         FROM `paciente`         
         INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
-        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm
+        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm        
 		WHERE id_rm = '.$id_cita;
     $pdo = $bd->prepare($sql);        
+    //echo $sql;
     $pdo->execute();   
     $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
     $json;
@@ -187,6 +192,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['hora_fin']       =   $resultados[$i]["hora_fin"];
         $json[$i+1]['medio_contacto'] =   $resultados[$i]["medio_contacto_id_mc"];
         $json[$i+1]['observaciones']  =   $resultados[$i]["observaciones"];
+        $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
     }
     //FORMATO de json
     //descripcion, fecha inicio, fecha fin
@@ -206,11 +212,12 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
     $medio_contac   =   $_POST["medio_contacto"];
+    $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
     $medicos_previos=   $_POST["medicos_previos"];    
             
-    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
+    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
         //Eliminamos las relaciones existentes y luego ingresamos nuevas relaciones        
         if (!citas::remover_medicos_cita($id_cita)){
             //echo "ERROR remover medicos";
