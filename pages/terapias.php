@@ -175,7 +175,7 @@ $usuario  = "";
                 $rut_get=0;
             }
             ?>){
-                    $("#rut_paciente").val(<?php echo $rut_get; ?>);
+                    $("#rut_paciente").val("<?php echo $rut_get; ?>");
                     $("#btn_buscar").trigger('click');
                 }
         });

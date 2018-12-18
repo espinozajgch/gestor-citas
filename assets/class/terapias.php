@@ -242,7 +242,7 @@ class terapias {
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE pt.estado NOT LIKE \"%culminado\"
+    . "WHERE pt.estado NOT LIKE \"%culminado%\" AND pt.estado NOT LIKE \"%cancelado%\"
         GROUP BY p.nombre";
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -374,6 +374,13 @@ class terapias {
                         onclick = \"seleccionar_terapia($id_cita, 2)\">
                         <i class=\"fa fa-edit\"></i>
                     </a>
+                    
+                    <a title=\"Generar INVOICE\" 
+                        class=\"btn btn-success\"
+                        onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
+                        <i class=\"fa fa-file\"></i>
+                    </a>
+                    
                             <a title=\"Validar terapia\" 
                         class=\"btn btn-success\"
                         onclick=\"validar_terapia(".$resultado[$i]["ptt_id"].", ".$resultado[$i]["id_terapia"].", ".$resultado[$i]["id_rm"].")\">
@@ -387,16 +394,18 @@ class terapias {
                         class=\"btn btn-danger\">
                         <i class=\"fa fa-edit\"></i>
                     </a>";
-                    $bandera_validar_programa = false;
+                    //$bandera_validar_programa = false;
                 }
-                
-                $str_btn.="
+                else if ($resultado[$i]["estado_t"]=="atendida") {
+                    $str_btn = "
                     <a title=\"Generar INVOICE\" 
                         class=\"btn btn-success\"
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-file\"></i>
-                    </a>
-                    
+                    </a>";
+                }
+                
+                $str_btn.="
                     ";
                 $json[$i]['N']          = ($i+1);
                 $json[$i]['Terapias']   = $resultado[$i]["id_terapia"];
