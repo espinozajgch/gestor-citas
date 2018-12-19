@@ -37,7 +37,7 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
         $resultado[0]['estado'] = false;
     }
     $json = json_encode($resultado);
-        echo $json;
+    echo $json;
     
     /*for ($i=0; $i<$longitud; $i++){
         

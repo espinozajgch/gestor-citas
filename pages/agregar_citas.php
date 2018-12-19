@@ -486,6 +486,68 @@ input:checked + .slider:before {
     <!--<script src="../../vendor/plugin/html5imageupload/html5imageupload.js"></script>-->
  
     <script type="text/javascript">
+
+        function validar_paciente(){
+            //e.preventDefault();
+            error = false;
+
+            validar_inputs("#doc", "#error_doc");
+            validar_inputs("#name", "#error_name");
+            validar_inputs("#last_name", "#error_last_name");
+            validar_inputs("#second_name", "#error_second_name");
+            validar_inputs("#email", "#error_email");
+            validar_inputs("#phone", "#error_phone"); 
+            validar_inputs("#fijo", "#error_fijo"); 
+            validar_inputs("#direccion", "#error_direccion");
+
+            if(!error){
+                $("#loader-wrapper").fadeIn("fast");
+                accion = $("#accion").val();
+                hash_usuario = "";
+
+                identificacion  = $("#doc").val();
+                nombre = $("#name").val();
+                apellidop = $("#last_name").val();
+                apellidom = $("#second_name").val();
+                email = $("#email").val();
+                telefonos = $("#fijo").val();
+                direccion = $("#direccion").val();
+                phone = $("#phone").val();
+                guardar_paciente(1, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);
+            }
+        };
+
+
+        function guardar_paciente(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone){
+
+                $.ajax({
+                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellidop : apellidop, apellidom : apellidom,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
+                    url:   '../assets/class/usuario/usuario_acciones.php',
+                    type:  'post',
+                    //dataType: "json",
+                    success:  function (data) {
+                        respuesta = JSON.stringify(data);
+                        console.log(data);
+                        //console.log(data.estado);
+
+                        if(data.estado == 0){
+                            $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b> ' + data.mensaje);
+                            $("#msgerror_danger").show();
+                            $("#msg_ok").hide();
+                        }
+                        else{
+                            $("#msg_ok").show();
+                            $("#msgerror_danger").hide();
+                            window.location.href="pacientes.php";
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                        $("#loader-wrapper").fadeOut("fast");
+                        $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
+                    }
+                });/**/
+        }
         
         function validar_paciente(){
             //e.preventDefault();
