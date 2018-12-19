@@ -2,7 +2,7 @@
 require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
 require_once '../assets/class/calendario.php';
-//require_once("../../vendor/class/usuario/usuarios_data.php");
+require_once("../assets/class/usuario/usuarios_data.php");
 
 $user = "";
 $tipo = "";
@@ -51,7 +51,7 @@ $hash = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -61,7 +61,7 @@ $hash = "";
 
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
-    //<link href="../dist/css/estilos.css" rel="stylesheet">
+    <link href="../dist/css/estilos.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
@@ -312,35 +312,42 @@ input:checked + .slider:before {
                                 <div class="form-row">
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="name">Nombre</label></strong></small>
-                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
+                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" disabled>
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="last_name">Apellido</label></strong></small>
-                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
+                                        <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
+                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" autocomplete="off">
                                         <div id="error_last_name" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6 col-sm-6 col-md-6">
+                                        <small><strong><label for="last_name">Apellido Materno</label></strong></small>
+                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div id="error_second_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-12 col-md-12">
                                         <small><strong><label for="inmobiliaria">Direccion</label></strong></small>
-                                        <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" readonly><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
+                                        <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" disabled><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
                                         <div id="error_inmobiliaria" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa el nombre de la inmobiliaria</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="rs">Email</label></strong></small>
-                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" readonly>
+                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" disabled>
                                         <div id="error_rs" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa la razon social</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <small><strong><label for="cuit">Telefono Fijo</label></strong></small>
-                                        <input type="text" class="form-control" id="fijo" placeholder="Telefono Fijo" value="<?php //echo Usuarios::obtener_cuit($bd,$hash); ?>" autocomplete="off" readonly>
+                                        <input type="text" class="form-control" id="fijo" placeholder="Telefono Fijo" value="<?php //echo Usuarios::obtener_cuit($bd,$hash); ?>" autocomplete="off" disabled>
                                         <div id="error_cuit" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa el Telefonos</small>
                                         </div>
@@ -349,7 +356,7 @@ input:checked + .slider:before {
 
                                     <div class="form-group col-6 col-md-6">
                                         <small><strong><label for="phone">Celular</label></strong></small>
-                                        <input id="celular" type="text" class="form-control" placeholder="Celular" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1" readonly>
+                                        <input id="celular" type="text" class="form-control" placeholder="Celular" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1" disabled>
                                         <div id="error_email" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
                                         </div>
@@ -480,6 +487,68 @@ input:checked + .slider:before {
  
     <script type="text/javascript">
         
+        function validar_paciente(){
+            //e.preventDefault();
+            error = false;
+
+            validar_inputs("#doc", "#error_doc");
+            validar_inputs("#name", "#error_name");
+            validar_inputs("#last_name", "#error_last_name");
+            validar_inputs("#second_name", "#error_second_name");
+            validar_inputs("#email", "#error_email");
+            validar_inputs("#phone", "#error_phone"); 
+            validar_inputs("#fijo", "#error_fijo"); 
+            validar_inputs("#direccion", "#error_direccion");
+
+            if(!error){
+                $("#loader-wrapper").fadeIn("fast");
+                accion = $("#accion").val();
+                hash_usuario = "";
+
+                identificacion  = $("#doc").val();
+                nombre = $("#name").val();
+                apellidop = $("#last_name").val();
+                apellidom = $("#second_name").val();
+                email = $("#email").val();
+                telefonos = $("#fijo").val();
+                direccion = $("#direccion").val();
+                phone = $("#phone").val();
+                guardar_paciente(1, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);
+            }
+        };
+
+
+        function guardar_paciente(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone){
+
+                $.ajax({
+                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellidop : apellidop, apellidom : apellidom,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
+                    url:   '../assets/class/usuario/usuario_acciones.php',
+                    type:  'post',
+                    //dataType: "json",
+                    success:  function (data) {
+                        respuesta = JSON.stringify(data);
+                        console.log(data);
+                        //console.log(data.estado);
+
+                        if(data.estado == 0){
+                            $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b> ' + data.mensaje);
+                            $("#msgerror_danger").show();
+                            $("#msg_ok").hide();
+                        }
+                        else{
+                            $("#msg_ok").show();
+                            $("#msgerror_danger").hide();
+                            window.location.href="pacientes.php";
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                        $("#loader-wrapper").fadeOut("fast");
+                        $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
+                    }
+                });/**/
+        }
+        
         /*
          * 
          * buscar_info_paciente()
@@ -503,20 +572,23 @@ input:checked + .slider:before {
         
         function buscar_info_paciente(){
             if ($("#rut_paciente").val()==""){
-                $("#error_rut").show(1500);
-                $("#error_rut").hide(5000);
+                $("#error_rut").fadeIn();
+                $("#error_rut").fadeOut(5000);
             }
             else{
                 $.post("citas/citas_controlador.php",{
                     id_operacion: 1,
                     rut: $("#rut_paciente").val()},
                     function (result){
+                        //console.log(result);
+                        //var json = JSON.stringify(result)
                         var json = JSON.parse(result);
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
                             $("#name").val(json[0].nombre);
-                            $("#last_name").val(json[0].apellido);
+                            $("#last_name").val(json[0].apellidop);
+                            $("#second_name").val(json[0].apellidom);
                             $("#direccion").val(json[0].direccion);
                             $("#email").val(json[0].email);
                             $("#fijo").val(json[0].fijo);
@@ -524,15 +596,16 @@ input:checked + .slider:before {
                             $("#id_oculto").val(json[0].id_paciente);
                         }
                         else{
-                            $("#name").val("");
-                            $("#last_name").val("");
-                            $("#direccion").val("");
-                            $("#email").val("");
-                            $("#fijo").val("");
-                            $("#celular").val("");
+                            $("#name").attr('disabled', false);
+                            $("#last_name").attr('disabled', false);
+                            $("#second_name").attr('disabled', false);
+                            $("#direccion").attr('disabled', false);
+                            $("#email").attr('disabled', false);
+                            $("#fijo").attr('disabled', false);
+                            $("#celular").attr('disabled', false);
                             $("#id_oculto").val("");                            
-                            $("#error_rut").show(1500);
-                            $("#error_rut").hide(5000);
+                            //$("#error_rut").show(1500);
+                            //$("#error_rut").hide(5000);
                         }
                     }
                 );

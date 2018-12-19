@@ -28,9 +28,12 @@ $id_hm = "";
         $historia = pacientes::obtener_historia($bd,$id_hm);
         $accion = 9;
 
-    }
+        if(isset($_GET["id_paciente"]))
+            $id_paciente = $_GET["id_paciente"];
 
-    if(isset($_GET["id_paciente"])){
+    }
+    else{
+    if(isset($_GET["id_paciente"]))
         $id_paciente = $_GET["id_paciente"];
         $accion = 8;
 
@@ -163,6 +166,7 @@ $id_hm = "";
             }
             else{
                 id = $("#id_hm").val();
+                id_paciente = $("#id_paciente").val();
             }
 
             historia = $('#summernote').val();

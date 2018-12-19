@@ -74,7 +74,13 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $nombre_programa = $_POST["nombre_programa"];
     //Obtener el ID del historial del paciente
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
-    $lista_terapias = $_POST["terapias"];
+    $lista_terapias = $_POST["terapias_individual"];
+    $terapia = $lista_terapias[0];
+    $cantidad = $_POST["cantidad"];
+    $count_array =count($lista_terapias);
+    for ($i=0; $i<$cantidad; $i++){
+        $lista_terapias[$count_array+$i]=$terapia;
+    }
     $json[0]["estado"]=1;
     $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
     if ($id_insert!=0){
@@ -102,7 +108,7 @@ else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
 else if ($id_operacion == 7){//Cargar opciones previas
     $id_paciente = $_POST["paciente"];    
     //echo "a";
-    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',true));
+    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     $id_paciente = $_POST["id_paciente"];
@@ -136,7 +142,13 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $lista_terapias         =   $_POST["terapias_previas"];        
     $json[0]["estado"]      =   1;
     $str_debug              =   "Inicio ";
-    
+    $terapia = $_POST["terapias_individual"];
+    $cantidad = $_POST["cantidad"];
+    print_r($lista_terapias);
+    $count_array =count($lista_terapias);
+    for ($i=0; $i<$cantidad; $i++){
+        $lista_terapias[$count_array+$i]=$terapia;
+    }
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
@@ -144,6 +156,12 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
         //Eliminar citas existentes
         if (terapias::eliminar_terapias_programa($id_programa, true)){
             //Ingresar las que se quedaron
+            
+            echo "<br>";
+            print_r($_POST["terapias_individual"]);
+            echo "<br>";
+            print_r($lista_terapias);
+            $lista_terapias[count($lista_terapias)] = $_POST["terapias_individual"];
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";

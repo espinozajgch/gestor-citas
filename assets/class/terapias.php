@@ -32,7 +32,7 @@ class terapias {
         }
     }
     
-    public static function consulta_terapia ($col, $valor, $tipo_dato="varchar"){
+    public static function consulta_terapia($col, $valor, $tipo_dato="varchar"){
         $operador;
         if ($tipo_dato != "varchar"){
             $operador = "=";
@@ -58,7 +58,7 @@ class terapias {
         else return false;
     }            
     
-    public static function consulta_info_terapia ($id_terapia){
+    public static function consulta_info_terapia($id_terapia){
         $json;
         $consulta = "SELECT DISTINCT nombre_terapia, precio_terapia, descripcion_terapia
             FROM terapia 
@@ -85,7 +85,7 @@ class terapias {
         }
     }
     
-    public static function actualizar_terapia ($id_terapia, $nombre, $precio, $descripcion){
+    public static function actualizar_terapia($id_terapia, $nombre, $precio, $descripcion){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE terapia
         SET nombre_terapia=?, descripcion_terapia=?, precio_terapia=?
@@ -94,7 +94,7 @@ class terapias {
         return $pdo->execute(array($nombre, $descripcion, $precio));
     }
     
-    public static function actualizar_programa_terapeutico_basico ($id_programa, $descripcion){
+    public static function actualizar_programa_terapeutico_basico($id_programa, $descripcion){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_terapeutico
         SET descripcion_programa_terapeutico=?
@@ -237,13 +237,7 @@ class terapias {
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
         $sql = "SELECT p.id_paciente as id_p, pt.id_programa_terapeutico as programa,
-            p.nombre as nombre, COUNT(t.id_terapia) Terapias \n"
-    . "FROM paciente p \n"
-    . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
-    . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
-    . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE pt.estado NOT LIKE \"%culminado%\" AND pt.estado NOT LIKE \"%cancelado%\"
-        GROUP BY p.nombre";
+            p.nombre as nombre, COUNT(t.id_terapia) Terapias FROM paciente p INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia WHERE pt.estado NOT LIKE '%culminado' GROUP BY p.nombre";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         
@@ -408,7 +402,7 @@ class terapias {
                 $str_btn.="
                     ";
                 $json[$i]['N']          = ($i+1);
-                $json[$i]['Terapias']   = $resultado[$i]["id_terapia"];
+                $json[$i]['Terapias']   = $resultado[$i]["nombre_t"];
                 $json[$i]['Precio']     = $resultado[$i]["precio_t"];
                 $json[$i]['Estado']     = $resultado[$i]["estado_t"];                
                 $json[$i]['Acciones']   = $str_btn;
@@ -427,10 +421,11 @@ class terapias {
         }
         else{
             //$json[0]["estado"] = 1;
-            $json[0]['N'] = "No hay terapias pendientes por cita";
-            $json[0]['Terapias'] = "";
-            $json[0]['Precio'] = "";
-            $json[0]['Estado'] = "";
+            $json[0]['N']           = "No hay información que mostrar";
+            $json[0]['Terapias']    = "";
+            $json[0]['Precio']      = "";
+            $json[0]['Estado']      = "";
+            $json[0]['Acciones']    = "";
             return $json;
         }
     }

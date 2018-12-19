@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$bd = connection::getInstance()->getDb();
 
 		$accion = $_POST["accion"];
+		$res ="accion invalida";
 
 		if($accion==1){
 			//AGREGAR ADMINISTRADOR

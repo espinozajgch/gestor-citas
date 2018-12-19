@@ -1,22 +1,6 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 require_once '../assets/class/calendario.php';
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-
-
-
-    <?php include_once("../assets/includes/menu.php") ?>
+include_once("../assets/includes/menu.php") ?>
 
         <div id="page-wrapper">
             <input type="hidden" id="hash" name="hash" value="<?php echo $hash ?>">

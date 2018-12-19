@@ -11,8 +11,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     
     var operacion = 5;
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
-        inicializar_lista_terapias();
-        
+        inicializar_lista_terapias("terapias_individual");
+        inicializar_lista_terapias("terapias");
+        //$("#terapias").hide();
         if (<?php 
         if (isset($_GET["terapia"])){
             echo "true";    
@@ -80,21 +81,31 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             </div>
         </div>
 
-        <div class="form-group col-8 col-sm-8 col-md-8">                                        
+        <div class="form-group col-7 col-sm-7 col-md-7">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
-            <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias" >  
-
-            </select>
+            <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
+            <div >
+                <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
+            </div>
+            
 
                 <div id="error_iva" class="text-danger" style="display:none">
                     <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                 </div>
+        </div>        
+        <div class="form-group col-xs-1 col-sm-1 col-md-1">
+            <small><strong><label for="medico">Cantidad</label></strong></small>
+            <input type="number" class="form-control" id="cantidad" placeholder="#" >
+        </div>
+        <div class="form-group col-xs-8 col-sm-8 col-md-8">
+            <br>
+            <button type="button" id="btnguardar" class="btn btn-success btn-sm" onclick="redirigir_terapia()"><i class="fa fa-arrow-right"></i></button>
         </div>
      
 
-        <div class="col-md-8 col-sm-8 col-xs-8 py-2 margin-bottom-20 text-right ">
+<!--        <div class="col-md-8 col-sm-8 col-xs-8 py-2 margin-bottom-20 text-right ">
             <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="redirigir_terapia()">Guardar</button>
-        </div>
+        </div>-->
    
 </div>
 <div id="alert_ok" class="alert alert-success alert-dismissible" role="alert" style="display:none">
@@ -109,10 +120,28 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-            
+    
+    <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
+        <hr>
+       <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_paciente">
+            <thead>
+                <tr>
+                    <th>N</th>
+                    <th>Terapias</th>
+                    <th>Precio</th>                                
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>                                            
+            <tbody >
+
+            </tbody>
+       </table>
+    </div>
+    
 <script type="text/javascript">
     function buscar_info_paciente(){
-        
+            $("#terapias").val(null).trigger('change');
             if ($("#rut_paciente").val()==""){
                 $("#error_rut").show(1500);
                 $("#error_rut").hide(5000);
@@ -131,7 +160,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             $("#id_oculto").val(json[0].id_paciente);                            
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
+                            $("#tabla_paciente").DataTable().destroy();
                             agregar_terapias_existentes($("#id_oculto").val());                                                        
+                            cargar_tabla_terapias();
                             //operacion = 11;
                         }
                         else{
@@ -148,7 +179,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             
         }        
         
-    function redirigir_terapia(){
+    function redirigir_terapia(){        
+        
         regex = /[a-zA-Z0-9]+/;
         bandera = true;
         if (!regex.test($("#name").val())){
@@ -157,14 +189,16 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             $("#error_rut").hide(5000);
             //alert ($("#name").val());
         }     
-        if ($("#terapias").val()==""){
+        if ($("#terapias").val()=="" || $("#cantidad").val()==""){
             bandera = false;
-            alert ("Seleccione al menos una terapia");
+            alert ("Verifique los campos");
         }
         
         if (bandera){
             $("#alert_ok").hide();
             $("#alert_fail").hide();            
+            //Agregamos la terapia seleccionada de la lista desplegable normal
+            //a una lista multiple oculta.                        )
             
             $.post("terapias/terapias_controlador.php",
             {
@@ -172,9 +206,11 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 terapias_previas:   $("#terapias").val(),                
                 id_paciente:        $("#id_oculto").val(),
                 terapias:           $("#terapias").val(),
+                terapias_individual:$("#terapias_individual").val(),
                 descripcion:        $("#descripcion").val(),
                 id:                 $("#id_oculto").val(),
-                nombre_programa:    $("#name_programa").val()
+                nombre_programa:    $("#name_programa").val(),
+                cantidad:           $("#cantidad").val()
             },function (result){
                 //window.location = ""
                 $("#alert_ok").show(500);
@@ -191,8 +227,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         }
     }
     
-    function inicializar_lista_terapias(){        
-            $('#terapias').select2({
+    function inicializar_lista_terapias(id){        
+            $('#'+id).select2({
                 ajax: {
                     url: 'terapias/terapias_controlador.php',
                     dataType: 'json',

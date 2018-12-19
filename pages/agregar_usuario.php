@@ -131,7 +131,7 @@ $estilo_par = "";
                                     </div>
 
                                     <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="name">Nombre</label></strong></small>
+                                        <small><strong><label for="name">Nombres</label></strong></small>
                                         <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo Pacientes::obtener_nombre($bd,$hash_usuario) ?>" autocomplete="off">
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
@@ -139,9 +139,16 @@ $estilo_par = "";
                                     </div>
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="last_name">Apellido</label></strong></small>
-                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellido($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
+                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" autocomplete="off">
                                         <div id="error_last_name" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6 col-sm-6 col-md-6">
+                                        <small><strong><label for="second_name">Apellido Materno</label></strong></small>
+                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div id="error_second_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
@@ -272,6 +279,7 @@ $estilo_par = "";
             validar_inputs("#doc", "#error_doc");
             validar_inputs("#name", "#error_name");
             validar_inputs("#last_name", "#error_last_name");
+            validar_inputs("#second_name", "#error_second_name");
             validar_inputs("#email", "#error_email");
             validar_inputs("#phone", "#error_phone"); 
             validar_inputs("#fijo", "#error_fijo"); 
@@ -285,7 +293,8 @@ $estilo_par = "";
 
                 identificacion  = $("#doc").val();
                 nombre = $("#name").val();
-                apellido = $("#last_name").val();
+                apellidop = $("#last_name").val();
+                apellidom = $("#second_name").val();
                 email = $("#email").val();
                 telefonos = $("#fijo").val();
                 direccion = $("#direccion").val();
@@ -296,28 +305,17 @@ $estilo_par = "";
                     hash_usuario = $("#hash_usuario").val();
                 }
                 
-                guardar_particular(accion, identificacion, nombre, apellido, email, hash_usuario, telefonos, direccion, phone);
+                guardar_particular(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);
 
             }
 
         });
 
 
-        function guardar_particular(accion, identificacion, nombre, apellido, email, hash_usuario, telefonos, direccion, phone){
-            /*
-                console.log(accion);
-                console.log(identificacion);
-                console.log(nombre);
-                console.log(apellido);
-                console.log(email);
-                console.log(hash_usuario);
-                console.log(telefonos);
-                console.log(direccion);
-                console.log(phone);
-            /**/
+        function guardar_particular(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone){
 
                 $.ajax({
-                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellido : apellido,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
+                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellidop : apellidop, apellidom : apellidom,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
                     url:   '../assets/class/usuario/usuario_acciones.php',
                     type:  'post',
                     //dataType: "json",

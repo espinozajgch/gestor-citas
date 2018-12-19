@@ -21,7 +21,7 @@ else if (isset($_GET["id_operacion"])){
 
 if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $rut = $_POST["rut"];
-    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellido`, `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
+    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellidop`, apellidom , `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
     
     $bd = connection::getInstance()->getDb();
     

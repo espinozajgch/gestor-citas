@@ -230,9 +230,9 @@ $id_rol = "";
                         type:  'post',
                         dataType: "json",
                         success:  function (data) {
-                            //respuesta = JSON.stringify(data);
+                            respuesta = JSON.stringify(data);
                             console.log(data);
-                            console.log(data.estado);
+                            //console.log(data.estado);
 
                             if(data.estado == 0){
                                 $("#msgerror_danger").show();

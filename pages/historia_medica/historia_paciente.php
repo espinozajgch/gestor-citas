@@ -12,8 +12,9 @@ if(isset($_REQUEST['id_hm'])){
 	$id_paciente = Pacientes::obtener_id_paciente_by_historia($bd, $id_hm);
 
 	$nombre = Pacientes::obtener_nombre($bd, $id_paciente);
-	$apellido = Pacientes::obtener_apellido($bd, $id_paciente);
-	$paciente = $nombre . " " . $apellido;
+	$apellidop = Pacientes::obtener_apellidop($bd, $id_paciente);
+	$apellidom = Pacientes::obtener_apellidom($bd, $id_paciente);
+	$paciente = $nombre . " " . $apellidop . " ". $apellidom;
 
 	$fijo = Pacientes::obtener_telefono($bd, $id_paciente);
 	$celular = Pacientes::obtener_celular($bd, $id_paciente);
@@ -23,6 +24,8 @@ if(isset($_REQUEST['id_hm'])){
 	$email = Pacientes::obtener_email($bd, $id_paciente);
 
 	$historia = Pacientes::obtener_historia($bd, $id_hm);
+	$historia = str_replace("<br/>", "\n", $historia);
+	$historia = strip_tags($historia);
 	$fecha = Pacientes::obtener_fecha_historia($bd, $id_hm);
 }
 
