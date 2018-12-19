@@ -84,7 +84,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <div class="form-group col-7 col-sm-7 col-md-7">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
             <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
-            <div >
+            <div hidden="true">
                 <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
             </div>
             
@@ -140,7 +140,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
     
 <script type="text/javascript">
-    function buscar_info_paciente(){
+    function buscar_info_paciente(notificaciones=true){        
             $("#terapias").val(null).trigger('change');
             if ($("#rut_paciente").val()==""){
                 $("#error_rut").show(1500);
@@ -161,8 +161,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             $("#tabla_paciente").DataTable().destroy();
-                            agregar_terapias_existentes($("#id_oculto").val());                                                        
-                            cargar_tabla_terapias();
+                            agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
+                            cargar_tabla_terapias(1);
                             //operacion = 11;
                         }
                         else{
@@ -223,6 +223,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 else{
                     alert ("ERROR");
                 }*/
+                buscar_info_paciente();
             });
         }
     }
@@ -277,8 +278,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             });
         }
         
-        function agregar_terapias_existentes(id_paciente){
-        
+        function agregar_terapias_existentes(id_paciente, notificaciones=true){
+            var bandera_confirm=true;
                     $.post("terapias/terapias_controlador.php",
                     {
                         id_operacion :  7,
@@ -290,7 +291,10 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         if (json!=null){
                             operacion = 11;                            
                             if(json[0].estado == 1){                            
-                                if (confirm("El paciente ya tiene un programa terapeutico activo ¿Desea modificarlo?")){
+                                if (notificaciones){
+                                     bandera_confirm=(confirm("El paciente ya tiene un programa terapeutico activo ¿Desea modificarlo?"))
+                                }
+                                if (bandera_confirm){
                                     for (i=0; i<json[0].cantidad; i++){                                
                                         var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
                                         $("#terapias").append(n_opcion);                                
@@ -344,6 +348,32 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 }
             }
             );
+        }
+        
+        function eliminar_terapia(id_programa, id_terapia){
+            if (confirm("¿Está seguro que desea eliminar esta terapia? Esta acción no puede deshacerse.")){
+                $.post("terapias/terapias_controlador.php",
+                {
+                    id_operacion: 18,
+                    programa : id_programa,
+                    terapia  : id_terapia
+                },function (result){
+                    var json = JSON.parse(result);       
+                    //alert (result);
+                    if (json!=null){
+                        operacion = 11;                            
+                        if(json[0].estado == 1){   
+                            alert ("Procesado con exito");
+                        }
+                        else{
+                            alert ("Ocurrió un error");
+                        }
+                    }
+                }
+                );
+                buscar_info_paciente(false);
+            }
+            
         }
 </script>
 

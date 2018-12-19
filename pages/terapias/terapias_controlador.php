@@ -156,13 +156,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa)){
         //Eliminar citas existentes
         if (terapias::eliminar_terapias_programa($id_programa, true)){
-            //Ingresar las que se quedaron
-            
-            echo "<br>";
-            print_r($_POST["terapias_individual"]);
-            echo "<br>";
-            print_r($lista_terapias);
-            $lista_terapias[count($lista_terapias)] = $_POST["terapias_individual"];
+            //Ingresar las que se quedaron            
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";
@@ -192,10 +186,17 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
 else if ($id_operacion == 12){
      //Devolver eventos para medicos para formato de tabla
     $id_paciente = $_GET["id_paciente"];
+    $id_referer;
+    if (isset($_GET["referer"])){
+        $id_referer =$_GET["referer"];        
+    }
+    else{
+        $id_referer = false;
+    }
     //echo $id_paciente;
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     if ($id_programa){
-        $json_temp = (terapias::lista_terapias_programa($id_programa));
+        $json_temp = (terapias::lista_terapias_programa($id_programa, $id_referer));
     }
     else{
         $json_temp[0]['N'] = "No hay información que mostrar";
@@ -281,14 +282,14 @@ else if ($id_operacion == 16){//Validar una terapia como culminada
         }
     }
     else{
-        $str_debug .= "ERROR PARA LOS PAAMETROS programa=$id_programa, terapia=$id_terapia y cita=$id_cita";
+        $str_debug .= "ERROR PARA LOS PARAMETROS programa=$id_programa, terapia=$id_terapia y cita=$id_cita";
         $json[0]["str_debug"]=$str_debug;
         $json[0]["estado"] = 0;
     }
     $json[0]["str_debug"]=$str_debug;
     echo json_encode($json);    
 }
-else if ($id_operacion == 17){
+else if ($id_operacion == 17){//VALIDAR PROGRAMA COMPLETO COMO CULMINADO
     $id_programa=$_POST["programa"];
     $json;
     $str_debug=" ";
@@ -296,6 +297,18 @@ else if ($id_operacion == 17){
     //Validar el programa
     if (!terapias::validar_programa($id_programa)){
         $json[0]["estado"] = 0;
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 18){//ELIMINAR TERAPIA
+    $id_programa    = $_POST["programa"];
+    $id_terapia     = $_POST["terapia"];
+    $json;
+    if (terapias::eliminar_terapia_individual($id_programa, $id_terapia)){
+        $json[0]["estado"]=1;
+    }
+    else{
+        $json[0]["estado"]=0;
     }
     echo json_encode($json);
 }

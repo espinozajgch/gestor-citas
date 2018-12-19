@@ -158,6 +158,17 @@ class terapias {
         return $pdo->execute();
     }
     
+    public static function eliminar_terapia_individual($id_programa, $id_terapia){
+        $bd = connection::getInstance()->getDb();        
+        $sql = "DELETE FROM programa_tiene_terapia
+            WHERE id_programa_tiene_terapia=".$id_programa."
+                AND terapia_id_terapia=".$id_terapia;
+        
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        return $pdo->execute();
+    }
+    
     public static function obtener_id_programa_paciente ($id_paciente){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente." 
@@ -314,7 +325,7 @@ class terapias {
         
     }
     
-    public static function lista_terapias_programa($id_programa){
+    public static function lista_terapias_programa($id_programa, $id_referer = false){
         $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id,
             rm.id_rm as id_rm, terapia.id_terapia as id_terapia, 
             programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, 
@@ -398,6 +409,14 @@ class terapias {
                         <i class=\"fa fa-file\"></i>
                     </a>";
                 }
+                if ($id_referer==1){//Agregar boton de eliminar terapia
+                    $str_btn .= "
+                    <a title=\"Eliminar terapia\" 
+                        class=\"btn btn-danger\"
+                        onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\">
+                        <i class=\"fa fa-times-circle\"></i>
+                    </a>";
+                }
                 
                 $str_btn.="
                     ";
@@ -456,7 +475,7 @@ class terapias {
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE p.id_paciente = ".$id_paciente;
+    . "WHERE pt.estado LIKE \"%activo%\" AND p.id_paciente = ".$id_paciente;
         if ($solo_activas){
             $sql.= " AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
         }

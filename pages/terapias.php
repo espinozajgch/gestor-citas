@@ -31,7 +31,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -349,10 +349,11 @@ $usuario  = "";
             
     });
     
-    function cargar_tabla_terapias(){
+    function cargar_tabla_terapias(referer){
+        
         $('#tabla_paciente').DataTable({  
                 responsive: true,
-                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val(),
+                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer,
                 "columns": [
                     {"data": "N"},
                     {"data": "Terapias"},                    
