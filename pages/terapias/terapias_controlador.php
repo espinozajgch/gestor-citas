@@ -90,8 +90,9 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     }
     echo json_encode($json);
 }
-else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
-     //Devolver eventos para medicos para formato de tabla
+else if ($id_operacion == 6){
+    //Obtener la tabla de programas terapeuticos
+    //Devolver eventos para medicos para formato de tabla
     $json_temp = json_decode(terapias::tabla_programas());
     //print_r($json_temp);
     $json_final["data"]=$json_temp;

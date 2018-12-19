@@ -25,8 +25,8 @@ $id_hm = "";
 
     if(isset($_GET["id_hm"])){
         $id_hm = $_GET["id_hm"];
-        $historia = pacientes::obtener_historia($bd,$id_hm);
-        $accion = 9;
+        $historia = pacientes::obtener_diagnostico($bd,$id_hm);
+        $accion = 12;
 
         if(isset($_GET["id_paciente"]))
             $id_paciente = $_GET["id_paciente"];
@@ -35,7 +35,7 @@ $id_hm = "";
     else{
     if(isset($_GET["id_paciente"]))
         $id_paciente = $_GET["id_paciente"];
-        $accion = 8;
+        $accion = 11;
 
     }
 
@@ -88,7 +88,8 @@ $id_hm = "";
                 <div class="col-lg-12">
                     <br>
                     <a class="btn btn-sm btn-success shared" href="historia_medica_de_paciente.php?id=<?php echo $id_paciente ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
-                    <h1 class="page-header">Historia Medica</h1>
+                    
+                    <h1 class="page-header">Indicaciones</h1>
 
                 </div>
 
@@ -160,7 +161,7 @@ $id_hm = "";
 
             accion = $("#accion").val();
 
-            if(accion == 8){
+            if(accion == 11){
                 id = $("#id_paciente").val();
                 id_paciente = id;
             }
@@ -172,7 +173,7 @@ $id_hm = "";
             historia = $('#summernote').val();
 
             $.ajax({
-                data:  {accion:accion, historia : historia, id : id},
+                data:  {accion:accion, diagnostico : historia, id : id},
                 url:   '../assets/class/usuario/usuario_acciones.php',
                 type:  'post',
                 dataType: "json",

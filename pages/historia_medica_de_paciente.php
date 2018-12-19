@@ -73,11 +73,12 @@ $usuario  = "";
             <div class="row">
                 <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Historias Medicas</h1>
+                    <h1 class="page-header">Historial</h1>
 
                 </div>
                 <div class="col-lg-12 text-right pull-right">
-                   <a class="btn btn-sm btn-success shared" href="agregar_historia_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
+                   <a class="btn btn-sm btn-info shared" href="agregar_historia_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar Diagnostico"><i class="fa fa-plus-circle fa-bg"></i></a>
+                   <!--a class="btn btn-sm btn-warning shared" href="agregar_diagnostico_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar Indicaciones"><i class="fa fa-plus-circle fa-bg"></i></a-->
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

@@ -23,13 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			}
 			else{
 				$nombre = $_POST["nombre"];
-				$apellido = $_POST["apellido"];
+				$apellidop = $_POST["apellidop"];
+				$apellidom = $_POST["apellidom"];
 				$identificacion = $_POST["identificacion"];
 				$telefono = $_POST["telefonos"];
 				$direccion = $_POST["direccion"];
 				$celular = $_POST["phone"];
 
-				$usuario = $nombre ." ". $apellido;
+				$usuario = $nombre;
 
 				//$hash = password_hash($identificacion,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
 				//$estatus = 0;
@@ -37,19 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$estado=1;
 				
 				//AQUI AGREGAREMOS LA ENTRADA AL HISTORICO
-                                //COMENZANDO CON LA CREACION DEL MISMO
-                                $id = historico::crear_historico("paciente", date("ym")."-".$identificacion, true);
-                                if ($id!=0){
-                                    $tipo_entrada   =   "CREAR";
-                                    $descripcion    =   "Se creó la historia clinica del paciente";
-                                    $nivel          =   2;
-                                    $id_historia    =   $id;
-                                    historico::agregar_entrada($id_historia, $tipo_entrada, $descripcion, $nivel);                                    
-                                    $res = pacientes::agregar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $estado, $id);
-                                }
-                                else{
-                                    echo "ERROR AL CREAR LA HISTORIA. CONTACTE AL ADMIN";
-                                } //*/                               
+                //COMENZANDO CON LA CREACION DEL MISMO
+	                $id = historico::crear_historico("paciente", date("ym")."-".$identificacion, true);
+	                if ($id!=0){
+	                    $tipo_entrada   =   "CREAR";
+	                    $descripcion    =   "Se creó la historia clinica del paciente";
+	                    $nivel          =   2;
+	                    $id_historia    =   $id;
+	                    historico::agregar_entrada($id_historia, $tipo_entrada, $descripcion, $nivel);                                    
+	                    $res = pacientes::agregar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $estado, $id);
+	                }
+	                else{
+	                    echo "ERROR AL CREAR LA HISTORIA. CONTACTE AL ADMIN";
+	                } //*/                               
                                 
 				//$res =  Mailer::correo_registro_usuario($bd, $usuario, $email, $celular, $hash);
 				//$res = $accion;
@@ -62,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			//EDITAR
 			$email = $_POST["email"];
 			$nombre = $_POST["nombre"];
-			$apellido = $_POST["apellido"];
+			$apellidop = $_POST["apellidop"];
+			$apellidom = $_POST["apellidom"];
 			$identificacion = $_POST["identificacion"];
 			$telefono = $_POST["telefonos"];
 			$direccion = $_POST["direccion"];
@@ -75,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 		$res = pacientes::validar_email($bd, $email);
 		 		if($res == null){
 		 			$estado=1;
-		 			$res= pacientes::editar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $hash);
+		 			$res= pacientes::editar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $hash);
 		 		}
 		 		else{
 		 			$estado=0;
@@ -84,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 	}
 		 	else{
 				$estado=1;
-				$res= pacientes::editar($bd, $identificacion, $nombre, $apellido, $email, $telefono, $celular, $direccion, $hash);
+				$res= pacientes::editar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $hash);
 		 	}/**/
 
 			if($res){
@@ -197,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::agregar_historia($bd, $id_paciente, $historia);
 			$estado = 1;
 		}
+		else
 		if($accion==9){
 			
 			//EDITAR HISTORIA
@@ -205,6 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::editar_historia($bd, $id_hm, $historia);
 			$estado = 1;
 		}
+		else
 		if($accion==10){
 			
 			//ELIMINAR HISTORIA
@@ -213,8 +217,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::eliminar_historia($bd, $id_hm);
 			$estado = 1;
 		}
+		else
+		if($accion==11){
+			
+			//AGREGAR diagnostico
+			$id_paciente = $_POST["id"];
+			$diagnostico = $_POST["diagnostico"];
+			$res = pacientes::agregar_diagnostico($bd, $id_paciente, $diagnostico);
+			$estado = 1;
+		}
+		if($accion==12){
+			
+			//EDITAR diagnostico
+			$id_hm = $_POST["id"];
+			$diagnostico = $_POST["diagnostico"];
+			$res = pacientes::editar_diagnostico($bd, $id_hm, $diagnostico);
+			$estado = 1;
+		}
 
-		echo json_encode(array("estado"=>$estado, "mensaje"=>$res), JSON_FORCE_OBJECT);	
+		echo json_encode(array("estado"=>$estado, "mensaje"=>$id_hm), JSON_FORCE_OBJECT);	
     		
 	}
 	

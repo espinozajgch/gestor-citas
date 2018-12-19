@@ -32,7 +32,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard </title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -93,7 +93,7 @@ $usuario  = "";
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12 mx-4">
-                <br>
+                
                     <?php
                     if (isset($_GET["opcion"])){
                         if ($_GET["opcion"]==1){
@@ -101,11 +101,11 @@ $usuario  = "";
                                 include_once("citas/citas_tabla.php");
                             }
                             else if ($_GET["vista"]==-1){
-                                include_once("citas/citas_calendario.php");
+                                //include_once("citas/citas_calendario.php");
                             }                            
                         }
                         else if ($_GET["opcion"]==2){
-                            include_once("agreagar_citas.php");                            
+                            //include_once("agreagar_citas.php");                            
                         }
                     }                    
                     

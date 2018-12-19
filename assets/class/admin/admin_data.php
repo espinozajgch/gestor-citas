@@ -375,7 +375,7 @@
 				" email,".
 				" password,".
 				" hash,".
-				" estatus,".
+				" estado,".
 				" id_rol)".
 				" VALUES(?,?,?,?,?,?)";
 
@@ -581,7 +581,7 @@
 			
 			// Sentencia INSERT
 			$consulta = "UPDATE admin SET" .
-				" estatus = ? " .
+				" estado = ? " .
 				" WHERE id_admin = ?";
 		   
 		    try {
