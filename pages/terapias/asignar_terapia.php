@@ -80,6 +80,13 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
             </div>
         </div>
+        <div class="form-group col-4 col-sm-4 col-md-4">
+            <small><strong><label for="second_name">Apellido del paciente</label></strong></small>
+            <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
+            <div id="error_second_name" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+            </div>
+        </div>
 
         <div class="form-group col-7 col-sm-7 col-md-7">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
@@ -140,6 +147,14 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
     
 <script type="text/javascript">
+
+    /*$("#rut_paciente").keypress(function(e) {
+        if(e.which == 13) {
+            // Acciones a realizar, por ej: enviar formulario.
+            buscar_info_paciente();
+        }
+    });*/
+
     function buscar_info_paciente(notificaciones=true){        
             $("#terapias").val(null).trigger('change');
             if ($("#rut_paciente").val()==""){
@@ -156,8 +171,11 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
                             $("#name").val(json[0].nombre);
-                            $("#last_name").val(json[0].apellido);                            
-                            $("#id_oculto").val(json[0].id_paciente);                            
+                            $("#last_name").val(json[0].apellidop); 
+                            $("#second_name").val(json[0].apellidom);                            
+                            $("#id_oculto").val(json[0].id_paciente);   
+
+                                                     
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             $("#tabla_paciente").DataTable().destroy();
@@ -189,6 +207,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             $("#error_rut").hide(5000);
             //alert ($("#name").val());
         }     
+
+
+        console.log($("#terapias").val());
         if ($("#terapias").val()=="" || $("#cantidad").val()==""){
             bandera = false;
             alert ("Verifique los campos");

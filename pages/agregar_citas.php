@@ -298,9 +298,9 @@ input:checked + .slider:before {
                                        
                                         <div class="input-group">
                                             <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off">
-                                          <span class="input-group-btn" >
+                                            <span class="input-group-btn" >
                                               <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
-                                          </span>
+                                            </span>
                                         </div><!-- /input-group -->
                                         <div id="error_rut" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
@@ -319,14 +319,14 @@ input:checked + .slider:before {
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
-                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_last_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="last_name">Apellido Materno</label></strong></small>
-                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_second_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
@@ -549,67 +549,7 @@ input:checked + .slider:before {
                 });/**/
         }
         
-        function validar_paciente(){
-            //e.preventDefault();
-            error = false;
 
-            validar_inputs("#doc", "#error_doc");
-            validar_inputs("#name", "#error_name");
-            validar_inputs("#last_name", "#error_last_name");
-            validar_inputs("#second_name", "#error_second_name");
-            validar_inputs("#email", "#error_email");
-            validar_inputs("#phone", "#error_phone"); 
-            validar_inputs("#fijo", "#error_fijo"); 
-            validar_inputs("#direccion", "#error_direccion");
-
-            if(!error){
-                $("#loader-wrapper").fadeIn("fast");
-                accion = $("#accion").val();
-                hash_usuario = "";
-
-                identificacion  = $("#doc").val();
-                nombre = $("#name").val();
-                apellidop = $("#last_name").val();
-                apellidom = $("#second_name").val();
-                email = $("#email").val();
-                telefonos = $("#fijo").val();
-                direccion = $("#direccion").val();
-                phone = $("#phone").val();
-                guardar_paciente(1, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);
-            }
-        };
-
-
-        function guardar_paciente(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone){
-
-                $.ajax({
-                    data:  {accion : accion, identificacion : identificacion, nombre : nombre, apellidop : apellidop, apellidom : apellidom,  email : email, hash: hash_usuario, telefonos: telefonos, direccion : direccion, phone : phone},
-                    url:   '../assets/class/usuario/usuario_acciones.php',
-                    type:  'post',
-                    //dataType: "json",
-                    success:  function (data) {
-                        respuesta = JSON.stringify(data);
-                        console.log(data);
-                        //console.log(data.estado);
-
-                        if(data.estado == 0){
-                            $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b> ' + data.mensaje);
-                            $("#msgerror_danger").show();
-                            $("#msg_ok").hide();
-                        }
-                        else{
-                            $("#msg_ok").show();
-                            $("#msgerror_danger").hide();
-                            window.location.href="pacientes.php";
-                        }
-                    },
-                    error: function(data){
-                        console.log(data);
-                        $("#loader-wrapper").fadeOut("fast");
-                        $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
-                    }
-                });/**/
-        }
         
         /*
          * 
@@ -631,6 +571,13 @@ input:checked + .slider:before {
             }
             
         }
+
+        $("#rut_paciente").keypress(function(e) {
+            if(e.which == 13) {
+                // Acciones a realizar, por ej: enviar formulario.
+                buscar_info_paciente();
+            }
+        });
         
         function buscar_info_paciente(){
             if ($("#rut_paciente").val()==""){
@@ -656,6 +603,14 @@ input:checked + .slider:before {
                             $("#fijo").val(json[0].fijo);
                             $("#celular").val(json[0].celular);
                             $("#id_oculto").val(json[0].id_paciente);
+
+                            $("#name").attr('disabled', true);
+                            $("#last_name").attr('disabled', true);
+                            $("#second_name").attr('disabled', true);
+                            $("#direccion").attr('disabled', true);
+                            $("#email").attr('disabled', true);
+                            $("#fijo").attr('disabled', true);
+                            $("#celular").attr('disabled', true);
                         }
                         else{
                             $("#name").attr('disabled', false);

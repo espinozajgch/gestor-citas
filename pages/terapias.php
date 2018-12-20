@@ -149,7 +149,18 @@ $usuario  = "";
         var id = "";
         var codigo = "";
 
-        $(document).ready(function(){
+        $(document).ready(function(){    
+
+
+
+            $("#rut_paciente").keypress(function(e) {
+                if(e.which == 13) {
+                    // Acciones a realizar, por ej: enviar formulario.
+                    buscar_info_paciente();
+                }
+            });
+
+
             $("#loader-wrapper").fadeOut("slow");
 
             $('#dataTables-example').DataTable({

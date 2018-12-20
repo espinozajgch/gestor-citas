@@ -21,6 +21,10 @@ $usuario  = "";
 
     if(isset($_GET["id"])){
         $id = $_GET["id"];
+
+        $nombre = Pacientes::obtener_nombre($bd,$id);
+        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id);
+        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id);
         //$historia = pacientes::obtener_historia($bd,$id_hm);
         //$accion = 9;
 
@@ -74,7 +78,8 @@ $usuario  = "";
                 <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
                 <div class="col-lg-12">
                     <h1 class="page-header">Historial</h1>
-
+                    <a class="btn btn-sm btn-success shared" href="pacientes.php" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+                    <small><?php echo $nombre ?></small>
                 </div>
                 <div class="col-lg-12 text-right pull-right">
                    <a class="btn btn-sm btn-info shared" href="agregar_historia_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar Diagnostico"><i class="fa fa-plus-circle fa-bg"></i></a>

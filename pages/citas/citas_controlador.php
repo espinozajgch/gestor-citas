@@ -114,7 +114,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     echo json_encode($json_retorno);
 }
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
-    $sql = "SELECT id_admin, nombre FROM `admin` WHERE estado LIKE \"activo\"";
+    $sql = "SELECT id_admin, nombre FROM `admin` WHERE id_rol = 3 AND estado LIKE \"activo\"";
     $bd = connection::getInstance()->getDb();
     
     $pdo = $bd->prepare($sql);

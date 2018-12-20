@@ -111,6 +111,14 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             }
         });
     }
+
+
+    /*$("#rut_paciente").keypress(function(e) {
+        if(e.which == 13) {
+            // Acciones a realizar, por ej: enviar formulario.
+            buscar_info_paciente();
+        }
+    });/**/    
     
     function buscar_info_paciente(){
             if ($("#rut_paciente").val()==""){

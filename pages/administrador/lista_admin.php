@@ -26,7 +26,7 @@
                 $des = "";
                 $hab = "";
 
-                if($admin["estatus"]==0){
+                if($admin["estado"]==0){
                     $hab = "display:none";
                 }
                 else{

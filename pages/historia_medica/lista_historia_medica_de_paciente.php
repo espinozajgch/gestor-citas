@@ -42,7 +42,7 @@
                                 <a class="btn btn-sm btn-info shared" href="agregar_historia_de_paciente.php?id_hm='.  $historia['id_hm'] .'&id_paciente='.  $id .'" title="Editar Diagnostico"><i class="fa fa-edit"></i></a>
 								<!--btn class="btn btn-sm btn-danger delete" cod="'.  $historia['id_hm'] .'" title="Eliminar"><i class="fa fa-trash"></i></btn-->
 
-                                <a class="btn btn-sm btn-warning shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>
+                                <a class="btn btn-sm btn-warning shared" href="historia_medica/diagnostico_paciente.php?id_hm='.  $historia['id_hm'] .'" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>
                                 <a class="btn btn-sm btn-warning shared" href="agregar_diagnostico_de_paciente.php?id_hm='.  $historia['id_hm'] .'&id_paciente='.  $id .'" title="Editar Indicaciones"><i class="fa fa-edit"></i></a>
 
                             </td>

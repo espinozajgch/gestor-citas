@@ -375,15 +375,16 @@
 				" email,".
 				" password,".
 				" hash,".
+				" id_eu,".
 				" estado,".
 				" id_rol)".
-				" VALUES(?,?,?,?,?,?)";
+				" VALUES(?,?,?,?,?,?,?)";
 
 		   try {
 
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
-				$resultado = $comando->execute(array($nombre, $email, $password, $hash, $estatus, $id_rol));
+				$resultado = $comando->execute(array($nombre, $email, $password, $hash, $estatus,"activo", $id_rol));
 				
 				return $resultado;
 
@@ -581,7 +582,7 @@
 			
 			// Sentencia INSERT
 			$consulta = "UPDATE admin SET" .
-				" estado = ? " .
+				" id_eu = ? " .
 				" WHERE id_admin = ?";
 		   
 		    try {
@@ -601,7 +602,7 @@
 
 		public static function obtener_lista_administadores($bd){
 
-			$consulta = "SELECT id_admin, nombre, email, id_eu, hash, rol FROM admin ad INNER JOIN rol r ON ad.id_rol = r.id_rol WHERE ad.id_rol > 1";
+			$consulta = "SELECT id_admin, nombre, email, id_eu, hash, rol, estado FROM admin ad INNER JOIN rol r ON ad.id_rol = r.id_rol WHERE ad.id_rol > 1";
 
 			try {
 				$comando = $bd->prepare($consulta);
