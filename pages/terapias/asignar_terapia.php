@@ -210,8 +210,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
 
 
         console.log($("#terapias").val());
-        if ($("#terapias").val()=="" || $("#cantidad").val()==""){
-            bandera = false;
+        if ($("#cantidad").val()==""){
+            bandera = false;            
             alert ("Verifique los campos");
         }
         
@@ -244,7 +244,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 else{
                     alert ("ERROR");
                 }*/
-                buscar_info_paciente();
+                buscar_info_paciente(false);
             });
         }
     }

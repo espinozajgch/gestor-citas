@@ -39,9 +39,20 @@ require_once '../assets/class/calendario.php';
                     $eventos_json = calendario::devolver_eventos_json("url");        
                     echo calendario::devolver_eventos_json("url");
                     ?>,
+                                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
                 locale: 'es-us',
                 eventClick: function (info){
                     //alert ("ID:"+info.event.id);                    
+                },navLinks: true,
+        navLinkDayClick: function (date, jsEvent){
+                    
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
+                    //alert (fecha_seleccionada);
+                    calendar.changeView('agendaDay', fecha_seleccionada);
                 },
                         eventLimit: true,
                         editable: true,

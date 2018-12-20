@@ -111,10 +111,23 @@ function mostrar_calendario(){
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         dateClick : function(info){
-            //alert (info.dateStr);
-            $("#fecha_feriado").val(info.dateStr);
+            //alert (info.dateStr);            
+            var fecha_seleccionada      =   info.date.getFullYear()+"-"+(info.date.getMonth()+1)+"-"+(info.date.getDate());                  
+            $("#fecha_feriado").val(fecha_seleccionada);
             //$("#calendario").hide();
         },
+        header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek'
+                },
+        navLinks: true,
+        navLinkDayClick: function (date, jsEvent){
+                    
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
+                    //alert (fecha_seleccionada);
+                    calendar.changeView('agendaDay', fecha_seleccionada);
+                },
         locale: 'es-us'
         
     });

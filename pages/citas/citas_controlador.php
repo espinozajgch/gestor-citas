@@ -121,7 +121,7 @@ else if($id_operacion == 3){//Devolver los médiocos para el pillbox
     $pdo->execute();
     $resultado = $pdo->fetchall(PDO::FETCH_ASSOC);
     $longitud = count ($resultado);
-    
+    //echo $sql;
     $json;
     for($i=0; $i<$longitud;$i++){
         $json[$i]["id"] = $resultado[$i]["id_admin"];

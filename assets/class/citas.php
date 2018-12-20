@@ -54,7 +54,7 @@ class citas {
     public static function consultar_disponibilidad_medicos($fecha_inicio, $hora_inicio, $hora_fin, $id_medico, $permitir_misma_fecha=false, $id_cita = false){
         
         $bd = connection::getInstance()->getDb();
-        $sql ='SELECT  id_admin, id_rm, admin.nombre, paciente.nombre, paciente.apellido, paciente. rut, reserva_medica.fecha_inicio,
+        $sql ='SELECT  id_admin, id_rm, admin.nombre, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,
         reserva_medica.hora_inicio, reserva_medica.hora_fin
         FROM `admin` 
         INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 

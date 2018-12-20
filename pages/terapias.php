@@ -272,14 +272,12 @@ $usuario  = "";
           
             hash = $("#hash").val();
             mensaje = $("#mensaje").val();
-
             if(mensaje.trim() != ""){
                 //console.log(id);
                 ///console.log("mensaje: "+mensaje);
                 //console.log("hash: "+hash);
                 enviar_mensaje(id, mensaje, hash);
             }
-
         });
 
         function enviar_mensaje(id, mensaje, hash){

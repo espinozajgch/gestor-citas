@@ -248,7 +248,7 @@ $estilo_par = "";
             if($(input).val().trim() == ""){
                 $(div_error).show();
                 error = true;
-                mostrar_error(input)
+                mostrar_error(input);
             }
             else{
                 $(div_error).hide();

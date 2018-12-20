@@ -199,7 +199,7 @@ else if ($id_operacion == 12){
         $json_temp = (terapias::lista_terapias_programa($id_programa, $id_referer));
     }
     else{
-        $json_temp[0]['N'] = "No hay información que mostrar";
+        $json_temp[0]['N'] = "No hay información que mostrar.";
         $json_temp[0]['Terapias'] = "";
         $json_temp[0]['Precio'] = "";
         $json_temp[0]['Estado'] = "";

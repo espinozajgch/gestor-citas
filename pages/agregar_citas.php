@@ -98,10 +98,13 @@ $hash = "";
         var calendarEl;
         var calendar;
         var preseleccion;
+        var bandera_nuevo_usuario = false;
         //Iniciar el calendario de FULLCALENDAR
         inicializar_calendario();
         //Iniciar la pillbox donde se agregarán los médicos
         inicializar_lista_medicos();     
+        
+        
         if (<?php 
             $operacion = 2;
             if (isset($_GET["cita"])){
@@ -486,17 +489,31 @@ input:checked + .slider:before {
     <!--<script src="../../vendor/plugin/html5imageupload/html5imageupload.js"></script>-->
  
     <script type="text/javascript">
-
+function validar_inputs(input, div_error){
+    //alert (input +":"+$(input).val()+" - "+div_error);
+            if($(input).val() == ""){
+                $(div_error).show();
+                error = true;
+                //mostrar_error(input);
+            }
+            else{
+                $(div_error).hide();
+                //mostrar_exito(input);
+                //error = false;
+            }
+            return error;
+        }
+        
         function validar_paciente(){
             //e.preventDefault();
             error = false;
 
-            validar_inputs("#doc", "#error_doc");
+            validar_inputs("#rut_paciente", "#error_doc");
             validar_inputs("#name", "#error_name");
             validar_inputs("#last_name", "#error_last_name");
             validar_inputs("#second_name", "#error_second_name");
             validar_inputs("#email", "#error_email");
-            validar_inputs("#phone", "#error_phone"); 
+            validar_inputs("#celular", "#error_phone"); 
             validar_inputs("#fijo", "#error_fijo"); 
             validar_inputs("#direccion", "#error_direccion");
 
@@ -505,14 +522,14 @@ input:checked + .slider:before {
                 accion = $("#accion").val();
                 hash_usuario = "";
 
-                identificacion  = $("#doc").val();
+                identificacion  = $("#rut_paciente").val();
                 nombre = $("#name").val();
                 apellidop = $("#last_name").val();
                 apellidom = $("#second_name").val();
                 email = $("#email").val();
                 telefonos = $("#fijo").val();
                 direccion = $("#direccion").val();
-                phone = $("#phone").val();
+                phone = $("#celular").val();
                 guardar_paciente(1, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);
             }
         };
@@ -538,7 +555,7 @@ input:checked + .slider:before {
                         else{
                             $("#msg_ok").show();
                             $("#msgerror_danger").hide();
-                            window.location.href="pacientes.php";
+                            //window.location.href="pacientes.php";
                         }
                     },
                     error: function(data){
@@ -623,6 +640,7 @@ input:checked + .slider:before {
                             $("#id_oculto").val("");                            
                             //$("#error_rut").show(1500);
                             //$("#error_rut").hide(5000);
+                            bandera_nuevo_usuario=true;
                         }
                     }
                 );
@@ -654,7 +672,9 @@ input:checked + .slider:before {
             }
             //alert (bandera);
             //alert ("Fecha inicio: "+$("#fecha_a").val()+"\n Fecha Fin: "+$("#fecha_b").val()+"\n Hora Inicio: "+$("#hora_a").val()+"\n Hora fin: "+$("#hora_b").val());
-            
+            if (bandera_nuevo_usuario){//Si esta seteada hay que agregar el id del usuario                
+                
+            }
             if (bandera){
                 //Si la bandera no fue modificada entonces podemos enviar el formulario
                 //Cuando verifiquemos que existe disponibilidad para los medicos seleccionados, procedemos a enviar el formulario
@@ -682,9 +702,17 @@ input:checked + .slider:before {
                         alert ("No hay citas disponibles en ese periodo, seleccione otro.");
                     }
                     else{
-                        alert ("Hay disponibilidad, registrando...");
+                        
+                        if (bandera_nuevo_usuario){//Si esta seteada hay que agregar el id del usuario                
+                            alert ("Hay disponibilidad, registrando... Agregando nuevo paciente");
+                            validar_paciente();
+                            bandera = false;
+                        }
+                        else{
+                            alert ("Hay disponibilidad, registrando...");
+                        }
                     }
-                })
+                }),
                 ).then(function(){
                     if (bandera){  
                         var nom_apellido = $("#name").val()+" "+$("#last_name").val();                        
@@ -849,6 +877,12 @@ input:checked + .slider:before {
                 },
                 editable: true,
                 navLinks: true, // can click day/week names to navigate views
+                navLinkDayClick: function (date, jsEvent){
+                    
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
+                    alert (fecha_seleccionada);
+                    calendar.changeView('agendaDay', fecha_seleccionada);
+                },
                 eventLimit: true, // allow "more" link when too many events
                 events: {
                     url: url,
