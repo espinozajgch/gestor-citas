@@ -13,13 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		if($accion==1){
 			//AGREGAR 
-
+//$id_hm = 1;
 			$email = $_POST["email"];
 			$mail = pacientes::validar_email($bd, $email);
 
 			if($email == $mail){
 				$estado= 0;
 				$res = "Email registrado";
+                                $id_hm=0;
 			}
 			else{
 				$nombre = $_POST["nombre"];
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				//$estatus = 0;
 
 				$estado=1;
+                                $res="";
 				
 				//AQUI AGREGAREMOS LA ENTRADA AL HISTORICO
                 //COMENZANDO CON LA CREACION DEL MISMO
@@ -46,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	                    $nivel          =   2;
 	                    $id_historia    =   $id;
 	                    historico::agregar_entrada($id_historia, $tipo_entrada, $descripcion, $nivel);                                    
-	                    $res = pacientes::agregar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $estado, $id);
+	                    $id_hm = pacientes::agregar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $estado, $id);
+                            
 	                }
 	                else{
 	                    echo "ERROR AL CREAR LA HISTORIA. CONTACTE AL ADMIN";
@@ -235,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$estado = 1;
 		}
 
-		echo json_encode(array("estado"=>$estado, "mensaje"=>$id_hm), JSON_FORCE_OBJECT);	
+		echo json_encode(array("estado"=>$estado, "mensaje"=>$id_hm, "res"=>$res), JSON_FORCE_OBJECT);	
     		
 	}
 	

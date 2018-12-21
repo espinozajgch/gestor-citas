@@ -502,7 +502,7 @@
 				$resultado = $comando->execute(array($RUT, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $estatus, $historico));
 				
 				if($resultado){
-					return true;
+					return $bd->lastInsertId();
 					//return pacientes::obtener_max_id($bd,"id_paciente","paciente");		        	
 				}
 				return false;

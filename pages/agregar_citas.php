@@ -93,12 +93,13 @@ $hash = "";
     
 
     <script type="text/javascript">
+        var bandera_nuevo_usuario = false;
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
         var calendar;
         var preseleccion;
-        var bandera_nuevo_usuario = false;
+        
         //Iniciar el calendario de FULLCALENDAR
         inicializar_calendario();
         //Iniciar la pillbox donde se agregarán los médicos
@@ -543,25 +544,32 @@ function validar_inputs(input, div_error){
                     type:  'post',
                     //dataType: "json",
                     success:  function (data) {
-                        respuesta = JSON.stringify(data);
+                        respuesta = JSON.parse(data);
                         console.log(data);
+                        //alert (respuesta);
                         //console.log(data.estado);
-
-                        if(data.estado == 0){
+                        $("#id_oculto").val(respuesta.mensaje);
+                        //alert ($("#id_oculto").val());
+                        if(respuesta.estado == 0){
                             $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b> ' + data.mensaje);
                             $("#msgerror_danger").show();
                             $("#msg_ok").hide();
+                            alert ("ERROR");
+                            return false;
                         }
                         else{
                             $("#msg_ok").show();
                             $("#msgerror_danger").hide();
                             //window.location.href="pacientes.php";
+                            alert ("EXITO");
+                            return true;
                         }
                     },
                     error: function(data){
                         console.log(data);
                         $("#loader-wrapper").fadeOut("fast");
                         $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
+                        return false;
                     }
                 });/**/
         }
@@ -671,10 +679,7 @@ function validar_inputs(input, div_error){
                 alert ("Seleccione al menos un medico");
             }
             //alert (bandera);
-            //alert ("Fecha inicio: "+$("#fecha_a").val()+"\n Fecha Fin: "+$("#fecha_b").val()+"\n Hora Inicio: "+$("#hora_a").val()+"\n Hora fin: "+$("#hora_b").val());
-            if (bandera_nuevo_usuario){//Si esta seteada hay que agregar el id del usuario                
-                
-            }
+            //alert ("Fecha inicio: "+$("#fecha_a").val()+"\n Fecha Fin: "+$("#fecha_b").val()+"\n Hora Inicio: "+$("#hora_a").val()+"\n Hora fin: "+$("#hora_b").val());            
             if (bandera){
                 //Si la bandera no fue modificada entonces podemos enviar el formulario
                 //Cuando verifiquemos que existe disponibilidad para los medicos seleccionados, procedemos a enviar el formulario
@@ -704,9 +709,13 @@ function validar_inputs(input, div_error){
                     else{
                         
                         if (bandera_nuevo_usuario){//Si esta seteada hay que agregar el id del usuario                
-                            alert ("Hay disponibilidad, registrando... Agregando nuevo paciente");
-                            validar_paciente();
-                            bandera = false;
+                            
+                        
+                            validar_paciente();                            
+                            alert ("Hay disponibilidad, registrando... Agregando nuevo paciente");                            
+                        
+                            //bandera = false;
+                            //$("#btn_buscar").trigger('click');
                         }
                         else{
                             alert ("Hay disponibilidad, registrando...");
@@ -715,7 +724,8 @@ function validar_inputs(input, div_error){
                 }),
                 ).then(function(){
                     if (bandera){  
-                        var nom_apellido = $("#name").val()+" "+$("#last_name").val();                        
+                        var nom_apellido = $("#name").val()+" "+$("#last_name").val();  
+                        //alert ("Diagnostico"+$("#id_oculto").val());
                         if ($("#check_slider").prop("checked")){//Si es un chequeo creamos un programa terapeutico
                             bandera = false;
                             var id_programa = false;
@@ -726,6 +736,8 @@ function validar_inputs(input, div_error){
                                     terapias_previas:   false,                
                                     id_paciente:        $("#id_oculto").val(),
                                     terapias:           1,
+                                    terapias_individual:1,
+                                    cantidad:           1,
                                     descripcion:        "Diagnóstico preliminar de "+nom_apellido,
                                     id:                 $("#id_oculto").val(),
                                     nombre_programa:    "Diagnóstico preliminar de "+nom_apellido

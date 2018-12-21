@@ -91,7 +91,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <div class="form-group col-7 col-sm-7 col-md-7">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
             <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
-            <div hidden="true">
+            <div >
                 <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
             </div>
             

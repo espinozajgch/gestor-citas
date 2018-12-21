@@ -140,7 +140,8 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $json;  
     $id_paciente            =   $_POST["id_paciente"];
     $nombre_programa        =   $_POST["nombre_programa"];
-    $lista_terapias         =   $_POST["terapias_previas"];        
+    //$lista_terapias         =   $_POST["terapias_previas"];        
+    $lista_terapias;         
     $json[0]["estado"]      =   1;
     $str_debug              =   "Inicio ";
     $terapia = $_POST["terapias_individual"];
@@ -148,14 +149,14 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     print_r($lista_terapias);
     $count_array =count($lista_terapias);
     for ($i=0; $i<$cantidad; $i++){
-        $lista_terapias[$count_array+$i]=$terapia;
+        $lista_terapias[$i]=$terapia;
     }
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
     if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa)){
         //Eliminar citas existentes
-        if (terapias::eliminar_terapias_programa($id_programa, true)){
+        //if (terapias::eliminar_terapias_programa($id_programa, true)){
             //Ingresar las que se quedaron            
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
@@ -168,11 +169,11 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
                 $str_debug.="Error en asignacion de terapia";
                 $json[0]["estado"]      =   0;
             }
-        }
-        else{
+        //}
+        /*else{
             $str_debug.="Error en eliminacion de terapias";
             $json[0]["estado"]      =   0;
-        }        
+        } //*/       
     }
     else{
         $str_debug.="Error en actualizacion de informacion basica";
