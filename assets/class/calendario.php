@@ -228,7 +228,17 @@ class calendario {
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT (id_admin), id_rm, admin.nombre as nombre_medico, paciente.nombre, paciente.apellidop, paciente.apellidom, paciente.rut, reserva_medica.fecha_inicio, reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.estado as estado_rm FROM admin INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente WHERE paciente.estado_paciente LIKE \"activo\" AND reserva_medica.estado NOT LIKE \"cancelado\" GROUP BY id_rm";
+        $sql = "SELECT (id_admin), id_rm, admin.nombre as nombre_medico,
+            paciente.nombre, paciente.apellidop, paciente.apellidom, paciente.rut, 
+            reserva_medica.fecha_inicio, reserva_medica.hora_inicio, 
+            reserva_medica.hora_fin, reserva_medica.estado as estado_rm 
+            FROM admin 
+            INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
+            INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+            INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+            INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
+            WHERE paciente.estado_paciente LIKE \"activo\" 
+                AND reserva_medica.estado NOT LIKE \"cancelado\" GROUP BY id_rm";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         

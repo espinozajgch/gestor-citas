@@ -31,11 +31,14 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $longitud = count ($resultado);
     if ($resultado){
         $resultado[0]['estado'] = true;
+        $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         
     }
     else{
         $resultado[0]['estado'] = false;
+        $resultado[0]["programa"] = false;
     }
+    
     $json = json_encode($resultado);
     echo $json;
     
@@ -93,7 +96,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
                         historico::agregar_entrada($id_historico,
                                 "RESERVAR",
                                 "Se reservó cita para el dia $fecha_inicio para una terapia de $nom_terapia, con los médicos: ".$nombre_medicos,
-                                2);
+                                2);//*/
                     }
                 }
                 
@@ -103,7 +106,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
                 historico::agregar_entrada($id_historico,
                         "RESERVAR",
                         "Se reservó la primera cita del paciente para el día $fecha_inicio con los medicos: ".$nombre_medicos,
-                        2);
+                        2);//*/
             }
             //Verificamos si se está haciendo un chequeo, y entonces creamos un programa terapeutico con esa terapia
         }
@@ -115,6 +118,15 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         $json_retorno[0]['estado'] = 0;
     }
     echo json_encode($json_retorno);
+}
+else if ($id_operacion == 2.5){//Agregar historico nuevo
+    $primera_vez;
+    if ($primera_vez){
+        
+    }
+    else{
+        
+    }
 }
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
     $sql = "SELECT id_admin, nombre FROM `admin` WHERE id_rol = 3 AND estado LIKE \"activo\"";
@@ -261,7 +273,7 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     }
     echo json_encode($json_retorno);
 }
-else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA
+else if ($id_operacion == 9){ //TODO, LISTA DE EVENTOS EN BITACORA, mover a un controlador de bitacora
     $id_paciente = $_GET["id_paciente"];
     $sql = "SELECT entrada_historico.fecha_entrada as fecha_ent, entrada_historico.tipo_entrada as tipo_ent, entrada_historico.descripcion_entrada as descp_ent \n"
     . "FROM entrada_historico \n"
@@ -302,5 +314,23 @@ else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA
         $json_final;
         $json_final["data"]=$json;
         echo json_encode($json_final);
+}
+else if ($id_operacion == 10){//TODO: MOVER A UN CONTROLADOR DE USUARIOS
+    $email = $_POST["mail"];
+    $sql = "SELECT email FROM `paciente` WHERE email LIKE \"$email\"";
+    $bd = connection::getInstance()->getDb();    
+    $pdo = $bd->prepare($sql);
+    $pdo->execute();    
+    $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+    $longitud = count($resultados);
+    $json;
+    //$json[0]["sql"] = $sql;
+    if ($longitud>0){//Hay un email con esa direccion, no se puede guardar
+        $json[0]["estado"] = 0;
+    }
+    else{//Se puede usar ese email
+        $json[0]["estado"] = 1;
+    }
+    echo json_encode($json);
 }
     

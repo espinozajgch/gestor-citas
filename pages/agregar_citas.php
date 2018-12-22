@@ -94,6 +94,7 @@ $hash = "";
 
     <script type="text/javascript">
         var bandera_nuevo_usuario = false;
+        var bandera_email_disponible = true;
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
@@ -216,9 +217,14 @@ input:checked + .slider:before {
         <div id="page-wrapper">
         
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                     <h1 class="page-header"><?php echo $etiqueta;?></h1>
-
+                </div>
+                <div id="advertencia_general" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
+                    <div id="alerta">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <div id="texto_advertencia_general"></div><a href="#" class="alert-link">X</a>.
+                     </div>                    
                 </div>
                 <div class="col-lg-7">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
@@ -335,6 +341,12 @@ input:checked + .slider:before {
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
+                                    <div id="notificacion_programa" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
+                                        <div id="programa_notificacion">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                            <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
+                                         </div>                    
+                                    </div>
                                     <div class="form-group col-6 col-sm-12 col-md-12">
                                         <small><strong><label for="inmobiliaria">Direccion</label></strong></small>
                                         <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" disabled><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
@@ -344,9 +356,9 @@ input:checked + .slider:before {
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="rs">Email</label></strong></small>
-                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" disabled>
-                                        <div id="error_rs" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa la razon social</small>
+                                        <input type="text" class="form-control" id="email" placeholder="Email" onchange="verificar_disponibilidad_mail()" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" disabled>
+                                        <div id="error_mail" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> EMAIL NO DISPONIBLE</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
@@ -454,7 +466,7 @@ input:checked + .slider:before {
                         </div>
                         <hr>
                         <div class="col-md-12 col-sm-12 col-xs-12 py-2 margin-bottom-20 pull-right text-right ">
-                            <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="enviar_formulario()">Guardar</button>
+                            <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="enviar_formulario_v2()">Guardar</button>
                         </div>
 
                     </form>
@@ -500,7 +512,7 @@ function validar_inputs(input, div_error){
             else{
                 $(div_error).hide();
                 //mostrar_exito(input);
-                //error = false;
+                error = false;
             }
             return error;
         }
@@ -605,6 +617,7 @@ function validar_inputs(input, div_error){
         });
         
         function buscar_info_paciente(){
+            
             if ($("#rut_paciente").val()==""){
                 $("#error_rut").fadeIn();
                 $("#error_rut").fadeOut(5000);
@@ -636,6 +649,20 @@ function validar_inputs(input, div_error){
                             $("#email").attr('disabled', true);
                             $("#fijo").attr('disabled', true);
                             $("#celular").attr('disabled', true);
+                            bandera_email_disponible = true;
+                            $("#error_mail").hide();
+                            msj="";
+                            if (json[0].programa!=false){                                   
+                                clase = "alert alert-success alert-dismissable";
+                                msj = "El paciente <strong>tiene</strong> programa terapéutico activo";
+                            }
+                            else{
+                                clase = "alert alert-warning alert-dismissable";
+                                msj = "El paciente <strong>no tiene</strong> programa terapéutico activo";
+                            }
+                            $("#programa_notificacion").prop("class",clase);
+                            $("#texto_notificacion_programa").html(msj);                    
+                            $("#notificacion_programa").fadeIn(100);                           
                         }
                         else{
                             $("#name").attr('disabled', false);
@@ -649,6 +676,12 @@ function validar_inputs(input, div_error){
                             //$("#error_rut").show(1500);
                             //$("#error_rut").hide(5000);
                             bandera_nuevo_usuario=true;
+                            clase = "alert alert-warning alert-dismissable";
+                            msj = "El paciente <strong>no tiene</strong> programa terapéutico activo";
+                            $("#programa_notificacion").prop("class",clase);
+                            $("#texto_notificacion_programa").html(msj);                    
+                            $("#notificacion_programa").fadeIn(100);                           
+                            verificar_disponibilidad_mail();
                         }
                     }
                 );
@@ -656,7 +689,229 @@ function validar_inputs(input, div_error){
             
         }
         
-        function enviar_formulario(){
+        function verificar_disponibilidad_mail(){
+            $.post(
+                    "citas/citas_controlador.php",
+            {
+                id_operacion: 10,
+                mail: $("#email").val()
+            },
+            function (result){
+                var resp = JSON.parse(result);
+                if (resp[0].estado == 1){//Si hay disponibilidad
+                    bandera_email_disponible = true;
+                    $("#error_mail").fadeOut();
+                }
+                else{//No hay disponibilidad
+                    bandera_email_disponible = false;
+                    $("#error_mail").fadeIn();
+                }
+            });
+        }
+        
+        function verificar_regex(campo, expresion){
+            var regex   =   new RegExp(expresion);
+            var res     =   regex.test($("#"+campo).val());
+            //alert ("Campo: "+campo+", resp: "+res);
+            return res;
+        }
+        
+        function verificar_fecha_regex (campo){
+            var regex   = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
+            var res     = regex.test($("#"+campo).val());
+            //alert ("Campo: "+campo+", resp: "+res);
+            return res;
+        }
+        
+        function verificar_normal (campo, expresion){
+            var bandera;
+            if ($("#"+campo).val() == expresion){
+                bandera = true;
+            }
+            else{
+                bandera = false;
+            }
+            //alert ("Campo: "+campo+", resp: "+bandera);
+        }
+        
+        function verificar_campos_inputs(){
+            var bandera = true;
+            //Verificar la fecha
+            if (!verificar_fecha_regex("fecha_a")){
+                bandera = false;
+            }
+            //Verficar el rut
+            if (!verificar_regex("name", "[a-zA-Z0-9]+")){
+                bandera = false;
+            }
+            //Verificar lista de medicos
+            if (verificar_normal("medicos","")){
+                bandera = false;
+            }
+            
+            if (bandera_email_disponible == false){                
+                bandera = false;
+            }
+            
+            if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
+            if (validar_inputs("#name", "#error_name")) bandera = false;
+            if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
+            //if (validar_inputs("#second_name", "#error_second_name")) bandera = false;
+            if (validar_inputs("#email", "#error_email")) bandera = false;            
+            if (validar_inputs("#celular", "#error_phone")) bandera = false;            
+            if (validar_inputs("#fijo", "#error_fijo")) bandera = false;            
+            if (validar_inputs("#direccion", "#error_direccion")) bandera = false;                        
+            
+            return bandera;
+        }
+        
+        function enviar_formulario_v2(){
+            //Primero tenemos que verificar que los campos estén correctamente puestos            
+            //Si todo está puesto bien hay que verificar dos cosas            
+            //1ero, disponibilidad de horario en la fecha y hora seleccionada            
+            //2do, si el paciente es nuevo hay que agregarlo para proceder            
+            //Luego se procede a procesar la información de la cita
+            //para esto hay una consideración: Si es un diagnostico.
+            //Para este caso se crea un programa terapeutico con un diagnostico y
+            //Se procede normalmente            
+            //Definimos una bandera que es la que nos indicará si los campos están bien puestos
+            var bandera = true;
+            //Llamamos a la función verificar campos y "bandera" tomará el boolean que devuelve
+            bandera = verificar_campos_inputs();            
+            var mensaje_final="Resultado:";
+            var bandera_exito=true;
+            if (bandera){//Procedemos con la doble verificación
+                //Guardamos los campos de manera temporal en algunas variables                
+                var identificacion  = $("#rut_paciente").val();
+                var nombre = $("#name").val();
+                var apellidop = $("#last_name").val();
+                var apellidom = $("#second_name").val();
+                var email = $("#email").val();
+                var telefonos = $("#fijo").val();
+                var direccion = $("#direccion").val();
+                var phone = $("#celular").val();
+                
+                $.when(//Primero la verificación de disponibilidad
+                $.post("citas/citas_controlador.php",
+                {
+                    id_operacion: 4,//TODO:CAMBIAR A JSCRIPT
+                    <?php
+                            if (isset($_GET["cita"])){
+                                echo "modificar: true, id_cita: ".$_GET["cita"];
+                            }
+                            else{
+                                echo "modificar: false";
+                            }
+                        ?>,
+                    fecha_inicio: $("#fecha_a").val(),
+                    hora_inicio: $("#hora_a").val(),
+                    hora_fin: $("#hora_b").val(),
+                    medicos: $("#medicos").val()
+                },
+                function(result){                    
+                    if (result !="1"){//No hay citas disponibles
+                        bandera = false;
+                        bandera_exito = false;
+                        mensaje_final+= "Fecha y hora no disponibles<br>";                        
+                    }                    
+                    else{
+                        mensaje_final+= "Fecha y hora disponibles<br>";
+                    }                    
+                }),
+                //Luego la verificación de usuario nuevo
+                $.ajax({
+                    data:  bandera_nuevo_usuario ? {accion : 1, identificacion : identificacion, nombre : nombre, apellidop : apellidop, apellidom : apellidom,  email : email, hash: "", telefonos: telefonos, direccion : direccion, phone : phone} : {accion: -1},
+                    url:   '../assets/class/usuario/usuario_acciones.php',
+                    type:  'post',                    
+                    success:  function (data) {
+                        respuesta = JSON.parse(data);
+                        console.log(data);                                                                     
+                        if(respuesta.estado <1){//No hubo necesidad de agregar al paciente
+                            if (respuesta.estado == 0.1){
+                                mensaje_final+= "Paciente registrado<br>";                                                                
+                            }
+                            else if (respuesta.estado == 0 && bandera_email_disponible == true){
+                                mensaje_final+= "Paciente registrado<br>";
+                            }
+                            else{
+                                mensaje_final+= "No se pudo agregar el paciente nuevo|<br>";
+                                bandera = false;
+                                bandera_exito = false;
+                            }
+                            
+                        }                      
+                        else if (respuesta.estado == 1){//Se agregó un paciente
+                            mensaje_final+= "Se registró el nuevo paciente<br>";
+                            $("#id_oculto").val(respuesta.mensaje);   
+                        }
+                    },
+                    error: function(data){
+                        bandera = false;
+                        bandera_exito = false;
+                        mensaje_final+= "ERROR GENERAL, CONTACTE AL ADMIN<br>";
+                    }
+                })
+                ).done(function (){//Por ultimo se procesa la información de ingreso de la cita
+                if (bandera){  
+                    var nom_apellido = $("#name").val()+" "+$("#last_name").val();                      
+                    if ($("#check_slider").prop("checked")){//Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
+                        bandera = false;
+                        //Verificar que el paciente no tenga un programa activo
+                        var id_programa = false;
+                        $.when(
+                            $.post("terapias/terapias_controlador.php",
+                            {
+                                id_operacion:       5,
+                                terapias_previas:   false,                
+                                id_paciente:        $("#id_oculto").val(),
+                                terapias:           1,
+                                terapias_individual:1,
+                                cantidad:           1,
+                                descripcion:        "Diagnóstico preliminar de "+nom_apellido,
+                                id:                 $("#id_oculto").val(),
+                                nombre_programa:    "Diagnóstico preliminar de "+nom_apellido
+                            },function (result){               
+                                var respuesta = JSON.parse(result);
+                                if (respuesta[0].estado == 1){//Se creo el programa terapeutico
+                                    id_programa = respuesta[0].id_programa;
+                                }
+                                console.log(respuesta[0].str_debug);
+                            })).then(function(){                                        
+                                    mensaje_final+=procesar_informacion(id_programa);
+                            });
+                    }
+                    else{
+                        mensaje_final+=procesar_informacion(false);
+                    }
+                }//FIN IF BANDERA
+                else{
+                    mensaje_final+="No se pudo reservar cita<br>";
+                    bandera_exito = false;
+                }   
+                var clase;
+                if (bandera_exito){                    
+                    clase = "alert alert-success alert-dismissable";
+                }
+                else{
+                    clase = "alert alert-warning alert-dismissable";
+                }
+                $("#alerta").prop("class",clase);
+                $("#texto_advertencia_general").html(mensaje_final);                    
+                $("#advertencia_general").fadeIn(100).fadeOut(5000);
+                
+                });
+            }
+            else{
+                $("#alerta").prop("class","alert alert-warning alert-dismissable");
+                mensaje_final+="|Por favor verifique los campos del formulario|";
+                $("#texto_advertencia_general").html(mensaje_final);
+                $("#advertencia_general").fadeIn(100).fadeOut(5000);
+            }
+            
+            
+        }
+                
+        /*function enviar_formulario(){
             //alert ($("#check_slider").prop("checked"));
             var regex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
             var bandera = true;
@@ -678,22 +933,27 @@ function validar_inputs(input, div_error){
                 bandera = false;
                 alert ("Seleccione al menos un medico");
             }
+            if (bandera_email_disponible == false){
+                alert ("El email ingresado no está disponible, intente otro");
+                bandera = false;
+            }
             //alert (bandera);
             //alert ("Fecha inicio: "+$("#fecha_a").val()+"\n Fecha Fin: "+$("#fecha_b").val()+"\n Hora Inicio: "+$("#hora_a").val()+"\n Hora fin: "+$("#hora_b").val());            
             if (bandera){
                 //Si la bandera no fue modificada entonces podemos enviar el formulario
                 //Cuando verifiquemos que existe disponibilidad para los medicos seleccionados, procedemos a enviar el formulario
+               
                 $.when(
                 $.post("citas/citas_controlador.php",
                 {
                     id_operacion: 4,
                     <?php
-                            if (isset($_GET["cita"])){
+                            /*if (isset($_GET["cita"])){
                                 echo "modificar: true, id_cita: ".$_GET["cita"];
                             }
                             else{
                                 echo "modificar: false";
-                            }
+                            }//*/
                         ?>,
                     fecha_inicio: $("#fecha_a").val(),
                     hora_inicio: $("#hora_a").val(),
@@ -763,11 +1023,12 @@ function validar_inputs(input, div_error){
             else{
                 console.log("Verificar datos");
             }
-        }
+        }//*/
         
         function procesar_informacion(id_programa){
             var terapias=false;
             var id_terapias=false;
+            var mensaje_retorno="";
             if (id_programa){
                 terapias = true;
                 id_terapias = 1;
@@ -775,44 +1036,41 @@ function validar_inputs(input, div_error){
             else{
                 terapias =<?php if (isset($_GET["id_terapia"])){echo "true";}else echo "false";?>;
                 id_terapias = <?php if (isset($_GET["id_terapia"])){echo $_GET["id_terapia"];}else echo "false";?>;
-            }
-            
+            }            
             $.post("citas/citas_controlador.php",
-                        {
-                            id_operacion : <?php
-                                if (isset($_GET["cita"])){
-                                    echo "\"7\",
-                                        cita: \"".$_GET["cita"]."\",
-                                        medicos_previos: preseleccion";
-                                }
-                                else{
-                                    echo "\"2\"";
-                                }
-                            ?>,
-                            terapia         : terapias,
-                            id_terapia      : id_terapias,
-                            fecha_inicio    : $("#fecha_a").val(),
-                            hora_inicio     : $("#hora_a").val(),
-                            hora_fin        : $("#hora_b").val(),
-                            id              : $("#id_oculto").val(),
-                            medio_contacto  : $("#medio_contacto").val(),
-                            medio_pago      : $("#metodo_pago").val(),
-                            observaciones   : $("#observaciones").val(),                            
-                            medicos         : bandera = $("#medicos").val()
-                            }, function (result){
-                                var respuesta = JSON.parse(result);
-                                if (respuesta[0].estado == 1){
-                                    alert ("Cita guardada con éxito");
-                                    //Luego de creada la cita, si estamos creando un chequeo, procedemos a crear el programa con esta terapia
-                                   // agregar_chequeo();
-                                    //Luego
-                                }
-                                else{
-                                    alert ("Error");
-                                }
-                                $("#alert_ok").show(500);
-                                $("#alert_ok").hide(5000);
-                            });
+            {
+            id_operacion : <?php
+                if (isset($_GET["cita"])){
+                    echo "\"7\",
+                        cita: \"".$_GET["cita"]."\",
+                        medicos_previos: preseleccion";
+                }
+                else{
+                    echo "\"2\"";
+                }
+            ?>,
+            terapia         : terapias,
+            id_terapia      : id_terapias,
+            fecha_inicio    : $("#fecha_a").val(),
+            hora_inicio     : $("#hora_a").val(),
+            hora_fin        : $("#hora_b").val(),
+            id              : $("#id_oculto").val(),
+            medio_contacto  : $("#medio_contacto").val(),
+            medio_pago      : $("#metodo_pago").val(),
+            observaciones   : $("#observaciones").val(),                            
+            medicos         : bandera = $("#medicos").val()
+            }, 
+            function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado == 1){
+                    mensaje_retorno+="La cita se guardó con éxito<br>";                
+                }
+                else{
+                    mensaje_retorno+="Hubo un error al guardar la cita, contacte al ADMIN<br>";
+                }
+            }
+            );
+        return mensaje_retorno;
         }
         
             

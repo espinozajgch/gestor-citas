@@ -261,30 +261,39 @@ class terapias {
         //print_r($resultados);
         $longitud = count($resultados);
         //echo $longitud;   
-        if ($longitud<1){
+        if ($resultados){
+            if ($longitud<1){
+                $json[0]['N'] = "No hay información que mostrar";
+                $json[0]['Paciente'] = "";
+                $json[0]['Terapias'] = "";
+                $json[0]['Acciones'] = "";
+
+            }
+            for ($i=0; $i<$longitud; $i++){
+                $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
+                $json[$i]['Paciente'] = $resultados[$i]["nombre"];
+                $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
+                $json[$i]['Acciones'] = "
+                        <a title=\"Generar invoice\" id=\"btn_reserva\" 
+                            class=\"btn btn-info\"  
+                            onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
+                            <i class=\"fa fa-file-text-o\"></i>
+                        </a>
+                        <a title=\"Detalle programa\" 
+                            class=\"btn btn-info\"  
+                            href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."\">
+                            <i class=\"fa fa-eye\"></i>
+                        </a>";
+
+            }        //FORMATO de json
+        }
+        else{
             $json[0]['N'] = "No hay información que mostrar";
             $json[0]['Paciente'] = "";
-            $json[0]['Cantidad de terapias'] = "";
+            $json[0]['Terapias'] = "";
             $json[0]['Acciones'] = "";
-            
         }
-        for ($i=0; $i<$longitud; $i++){
-            $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
-            $json[$i]['Paciente'] = $resultados[$i]["nombre"];
-            $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
-            $json[$i]['Acciones'] = "
-                    <a title=\"Generar invoice\" id=\"btn_reserva\" 
-                        class=\"btn btn-info\"  
-                        onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
-                        <i class=\"fa fa-file-text-o\"></i>
-                    </a>
-                    <a title=\"Detalle programa\" 
-                        class=\"btn btn-info\"  
-                        href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."\">
-                        <i class=\"fa fa-eye\"></i>
-                    </a>";
-            
-        }        //FORMATO de json
+        
         //descripcion, fecha inicio, fecha fin
         $json = json_encode($json);
         return $json;

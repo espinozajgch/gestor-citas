@@ -70,6 +70,7 @@ else if ($id_operacion == 4){//Obtener las terapias para el pillbox
 }
 else if ($id_operacion == 5){//Crear un programa terapeutico
     $json;
+    $str_debug="";
     $id_paciente = $_POST["id_paciente"];
     $nombre_programa = $_POST["nombre_programa"];
     //Obtener el ID del historial del paciente
@@ -78,22 +79,44 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $terapia = $lista_terapias[0];
     $cantidad = $_POST["cantidad"];
     $count_array =count($lista_terapias);
+    $str_debug.="-Se agregaran $cantidad terapias-";
     for ($i=0; $i<$cantidad; $i++){
         $lista_terapias[$count_array+$i]=$terapia;
     }
     $json[0]["estado"]=1;
-    $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
-    if ($id_insert!=0){
-        $json[0]["id_programa"] = $id_insert;
-        if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
-            $cantida_terapias = count($lista_terapias);
-            historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
-            $json[0]["estado"]=0;
+    //Verificamos que el paciente no tenga un programa terapeutico actaivo
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    if ($id_programa){//Debemos actualizar
+        $str_debug.="-El paciente tiene un programa activo, actualizar lista de terapias-";
+        if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){            
+            $str_debug.="-Terapia agregada-";
+            $id_historico = historico::obtener_id_historico_paciente($id_paciente);            
+            historico::agregar_entrada($id_historico, "MODIFICAR", "Se agregó un chequeo al programa terapeutico del paciente", 2);
+        }
+        else{
+            $str_debug.="-Error al agregar terapia-";
+            $json[0]["estado"]      =   0;
         }
     }
     else{
-        $json[0]["estado"]=0;
-    }
+        $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
+        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
+        if ($id_insert!=0){
+            $str_debug.="-Programa creado con el indice $id_insert-";
+            $json[0]["id_programa"] = $id_insert;
+            if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
+                $cantida_terapias = count($lista_terapias);
+                historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
+                $str_debug.="-Terapias agregadas, historico actualizado-";
+                $json[0]["estado"]=0;
+            }
+        }
+        else{
+            $str_debug.="-Error al agregar terapias-";
+            $json[0]["estado"]=0;
+        }
+    }    
+    $json[0]["str_debug"] = $str_debug;
     echo json_encode($json);
 }
 else if ($id_operacion == 6){

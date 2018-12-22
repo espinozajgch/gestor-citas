@@ -1,8 +1,8 @@
 <?php
-$etiqueta = "Crear programa terapéutico";
+$etiqueta = "Programas terapeuticos";
 $id_terapia;
 if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a modificar
-    $etiqueta = "Modificar programa terapéutico";
+    $etiqueta = "Programas terapéutico";
     $id_terapia = $_GET["terapia"];
 }
 ?>
@@ -44,7 +44,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
 
     <div class="row">
-        <div class="form-group col-8 col-sm-8 col-md-8 mt-5">
+        <div class="form-group col-8 col-sm-8 col-md-8 mt-5" style="display: none" id="contenedor_nombre_programa">
             <small><strong><label for=name_>Nombre del programa</label></strong></small>
             <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">
             <div id="error_name_pt" class="text-danger" style="display:none">
@@ -91,7 +91,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <div class="form-group col-7 col-sm-7 col-md-7">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
             <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
-            <div >
+            <div hidden="true">
                 <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
             </div>
             
@@ -194,7 +194,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     }                
                 );
             }
-            
+            $("#contenedor_nombre_programa").show();
         }        
         
     function redirigir_terapia(){        

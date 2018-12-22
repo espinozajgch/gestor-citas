@@ -237,6 +237,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res = pacientes::editar_diagnostico($bd, $id_hm, $diagnostico);
 			$estado = 1;
 		}
+                else if ($accion==-1){
+                    $estado = 0.1;
+                    $id_hm  = 0;
+                    $res    = "No se agrega nuevo usuario";
+                }
 
 		echo json_encode(array("estado"=>$estado, "mensaje"=>$id_hm, "res"=>$res), JSON_FORCE_OBJECT);	
     		
