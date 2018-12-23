@@ -291,7 +291,7 @@ input:checked + .slider:before {
                                         </div>                                        
                                     </div>
                                     <div  id="error_fechas" class="col-sm-12 col-md-12 my-3 text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Selecciona fechas válidas</small>
+                                            <i class="fa fa-exclamation"></i><small> Selecciona fechas y horas válidas</small>
                                     </div>
 <!--                                    <div class="form-group col-2 col-sm-2 col-md-2">
                                         <small><strong><label for=name_>Presiona </label></strong></small><br>
@@ -599,11 +599,11 @@ function validar_inputs(input, div_error){
         
         function mostrar_calendario(id){
             if (fecha < 0){
-                $("#contenedor_calendario").show();
+                $("#contenedor_calendario").fadeIn(300);
                 fecha *= -1;
             }
             else{
-                $("#contenedor_calendario").hide();
+                $("#contenedor_calendario").fadeOut(300);
                 fecha *= -1;
             }
             
@@ -1149,8 +1149,8 @@ function validar_inputs(input, div_error){
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){
                     
-                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
-                    alert (fecha_seleccionada);
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
+                    //alert (fecha_seleccionada);
                     calendar.changeView('agendaDay', fecha_seleccionada);
                 },
                 eventLimit: true, // allow "more" link when too many events
@@ -1161,6 +1161,7 @@ function validar_inputs(input, div_error){
                 locale : "es-us",
                 responsive: true,
                 selectable: true,
+                weekends: false,
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
@@ -1179,11 +1180,24 @@ function validar_inputs(input, div_error){
                           calendar.changeView('agendaWeek', fecha_seleccionada);
                     }
                     else{//Sino procedemos a colocar las dos fechas juntas
-                        $("#fecha_a").val(fecha_seleccionada);
-                        $("#hora_a").val(hora_seleccionada);
+                        //Asegurarse que no se seleccionen horas no laborables
+                        //alert (arg.start.getHours());
+                        if ((arg.start.getHours()>=9)&&(arg.start.getHours()<17)){
+                            $("#fecha_a").val(fecha_seleccionada);
+                            $("#hora_a").val(hora_seleccionada);
                         
-                        $("#fecha_b").val(fecha_seleccionada_b);
-                        $("#hora_b").val(hora_seleccionada_b);
+                            $("#fecha_b").val(fecha_seleccionada_b);
+                            $("#hora_b").val(hora_seleccionada_b);
+                        }
+                        else{                            
+                            $("#error_fechas").fadeIn(100).fadeOut(2000);
+                            $("#fecha_a").val("");
+                            $("#hora_a").val("");
+                        
+                            $("#fecha_b").val("");
+                            $("#hora_b").val("");
+                        }
+                        
                     }
                 }
             });        

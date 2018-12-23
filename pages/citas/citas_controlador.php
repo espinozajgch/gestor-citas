@@ -333,4 +333,32 @@ else if ($id_operacion == 10){//TODO: MOVER A UN CONTROLADOR DE USUARIOS
     }
     echo json_encode($json);
 }
+else if ($id_operacion == 11){//VALIDAR UNA CITA INDIVIDUAL, SIN PROGRAMA
+    $id_cita = $_POST["id_cita"];
+    $id_programa = $_POST["id_programa"];
+    $id_terapia = $_POST["id_terapia"];
+    $json;
+    if (citas::validar_cita($id_cita)){        
+        if ($id_programa!=false){
+            if (terapias::validar_terapia($id_programa, $id_terapia)){
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita validad con exito";
+            }
+            else{
+                $json[0]["estado"]=0;
+                $json[0]["str_debug"]="Ocurrió un error inesperado";
+            }
+            
+        }
+        else{
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita validad con exito";
+            }
+    }
+    else{
+        $json[0]["estado"]=0;
+        $json[0]["str_debug"]="Ocurrió un error inesperado";
+    }
+    echo json_encode($json);
+}
     

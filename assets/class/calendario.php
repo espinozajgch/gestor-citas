@@ -228,7 +228,7 @@ class calendario {
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT (id_admin), id_rm, admin.nombre as nombre_medico,
+        /*$sql = "SELECT (id_admin), id_rm, admin.nombre as nombre_medico,
             paciente.nombre, paciente.apellidop, paciente.apellidom, paciente.rut, 
             reserva_medica.fecha_inicio, reserva_medica.hora_inicio, 
             reserva_medica.hora_fin, reserva_medica.estado as estado_rm 
@@ -238,20 +238,29 @@ class calendario {
             INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
             INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
             WHERE paciente.estado_paciente LIKE \"activo\" 
-                AND reserva_medica.estado NOT LIKE \"cancelado\" GROUP BY id_rm";
-        $pdo = $bd->prepare($sql);
-        //echo $sql;
+                AND reserva_medica.estado NOT LIKE \"cancelado\" GROUP BY id_rm";//*/
         
+        //echo $sql;
+        $sql ='SELECT rm.id_rm as id_rm, rm.fecha_inicio as fecha_inicio, 
+            rm.hora_inicio as hora_inicio, rm.estado as estado_rm, 
+            p.nombre as nombre, p.apellidop as apellidop, 
+            p.apellidom, a.nombre as nombre_medico ,
+            pt.descripcion_programa_terapeutico as nombre_programa, pt.id_programa_terapeutico as id_programa,
+            ptt.terapia_id_terapia as id_terapia
+            FROM reserva_medica rm 
+            INNER JOIN paciente_tiene_reserva ptr ON rm.id_rm=ptr.reserva_medica_id_rm 
+            INNER JOIN paciente p ON ptr.paciente_id_paciente=p.id_paciente 
+            INNER JOIN medico_tiene_reserva mtr ON mtr.reserva_medica_id_rm=rm.id_rm 
+            INNER JOIN admin a ON a.id_admin=mtr.admin_id_admin 
+            LEFT JOIN programa_tiene_terapia ptt ON ptt.reserva_medica_id_rm = rm.id_rm
+            LEFT JOIN programa_terapeutico pt ON ptt.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico
+            WHERE rm.estado NOT LIKE "cancelado" AND rm.estado NOT LIKE "atendida"';
+        $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos
         $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
-        //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria
-        //para el calendario de FULLCALENDAR
-        //print_r($resultados);
-        //echo "<br>";
-        //print_r($resultados);
-        $longitud = count($resultados);
-        //echo $longitud;   
+        //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria        
+        $longitud = count($resultados);        
         if ($longitud<1){
             $json[0]['N'] = "No hay información que mostrar";
             $json[0]['Medico'] = "";
@@ -259,19 +268,48 @@ class calendario {
             $json[0]['Hora'] = "";
             $json[0]['Fecha'] = "";
             $json[0]['Estado'] = "";
+            $json[0]['Programa'] = "";
             $json[0]['Acciones'] = "";
         }
+        $nombre_programa;
+        $id_programa;
+        $id_terapia;
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['Medico'] = $resultados[$i]["nombre_medico"];
             $json[$i]['Paciente'] = $resultados[$i]["nombre"]." ".$resultados[$i]["apellidop"];
             $json[$i]['Hora'] = $resultados[$i]["hora_inicio"];
-            $json[$i]['Fecha'] = $resultados[$i]["fecha_inicio"];
+            $json[$i]['Fecha'] = $resultados[$i]["fecha_inicio"];            
+            if ($resultados[$i]["nombre_programa"]==""||$resultados[$i]["nombre_programa"]==null){
+                $nombre_programa = "No pertenece";
+                $id_programa = "false";
+                $id_terapia = "false";
+            }
+            else{
+                $nombre_programa = $resultados[$i]["nombre_programa"];
+                $id_programa = $resultados[$i]["id_programa"];
+                $id_terapia =  $resultados[$i]["id_terapia"];
+            }
+            $json[$i]['Programa'] = $nombre_programa;
             $json[$i]['Estado'] = $resultados[$i]["estado_rm"];
-            $json[$i]['N'] = "<a href=\"agregar_citas.php?cita=".$resultados[$i]["id_rm"]."\">".($i+1)."</a>";
-            $json[$i]['Acciones'] = "";
+            $json[$i]['N'] = ($i+1);
+            $json[$i]['Acciones'] = "
+                <a title=\"Validar cita\" 
+                    class=\"btn btn-success\"  
+                    onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" >
+                    <i class=\"fa fa-check\"></i>
+                </a>
+                <a title=\"Detalle\" 
+                    class=\"btn btn-info\"  
+                    href=\"agregar_citas.php?cita=".$resultados[$i]["id_rm"]."\" >
+                    <i class=\"fa fa-eye\"></i>
+                </a>
+                <a title=\"Cancelar\" 
+                    class=\"btn btn-danger\"  
+                    onclick =\"cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" >
+                    <i class=\"fa fa-times-circle\"></i>
+                </a>";
         }
-        //FORMATO de json
-        //descripcion, fecha inicio, fecha fin
+        //FORMATO de json        
         $json = json_encode($json);
         return $json;
     }

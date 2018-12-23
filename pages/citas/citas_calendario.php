@@ -36,7 +36,7 @@ require_once '../assets/class/calendario.php';
             <!-- /.row -->
 <div class="row">
     <div class="col-lg-10 pull-left">
-        <div id="calendario" class="calendario" style="max-width: 50%">
+        <div id="calendario" class="calendario" style="max-width: 80%">
         
         </div>
     </div>    
@@ -58,24 +58,28 @@ require_once '../assets/class/calendario.php';
             //alert (url);
             calendar = new FullCalendar.Calendar(calendarEl, {      
                 header: {
-                    left: 'prev,next today',
+                    left: 'prev,next,today',
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
+                },                  
+                businessHours:{
+                    dow: [1,2,3,4,5],
+                    start: '8:00',
+                    end: '18:00'
                 },
                 defaultView: 'agendaWeek',
-                editable: true,
+                editable: false,
                 navLinks: true, // can click day/week names to navigate views
+                navLinkDayClick: function (date, jsEvent){
+                    
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
+                    //alert (fecha_seleccionada);
+                    calendar.changeView('agendaWeek', fecha_seleccionada);
+                },
                 eventLimit: true, // allow "more" link when too many events
                 events: {
                     url: url,
-                    method: 'GET',
-                    failure: function() {
-                      //document.getElementById('script-warning').style.display = 'block'
-                      //alert("trtr");
-                    },
-                    success: function (){
-                        //alert ("Cargado");
-                    }
+                    method: 'GET'
                 },
                 locale : "es-us",
                 responsive: true,

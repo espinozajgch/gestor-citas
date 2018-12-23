@@ -101,11 +101,11 @@ $usuario  = "";
                                 include_once("citas/citas_tabla.php");
                             }
                             else if ($_GET["vista"]==-1){
-                                //include_once("citas/citas_calendario.php");
+                                include_once("citas/citas_calendario.php");
                             }                            
                         }
                         else if ($_GET["opcion"]==2){
-                            //include_once("agreagar_citas.php");                            
+                            include_once("agregar_citas.php");                            
                         }
                     }                    
                     
@@ -232,11 +232,31 @@ $usuario  = "";
                     {"data": "Fecha"},
                     {"data": "Hora"},
                     {"data": "Paciente"},
-                    {"data": "Medico"},
+                    {"data": "Medico"},                    
                     {"data": "Estado"},
+                    {"data": "Programa"},
                     {"data": "Acciones"}
                 ]
             });
     });
+    
+    function validar_cita(id_cita, id_programa, id_terapia){
+        $.post("citas/citas_controlador.php",
+        {
+            id_operacion: 11,
+            id_cita: id_cita,
+            id_programa: id_programa,
+            id_terapia: id_terapia
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                //Validado con exito
+                alert ("Validado con exito");
+            }
+            else{
+                alert ("Ocurrio un error");
+            }
+        });
+    }
 </script>
 </html>
