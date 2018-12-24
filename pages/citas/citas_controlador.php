@@ -88,7 +88,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
                 if ($_POST["id_terapia"]!="false"){
                     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
                     //echo "$id_programa,".$_POST["id_terapia"].", $id_insercion";
-                    if (!citas::asignar_reserva_terapia($id_programa, $_POST["id_terapia"], $id_insercion)){
+                    if (!citas::asignar_reserva_terapia($_POST["id_terapia"], $id_insercion)){
                         $json_retorno[0]['estado'] = 0;                    
                     }else{
                         $nom_terapia = terapias::obtener_nombre_terapia($_POST["id_terapia"]);

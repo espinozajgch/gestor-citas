@@ -104,11 +104,13 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
         if ($id_insert!=0){
             $str_debug.="-Programa creado con el indice $id_insert-";
             $json[0]["id_programa"] = $id_insert;
-            if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
+            $id_terapia_programa = terapias::asignar_terapias_programa($lista_terapias, $id_insert);
+            if ($id_terapia_programa != 0){
                 $cantida_terapias = count($lista_terapias);
                 historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
                 $str_debug.="-Terapias agregadas, historico actualizado-";
                 $json[0]["estado"]=0;
+                $json[0]["id_pr_t_t"] = $id_terapia_programa;
             }
         }
         else{

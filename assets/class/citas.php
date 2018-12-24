@@ -171,12 +171,11 @@ class citas {
         return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones,$hora_inicio,$hora_fin));
     }
     
-    public static function asignar_reserva_terapia($id_programa, $id_terapia, $id_reserva){
+    public static function asignar_reserva_terapia($id_programa_t_t, $id_reserva){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_tiene_terapia
         SET reserva_medica_id_rm=?, estado=? 
-            WHERE programa_terapeutico_id_programa_terapeutico =$id_programa
-                AND terapia_id_terapia = $id_terapia";
+            WHERE id_programa_tiene_terapia =$id_programa_t_t";
         $pdo = $bd->prepare($sql);        
         //echo $sql." - $id_programa - $id_terapia - $id_reserva";
         return $pdo->execute(array($id_reserva, "pagado"));

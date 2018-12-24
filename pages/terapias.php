@@ -323,25 +323,21 @@ $usuario  = "";
             });
     }
     
-    function seleccionar_terapia(id_terapia, estado){
-        terapia_seleccionada = id_terapia;
-        window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
-        //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"
-        /*var mensaje_confirm;
-        if (estado == 1){//Se reserva por primera vez
-            mensaje_confirm = "Se reservará cita para la terapia seleccionada, por favor confirme";
+    function seleccionar_terapia(id_terapia, estado, modificar = false){
+        terapia_seleccionada = id_terapia;        
+        //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"        
+        if (estado == 1){
+            redirigir_terapia();
         }
-        else if (estado == 2){//Se modificará la reservación de la cita
-            mensaje_confirm = "Está a punto de modificar la reservación de una cita pagada, confirmar";
-        }
-        if (confirm(mensaje_confirm)){
-            if (estado == 1){
-                redirigir_terapia();
+        else{
+            if (modificar==true){
+                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
             }
             else{
-                
+                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
             }
-        }*/
+                
+        }        
     }
     
     function generar_invoice(id_paciente){

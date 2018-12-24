@@ -186,6 +186,23 @@ class terapias {
         }
     }
     
+    public static function obtener_id_cita_programa_t_id ($id_ptt){
+        $sql = "SELECT * FROM `programa_tiene_terapia` 
+            WHERE `id_programa_tiene_terapia`=".$id_cita."";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["reserva_medica_id_rm"];
+        }
+        else{            
+            return false;
+        }
+    }
+            
+    
     public static function obtener_nombre_terapia ($id_terapia){
         $sql = "SELECT DISTINCT * 
             FROM `terapia` 
@@ -238,7 +255,10 @@ class terapias {
             //echo $id_terapia." - ".$id_programa;
             if (!$pdo->execute(array($id_programa,$id_terapia))){
                 $bandera = 0;
-            }            
+            }
+            else{
+                $bandera = $bd->lastInsertId();
+            }
         }
         return $bandera;
     }
@@ -368,12 +388,13 @@ class terapias {
             for ($i=0; $i<$longitud; $i++){
                 $str_a                  = "href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."";
                 $id_terapia = $resultado[$i]["id_terapia"];                
+                $id_ptt     = $resultado[$i]["ptt_id"];
                 //echo $resultado[$i]["estado_t"]." - estado";
                 if ($resultado[$i]["estado_t"]=="pendiente"){//Se puede reservar la cita                    
                     $str_btn = "
                     <a title=\"Reservar\" 
                         class=\"btn btn-info\"  
-                        onclick = \"seleccionar_terapia($id_terapia, 1)\">
+                        onclick = \"seleccionar_terapia($id_ptt, 2)\">
                         <i class=\"fa fa-calendar\"></i>
                     </a>";
                     if ($id_referer==1){//Agregar boton de eliminar terapia
@@ -392,7 +413,7 @@ class terapias {
                     $str_btn = "
                     <a title=\"Modificar Reserva\" 
                         class=\"btn btn-warning\"  
-                        onclick = \"seleccionar_terapia($id_cita, 2)\">
+                        onclick = \"seleccionar_terapia($id_cita, 2, true)\">
                         <i class=\"fa fa-edit\"></i>
                     </a>
                     

@@ -3,7 +3,7 @@ require_once('../assets/bin/connection.php');
 require_once("../assets/class/admin/admin_data.php");
 require_once '../assets/class/calendario.php';
 require_once("../assets/class/usuario/usuarios_data.php");
-
+//BIG TODO: ARREGLAR EL FORMULARIO, HACERLO MÁS GENERICO Y SIN TANTO HARDCODING
 $user = "";
 $tipo = "";
 $hash = "";
@@ -28,8 +28,19 @@ $rut_paciente = "";
     
         $etiqueta = "Agregar Cita";
         if (isset($_GET["cita"])){//Si existe la variable cita, es porque vamos a modificar
-            $etiqueta = "Modificar Cita";
+            if (isset($_GET["ref"])){//Viene para reservar una cita nueva
+                $etiqueta = "Asignar cita para terapia";
+                $id_operacion = "2";
+            }
+            else{
+                $etiqueta = "Modificar Cita";
+                $id_operacion = "7";
+            }
             
+            
+        }
+        else if (isset ($_GET["mod"])){
+            $etiqueta = "Reservar cita para terapia";
         }
         if (isset($_GET["id_terapia"])){
             $id_terapia         = $_GET["id_terapia"];
@@ -113,9 +124,23 @@ $rut_paciente = "";
         
         if (<?php 
             $operacion = 2;
-            if (isset($_GET["cita"])){
-                echo "true";
-                $operacion = 7;
+            if (isset($_GET["cita"])||(isset($_GET["ref"]))){
+                if (isset($_GET["ref"])){
+                    if (isset($_GET["mod"])){
+                        $operacion = 7;
+                        echo "true";
+                    }
+                    else{
+                        $operacion = 2;
+                        echo "false";
+                    }
+                    
+                }
+                else{
+                    $operacion = 7;
+                    echo "true";
+                }
+                
             }
             else{
                 $operacion = 2;
@@ -125,12 +150,18 @@ $rut_paciente = "";
         {
             //alert ("Modificar");
             obtener_informacion_cita();
-
+            
 
         }
+        <?php 
+            if (isset($_GET["ref"])){
+                echo '$("#btn_buscar").trigger(\'click\').prop(\'disabled\', "true"); 
+                    ';
+            }
+            ?>
         if (<?php 
             $operacion = 2;
-            if (isset($_GET["rut"])){
+            if ((isset($_GET["rut"]))||(isset($_GET["rut_paciente"]))){
                 echo "true";                
             }
             else{                
@@ -820,8 +851,14 @@ function validar_inputs(input, div_error){
                 {
                     id_operacion: 4,//TODO:CAMBIAR A JSCRIPT
                     <?php
-                            if (isset($_GET["cita"])){
-                                echo "modificar: true, id_cita: ".$_GET["cita"];
+                            if (isset($_GET["cita"])||(isset($_GET["mod"]))){
+                                if (isset($_GET["cita"])){
+                                    echo "modificar: true, id_cita: ".$_GET["cita"];
+                                }
+                                else{
+                                    echo "modificar: true, id_cita: ".$_GET["id_ptt"];
+                                }
+                                
                             }
                             else{
                                 echo "modificar: false";
@@ -876,8 +913,6 @@ function validar_inputs(input, div_error){
                     }
                 })
                 ).done(function (){//Por ultimo se procesa la información de ingreso de la cita
-
-                    //console.log(bandera);   
                 if (bandera){  
 
                     ///console.log(bandera);   
@@ -904,6 +939,7 @@ function validar_inputs(input, div_error){
                                 var respuesta = JSON.parse(result);
                                 if (respuesta[0].estado == 1){//Se creo el programa terapeutico
                                     id_programa = respuesta[0].id_programa;
+                                    id_terapia_programa = respuesta[0].id_pt_t_t;
                                 }
                                 //console.log(respuesta[0].str_debug);
                             }).fail(function() {
@@ -911,11 +947,12 @@ function validar_inputs(input, div_error){
                               })
 
                         ).then(function(){                                        
-                                    mensaje_final+=procesar_informacion(id_programa);
+                                    mensaje_final+=procesar_informacion(id_terapia_programa);
                         });
                     }
                     else{
-                        //console.log("aqui");     
+                        //console.log("aqui");   
+                        
                         mensaje_final+=procesar_informacion(false);
                     }
                 }//FIN IF BANDERA
@@ -1066,19 +1103,27 @@ function validar_inputs(input, div_error){
             var mensaje_retorno="";
             if (id_programa){
                 terapias = true;
-                id_terapias = 1;
+                id_terapias = id_programa;
             }
             else{
-                terapias =<?php if (isset($_GET["id_terapia"])){echo "true";}else echo "false";?>;
-                id_terapias = <?php if (isset($_GET["id_terapia"])){echo $_GET["id_terapia"];}else echo "false";?>;
+                terapias =<?php if (isset($_GET["id_ptt"])){echo "true";}else echo "false";?>;
+                id_terapias = <?php if (isset($_GET["id_ptt"])){echo $_GET["id_ptt"];}else echo "false";?>;
             }            
             $.post("citas/citas_controlador.php",
             {
             id_operacion : <?php
-                if (isset($_GET["cita"])){
-                    echo "\"7\",
+                if ((isset($_GET["cita"]))||((isset($_GET["id_ptt"])))){
+                    if (isset($_GET["cita"])){
+                        echo "\"7\",
                         cita: \"".$_GET["cita"]."\",
                         medicos_previos: preseleccion";
+                    }
+                    else{
+                        echo "\"7\",
+                        cita: \"".$_GET["id_ptt"]."\",
+                        medicos_previos: preseleccion";
+                    }
+                    
                 }
                 else{
                     echo "\"2\"";
@@ -1141,13 +1186,16 @@ function validar_inputs(input, div_error){
             }).ready(function (){
                 //En cuanto se cargue esto verificamos si se está verificando
                 //en cuyo caso cargaremos las opciones que se necesitan
-                if (1==<?php if (isset($_GET["cita"])){echo "1";}else{echo "0";}?>){                    
+                if (1==<?php if (isset($_GET["cita"])||(isset($_GET["mod"]))){echo "1";}else{echo "0";}?>){                    
                     $.post("citas/citas_controlador.php",
                     {
                         id_operacion : 6
                         <?php 
                             if (isset($_GET["cita"])){
                                 echo ", cita:".$_GET["cita"];
+                            }
+                            else if (isset ($_GET["id_ptt"])){
+                                echo ", cita:".$_GET["id_ptt"];
                             }
                         ?>
                     },
@@ -1260,13 +1308,18 @@ function validar_inputs(input, div_error){
         //rut paciente
         //medio contacto        
         //Observaciones
-        if (1==<?php if (isset($_GET["cita"])){echo "1";}else{echo "0";}?>){                    
+        if (1==<?php if (isset($_GET["cita"])||(isset($_GET["mod"]))){echo "1";}else{echo "0";}?>){                    
             $.post("citas/citas_controlador.php",
             {
                 id_operacion : 5
                 <?php 
-                    if (isset($_GET["cita"])){
-                        echo ", cita:".$_GET["cita"];
+                    if (isset($_GET["cita"])||(isset($_GET["mod"]))){
+                        if (isset($_GET["cita"])){
+                            echo ", cita:".$_GET["cita"];
+                        }
+                        else{
+                            echo ", cita:".$_GET["id_ptt"];
+                        }
                     }
                 ?>
             },function(result){
