@@ -151,36 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		}
 		else
-		if($accion==6){
-			
-			//REENVIAR MENSAJE ACTIVACION
-			$email = $_POST["email"];
-			$data = pacientes::recuperar_pass_by_email($bd,$email);
-			$tam = count($data);
-
-			if($tam > 0){
-				$estado=1;
-				$hash = $data["hash"];
-				$password = $data["password"];
-				$id_tipo_usuario = $data["id_tipo_usuario"];
-
-	            if($id_tipo_usuario == 1){
-	                $destinatario = pacientes::obtener_nombre($bd, $hash);
-	                $destinatario .= " ". pacientes::obtener_apellido($bd, $hash);
-	            }
-	            else{
-	                $destinatario = pacientes::obtener_nombre_inmobiliaria($bd, $hash);
-	            }
-
-				Mailer::correo_registro_rsuario($bd, $destinatario, $email, $password, $hash);
-				$res = "Mensaje de activacion enviado";
-			}
-			else{
-				$estado= 0;
-				$res = "Email Invalido";
-			}
-		}
-		else
 		if($accion==7){
 			
 			//CAMBIAR ESTATUS
@@ -199,7 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			//AGREGAR HISTORIA
 			$id_paciente = $_POST["id"];
 			$historia = $_POST["historia"];
-			$res=pacientes::agregar_historia($bd, $id_paciente, $historia);
+			$diagnostico = $_POST["diagnostico"];
+			$indicaciones = $_POST["indicaciones"];
+
+			$res=pacientes::agregar_historia($bd, $id_paciente, $historia, $diagnostico, $indicaciones);
 			$estado = 1;
 		}
 		else
@@ -208,7 +181,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			//EDITAR HISTORIA
 			$id_hm = $_POST["id"];
 			$historia = $_POST["historia"];
-			$res=pacientes::editar_historia($bd, $id_hm, $historia);
+			$diagnostico = $_POST["diagnostico"];
+			$indicaciones = $_POST["indicaciones"];
+			$res=pacientes::editar_historia($bd, $id_hm, $historia, $diagnostico, $indicaciones);
 			$estado = 1;
 		}
 		else
@@ -220,30 +195,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::eliminar_historia($bd, $id_hm);
 			$estado = 1;
 		}
-		else
-		if($accion==11){
-			
-			//AGREGAR diagnostico
-			$id_paciente = $_POST["id"];
-			$diagnostico = $_POST["diagnostico"];
-			$res = pacientes::agregar_diagnostico($bd, $id_paciente, $diagnostico);
-			$estado = 1;
-		}
-		if($accion==12){
-			
-			//EDITAR diagnostico
-			$id_hm = $_POST["id"];
-			$diagnostico = $_POST["diagnostico"];
-			$res = pacientes::editar_diagnostico($bd, $id_hm, $diagnostico);
-			$estado = 1;
-		}
-                else if ($accion==-1){
-                    $estado = 0.1;
-                    $id_hm  = 0;
-                    $res    = "No se agrega nuevo usuario";
-                }
+        else if ($accion==-1){
+            $estado = 0.1;
+            $id_hm  = 0;
+            $res    = "No se agrega nuevo usuario";
+        }
 
-		echo json_encode(array("estado"=>$estado, "mensaje"=>$id_hm, "res"=>$res), JSON_FORCE_OBJECT);	
+		echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	
     		
 	}
 	

@@ -812,19 +812,22 @@
 		/**
 		retorna 
 		*/
-		public static function agregar_historia($bd, $id_paciente, $historico)
+		public static function agregar_historia($bd, $id_paciente, $historia, $diagnostico, $indicaciones)
 		{
 			// Sentencia INSERT
 			$consulta = "INSERT INTO historias_medicas ( " .
 				" descripcion,".
+				" diagnostico,".
+				" indicaciones,".
+				" fecha,".
 				" id_paciente)".
-				" VALUES(?,?)";
+				" VALUES(?,?,?,now(),?)";
 
 		   try {
 
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
-				$resultado = $comando->execute(array($historico,$id_paciente));
+				$resultado = $comando->execute(array($historia, $diagnostico, $indicaciones,$id_paciente));
 
 				return $resultado;
 
@@ -839,18 +842,20 @@
 		/**
 		retorna 
 		*/
-		public static function editar_historia($bd, $id_hm, $historico)
+		public static function editar_historia($bd, $id_hm, $historia, $diagnostico, $indicaciones)
 		{
 			// Sentencia INSERT
 			$consulta = "UPDATE historias_medicas SET" .
-				" descripcion = ?" .
+				" descripcion = ?," .
+				" diagnostico = ?," .
+				" indicaciones = ?" .
 				" WHERE id_hm = ?";
 
 		   try {
 
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
-				$resultado = $comando->execute(array($historico, $id_hm));
+				$resultado = $comando->execute(array($historia, $diagnostico, $indicaciones, $id_hm));
 
 				return $resultado;
 
@@ -937,7 +942,7 @@
 			}
 		} //FIN FUNCION 
 
-				/**
+		/**
 		retorna 
 		*/
 		public static function obtener_diagnostico($bd, $id_hm){
@@ -959,13 +964,35 @@
 			}
 		} //FIN FUNCION 
 
+		/**
+		retorna 
+		*/
+		public static function obtener_indicaciones($bd, $id_hm){
+
+			$consulta = "SELECT indicaciones FROM historias_medicas WHERE id_hm = ?";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute(array($id_hm));
+				$row = $comando->fetch(PDO::FETCH_ASSOC);
+
+				if($row){		                        
+					return $row["indicaciones"];								
+				}
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+		} //FIN FUNCION 
+
 
 		/**
 		retorna 
 		*/
 		public static function obtener_fecha_historia($bd, $id_hm){
 
-			$consulta = "SELECT fecha FROM historias_medicas WHERE id_hm = ?";
+			$consulta = "SELECT DATE_FORMAT(fecha, '%d-%m-%Y %H:%m:%s') as fecha FROM historias_medicas WHERE id_hm = ?";
 
 			try {
 				$comando = $bd->prepare($consulta);
@@ -987,7 +1014,7 @@
 		*/
 		public static function obtener_historias_de_pacientes($bd, $id_paciente){
 
-			$consulta = "SELECT * FROM historias_medicas WHERE id_paciente = ?";
+			$consulta = "SELECT id_hm, indicaciones, descripcion, diagnostico, DATE_FORMAT(fecha, '%d-%m-%Y %H:%m:%s') as fecha FROM historias_medicas WHERE id_paciente = ?";
 
 			//echo $consulta;
 			try {
@@ -1010,7 +1037,7 @@
 		*/
 		public static function obtener_lista_historias($bd){
 
-			$consulta = "SELECT * FROM historias_medicas";
+			$consulta = "SELECT id_hm, indicaciones, descripcion, diagnostico, DATE_FORMAT(fecha, '%d-%m-%Y %H:%m:%s') as fecha, p.id_paciente, nombre, apellidop, apellidom FROM historias_medicas hm INNER JOIN paciente p ON hm.id_paciente = p.id_paciente  ORDER BY id_paciente";
 
 			//echo $consulta;
 			try {

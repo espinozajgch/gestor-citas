@@ -23,12 +23,10 @@ if(isset($_REQUEST['id_hm'])){
 	$rut = Pacientes::obtener_identificacion($bd, $id_paciente);
 	$email = Pacientes::obtener_email($bd, $id_paciente);
 
-	$historia = Pacientes::obtener_historia($bd, $id_hm);
+	$historia = Pacientes::obtener_indicaciones($bd, $id_hm);
 	$historia = str_replace("<br/>", "\n", $historia);
 	$historia = strip_tags($historia);
 	$fecha = Pacientes::obtener_fecha_historia($bd, $id_hm);
-
-	//$fecha = date_format($fecha,"d/m/Y H:i:s");
 }
 
 ?>
@@ -84,7 +82,7 @@ $pdf->Cell(15,10,$email,0,0,'L');
 $pdf->Line(32, 78, 100, 78);
 
 $pdf->SetXY(15,90);
-$pdf->Cell(180,10,"Diagnostico General",1,0,'C');
+$pdf->Cell(180,10,"Indicaciones",1,0,'C');
 //s$pdf->Line(90, 68, 180, 68);
 
 $pdf->SetFont('Arial','',12);

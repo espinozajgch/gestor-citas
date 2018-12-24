@@ -41,7 +41,7 @@ $pdf->SetTitle("Reporte Historico");;
 //$pdf->SetTextColor(0,255,0);
 
 //$pdf->Image('../../dist/img/logo.jpg',10,10,150,50,-300,'JPG');
-$pdf->Image('../../dist/img/logo.jpg' , 10 ,10, 100 , 25,'JPG', 'http://www.saludintegralcentro.com');
+$pdf->Image('../../dist/img/logo.jpg' , 10 ,10, 100 , 20,'JPG', 'http://www.saludintegralcentro.com');
 $pdf->SetFont('Arial','B',12);
 //$pdf->Cell(40,10,$id_hm);
 //$pdf->Cell(10,100,$id_paciente,0,0,'C');
@@ -82,7 +82,7 @@ $pdf->Cell(15,10,$email,0,0,'L');
 $pdf->Line(32, 78, 100, 78);
 
 $pdf->SetXY(15,90);
-$pdf->Cell(180,10,"Indicaciones",1,0,'C');
+$pdf->Cell(180,10,"Diagnostico",1,0,'C');
 //s$pdf->Line(90, 68, 180, 68);
 
 $pdf->SetFont('Arial','',12);

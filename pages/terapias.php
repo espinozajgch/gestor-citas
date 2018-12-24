@@ -245,61 +245,7 @@ $usuario  = "";
             cargar_chat(id);
         });
 
-        function cargar_chat(id){
-            $("#enviar").prop('disabled', false);
-            $("#mensaje").prop('disabled', false);
-            $.ajax({
-                data:  {id : id},
-                url:   '../assets/class/admin/lista_mensajes_chat_admin.php',
-                type:  'post',
-                //dataType: "json",
-                success:  function (data) {
-                    //respuesta = JSON.stringify(data);
-                    //console.log(data);
-                        $("#chating").html(data);
-                        $(".panel-body").scrollTop($(".panel-body")[0].scrollHeight);
-                        //window.location.href="mensajes.php";
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
-
-
-        $("#enviar").click(function(e){
-          
-            hash = $("#hash").val();
-            mensaje = $("#mensaje").val();
-            if(mensaje.trim() != ""){
-                //console.log(id);
-                ///console.log("mensaje: "+mensaje);
-                //console.log("hash: "+hash);
-                enviar_mensaje(id, mensaje, hash);
-            }
-        });
-
-        function enviar_mensaje(id, mensaje, hash){
-
-            $.ajax({
-                data:  {accion: 9, id : id, mensaje : mensaje, hash : hash},
-                url:   '../../vendor/class/soporte/soporte_acciones.php',
-                type:  'post',
-                dataType: "json",
-                success:  function (data) {
-                    //console.log(data);
-                    if(data.estado == 1){
-                       cargar_chat(id);
-                       $("#mensaje").val("");
-                    }
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
+    
         
         function modificar_terapia(terapia, modo){
             if (confirm("¿Está seguro de querer hacer esto?")){
@@ -342,7 +288,7 @@ $usuario  = "";
                 ]
             });
             
-             $('#tabla_terapias').DataTable({  
+            $('#tabla_terapias').DataTable({  
                 responsive: true,
                 "ajax":"terapias/terapias_controlador.php?id_operacion=10",
                 "columns": [
@@ -350,10 +296,10 @@ $usuario  = "";
                     {"data": "Nombre"},                    
                     {"data": "Descripcion"},                    
                     {"data": "Precio"},
-                    {"data": "Estado"},
+                    ///{"data": "Estado"},
                     {"data": "Acciones"}
                 ]
-            });
+            });/**/
             
             
     });
@@ -379,8 +325,9 @@ $usuario  = "";
     
     function seleccionar_terapia(id_terapia, estado){
         terapia_seleccionada = id_terapia;
+        window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
         //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"
-        var mensaje_confirm;
+        /*var mensaje_confirm;
         if (estado == 1){//Se reserva por primera vez
             mensaje_confirm = "Se reservará cita para la terapia seleccionada, por favor confirme";
         }
@@ -392,9 +339,9 @@ $usuario  = "";
                 redirigir_terapia();
             }
             else{
-                window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
+                
             }
-        }
+        }*/
     }
     
     function generar_invoice(id_paciente){

@@ -6,7 +6,9 @@ require_once("../assets/class/utilidades.php");
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
-$historia = "";
+$diagnostico_general = "";
+$diagnostico = "";
+$indicaciones = "";
 $id_paciente = "";
 $id_hm = "";
 
@@ -25,7 +27,9 @@ $id_hm = "";
 
     if(isset($_GET["id_hm"])){
         $id_hm = $_GET["id_hm"];
-        $historia = pacientes::obtener_historia($bd,$id_hm);
+        $diagnostico_general = pacientes::obtener_historia($bd,$id_hm);
+        $diagnostico = pacientes::obtener_diagnostico($bd,$id_hm);
+        $indicaciones = pacientes::obtener_indicaciones($bd, $id_hm);
         $accion = 9;
 
         if(isset($_GET["id_paciente"]))
@@ -103,11 +107,31 @@ $id_hm = "";
                 <form id="form_historia">
                     <div class="form-group">
                     <!--label> historia y Condiciones</label-->
-
-                        <textarea id='summernote'">
-                            <?php echo $historia ?>
-                        </textarea>
+                        <div class="form-group col-12 col-sm-12 col-md-12">
+                            <small><strong><label for="diagnostico_general">Diagnostico General</label></strong></small>
+                            <textarea row="5" col="10" class="form-control" id="diagnostico_general"><?php echo $diagnostico_general ?></textarea>
+                            <div id="error_direccion" class="text-danger" style="display:none">
+                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                            </div>
                         </div>
+
+                        <div class="form-group col-12 col-sm-12 col-md-12">
+                            <small><strong><label for="diagnostico">Diagnostico</label></strong></small>
+                            <textarea row="5" col="10" class="form-control" id="diagnostico"><?php echo $diagnostico ?></textarea>
+                            <div id="error_direccion" class="text-danger" style="display:none">
+                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 col-sm-12 col-md-12">
+                            <small><strong><label for="indicaciones">Indicaciones</label></strong></small>
+                            <textarea row="5" col="10" class="form-control" id="indicaciones"><?php echo $indicaciones ?></textarea>
+                            <div id="error_direccion" class="text-danger" style="display:none">
+                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                            </div>  
+                        </div>
+
+                    </div>
 
                         <div class="col-md-8 col-sm-8 col-xs-8">
                             <div id="msg_ok" class="alert alert-success alert-dismissable"  style="display:none">
@@ -169,10 +193,12 @@ $id_hm = "";
                 id_paciente = $("#id_paciente").val();
             }
 
-            historia = $('#summernote').val();
+            historia = $('#diagnostico_general').val();
+            diagnostico = $('#diagnostico').val();
+            indicaciones = $('#indicaciones').val();
 
             $.ajax({
-                data:  {accion:accion, historia : historia, id : id},
+                data:  {accion:accion, historia : historia, diagnostico : diagnostico, indicaciones : indicaciones ,id : id},
                 url:   '../assets/class/usuario/usuario_acciones.php',
                 type:  'post',
                 dataType: "json",

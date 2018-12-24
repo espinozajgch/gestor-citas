@@ -231,6 +231,8 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
     $medicos_previos=   $_POST["medicos_previos"];    
+
+    //echo $medio_pago;
             
     if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
         //Eliminamos las relaciones existentes y luego ingresamos nuevas relaciones        
@@ -252,7 +254,7 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     else{
         //echo "ERROR ACTUALIZAR";
         $json_retorno[0]['estado'] = 0;
-    }
+    }/**/
     echo json_encode($json_retorno);
 }
 else if ($id_operacion == 8){//CANCELAR UNA CITA

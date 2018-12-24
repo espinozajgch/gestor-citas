@@ -7,6 +7,7 @@ require_once("../assets/class/usuario/usuarios_data.php");
 $user = "";
 $tipo = "";
 $hash = "";
+$rut_paciente = "";
 
     session_start();
     if(isset($_SESSION["recuerdame_admin"])){
@@ -37,6 +38,8 @@ $hash = "";
         }        
         if (isset($_GET["ref"])){
             $link = $_GET["ref"]."&rut_paciente=".$_GET["rut_paciente"];
+
+            $rut_paciente = $_GET["rut_paciente"];
         }
 
 ?>
@@ -95,11 +98,12 @@ $hash = "";
     <script type="text/javascript">
         var bandera_nuevo_usuario = false;
         var bandera_email_disponible = true;
+        var preseleccion = "";
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
         var calendar;
-        var preseleccion;
+        
         
         //Iniciar el calendario de FULLCALENDAR
         inicializar_calendario();
@@ -121,6 +125,8 @@ $hash = "";
         {
             //alert ("Modificar");
             obtener_informacion_cita();
+
+
         }
         if (<?php 
             $operacion = 2;
@@ -215,18 +221,13 @@ input:checked + .slider:before {
     <?php include_once("../assets/includes/menu.php") ?>
 
         <div id="page-wrapper">
-        
+            <!--input id="rut_paciente" type="text" hidden="" value="<?php //echo $rut_paciente ?>"-->
             <div class="row">
                 <div class="col-lg-6">
                     <h1 class="page-header"><?php echo $etiqueta;?></h1>
                 </div>
-                <div id="advertencia_general" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
-                    <div id="alerta">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <div id="texto_advertencia_general"></div><a href="#" class="alert-link">X</a>.
-                     </div>                    
-                </div>
-                <div class="col-lg-7">
+                
+                <div class="col-lg-10">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                    <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button>                   
                 </div>
@@ -248,12 +249,12 @@ input:checked + .slider:before {
 
 
 
-                            <div class="col-sm-12 col-md-8 my-3"> 
+                            <div class="col-sm-12 col-md-12 my-3"> 
 
                                 <div id="div_par" class="form-row" >
                                     
                                     <div class="form-row">    
-                                    <div class="form-group col-12 col-sm-12 col-md-12">
+                                    <div class="form-group col-10 col-sm-10 col-md-10">
                                         
                                         <small><strong><label for="medico">Seleccione los médicos</label></strong></small>
                                         <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="medicos" onchange="actualizar_eventos_medicos()">  
@@ -265,31 +266,34 @@ input:checked + .slider:before {
                                             </div>
                                     </div>
                                     
-                                    <div class="form-group col-5 col-sm-5 col-md-5">
+                                    <div class="form-group col-3 col-sm-3 col-md-3">
                                         <small><strong><label for=name_>Fecha Inicio</label></strong></small>
                                         <input id="fecha_a" disabled="true" id="fecha_feriado" type="text" class="form-control" value="" placeholder="Seleccione una fecha del caldendario" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">                                        
                                     </div>
 
-                                    <div class="form-group col-5 col-sm-5 col-md-5">
+                                    <div class="form-group col-3 col-sm-3 col-md-3">
                                         <small><strong><label for=name_>Hora Inicio</label></strong></small>
                                         <input id="hora_a" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Hora</small>
                                         </div>                                        
                                     </div>
-                                    
-                                    <div class="form-group col-2 col-sm-2 col-md-2">
-                                        <small><strong><label for=name_>Mostrar</label></strong></small><br>
-                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
-                                    </div>
 
-                                    <div class="form-group col-5 col-sm-5 col-md-5 col-sm-offset-5 col-md-offset-5">
+                                    <div class="form-group col-3 col-sm-3 col-md-3">
                                         <small><strong><label for=name_>Hora Fin</label></strong></small>
                                         <input id="hora_b" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Hora</small>
                                         </div>                                        
                                     </div>
+
+
+                                    <div class="form-group col-2 col-sm-2 col-md-2">
+                                        <small><strong><label for=name_>Mostrar</label></strong></small><br>
+                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
+                                    </div>
+
+
                                     <div  id="error_fechas" class="col-sm-12 col-md-12 my-3 text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Selecciona fechas y horas válidas</small>
                                     </div>
@@ -303,38 +307,42 @@ input:checked + .slider:before {
                                         </div>
                                     </div>                                    
                                     
-                                    <div class="form-group col-12 col-sm-12 col-md-12">
+
+                                </div>
+
+                                <div class="form-row">                                   
+                                    <div class="form-group col-10 col-sm-10 col-md-10">
                                         <small><strong><label for=name_>RUT</label></strong></small>
                                        
                                         <div class="input-group">
-                                            <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off">
+                                            <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off" value="<?php echo $rut_paciente ?>">
                                             <span class="input-group-btn" >
                                               <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
                                             </span>
-                                        </div><!-- /input-group -->
+                                        </div>
                                         <div id="error_rut" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
                                         </div>
                                         <input id="id_oculto" type="text" hidden="">
-                                    </div>
-                                </div>
 
-                                <div class="form-row">
-                                    <div class="form-group col-6 col-sm-6 col-md-6">
-                                        <small><strong><label for="name">Nombre</label></strong></small>
+                                    </div>
+
+                                   
+                                    <div class="form-group col-4 col-sm-4 col-md-4">
+                                        <small><strong><label for="name">NombreS</label></strong></small>
                                         <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" disabled>
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
                                         </div>
                                     </div>
-                                    <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="form-group col-4 col-sm-4 col-md-4">
                                         <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
                                         <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_last_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
-                                    <div class="form-group col-6 col-sm-6 col-md-6">
+                                    <div class="form-group col-4 col-sm-4 col-md-4">
                                         <small><strong><label for="last_name">Apellido Materno</label></strong></small>
                                         <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_second_name" class="text-danger" style="display:none">
@@ -448,6 +456,13 @@ input:checked + .slider:before {
 
                                 </div>
                             </div>
+                        </div>
+
+                        <div id="advertencia_general" class="col-lg-12 col-md-12 col-xs-12 col-sm-12" hidden="true">
+                            <div id="alerta">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div id="texto_advertencia_general"></div>
+                             </div>                    
                         </div>
 
                         
@@ -672,6 +687,15 @@ function validar_inputs(input, div_error){
                             $("#email").attr('disabled', false);
                             $("#fijo").attr('disabled', false);
                             $("#celular").attr('disabled', false);
+
+                            $("#name").val("");
+                            $("#last_name").val("");
+                            $("#second_name").val("");
+                            $("#direccion").val("");
+                            $("#email").val("");
+                            $("#fijo").val("");
+                            $("#celular").val("");
+
                             $("#id_oculto").val("");                            
                             //$("#error_rut").show(1500);
                             //$("#error_rut").hide(5000);
@@ -852,13 +876,18 @@ function validar_inputs(input, div_error){
                     }
                 })
                 ).done(function (){//Por ultimo se procesa la información de ingreso de la cita
+
+                    //console.log(bandera);   
                 if (bandera){  
+
+                    ///console.log(bandera);   
                     var nom_apellido = $("#name").val()+" "+$("#last_name").val();                      
-                    if ($("#check_slider").prop("checked")){//Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
+                    if ($("#check_slider").prop("checked")){
+                    //Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
                         bandera = false;
                         //Verificar que el paciente no tenga un programa activo
                         var id_programa = false;
-                        $.when(
+                        $.when(       
                             $.post("terapias/terapias_controlador.php",
                             {
                                 id_operacion:       5,
@@ -870,17 +899,23 @@ function validar_inputs(input, div_error){
                                 descripcion:        "Diagnóstico preliminar de "+nom_apellido,
                                 id:                 $("#id_oculto").val(),
                                 nombre_programa:    "Diagnóstico preliminar de "+nom_apellido
-                            },function (result){               
+                            }).done(function (result){       
+                                //console.log("aqui");        
                                 var respuesta = JSON.parse(result);
                                 if (respuesta[0].estado == 1){//Se creo el programa terapeutico
                                     id_programa = respuesta[0].id_programa;
                                 }
-                                console.log(respuesta[0].str_debug);
-                            })).then(function(){                                        
+                                //console.log(respuesta[0].str_debug);
+                            }).fail(function() {
+                                console.log( "error" );
+                              })
+
+                        ).then(function(){                                        
                                     mensaje_final+=procesar_informacion(id_programa);
-                            });
+                        });
                     }
                     else{
+                        //console.log("aqui");     
                         mensaje_final+=procesar_informacion(false);
                     }
                 }//FIN IF BANDERA
@@ -1061,6 +1096,7 @@ function validar_inputs(input, div_error){
             medicos         : bandera = $("#medicos").val()
             }, 
             function (result){
+                console.log(result)
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     mensaje_retorno+="La cita se guardó con éxito<br>";                
@@ -1115,16 +1151,19 @@ function validar_inputs(input, div_error){
                             }
                         ?>
                     },
-                    function (result){                        
-                        var json = JSON.parse(result);                        
-                        if(json[0].estado == 1){                            
-                            for (i=0; i<json[0].cantidad; i++){                                
-                                var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
-                                $("#medicos").append(n_opcion);                                
-                            }                            
-                            $("#medicos").trigger('change');
-                            preseleccion = $("#medicos").val();
-                            //alert (preseleccion);
+                    function (result){   
+                        //console.log(result);
+                        if(result!="null"){                     
+                            var json = JSON.parse(result);                        
+                            if(json[0].estado == 1){                            
+                                for (i=0; i<json[0].cantidad; i++){                                
+                                    var n_opcion = new Option(json[i+1].text, json[i+1].id, true, true);
+                                    $("#medicos").append(n_opcion);                                
+                                }                            
+                                $("#medicos").trigger('change');
+                                preseleccion = $("#medicos").val();
+                                //alert (preseleccion);
+                            }
                         }                               
                     });                       
                 }
@@ -1231,8 +1270,9 @@ function validar_inputs(input, div_error){
                     }
                 ?>
             },function(result){
+                //  console.log(result);
                 var respuesta = JSON.parse(result);
-                console.log(respuesta[0].str_debug);
+                //console.log(respuesta[0].str_debug);
                 if (respuesta[0].estado == 1){
                     $("#rut_paciente").val(respuesta[1].rut).prop("disabled",true);
                     $("#btn_buscar").trigger('click').prop("disabled",true);
@@ -1248,7 +1288,10 @@ function validar_inputs(input, div_error){
                     $("#chequeo").hide();
                 }
                 else{
-                    alert ("Error de sistema");
+                    
+                    $("#rut_paciente").attr('disabled', true);
+                    $("#btn_buscar").attr('disabled', true);
+                    buscar_info_paciente();
                 }
             });
         }

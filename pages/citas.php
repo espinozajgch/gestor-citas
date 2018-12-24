@@ -234,7 +234,7 @@ $usuario  = "";
                     {"data": "Paciente"},
                     {"data": "Medico"},                    
                     {"data": "Estado"},
-                    {"data": "Programa"},
+                    
                     {"data": "Acciones"}
                 ]
             });

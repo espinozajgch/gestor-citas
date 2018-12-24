@@ -254,7 +254,7 @@ class calendario {
             INNER JOIN admin a ON a.id_admin=mtr.admin_id_admin 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.reserva_medica_id_rm = rm.id_rm
             LEFT JOIN programa_terapeutico pt ON ptt.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico
-            WHERE rm.estado NOT LIKE "cancelado" AND rm.estado NOT LIKE "atendida"';
+            WHERE rm.estado NOT LIKE "cancelado" AND rm.estado NOT LIKE "atendida" order by fecha_inicio DESC';
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos

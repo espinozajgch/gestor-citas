@@ -5,7 +5,7 @@ include_once("../assets/includes/menu.php") ?>
         <div id="page-wrapper">
             <input type="hidden" id="hash" name="hash" value="<?php echo $hash ?>">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <h1 class="page-header">Citas</h1>
 
                 </div>
@@ -15,7 +15,7 @@ include_once("../assets/includes/menu.php") ?>
                         <div id="texto_advertencia_general"></div><a href="#" class="alert-link">X</a>.
                      </div>                    
                 </div>
-                <div class="col-lg-1 text-right pull-right">
+                <div class=" text-right pull-right">
                    <a class="btn btn-sm btn-success shared" href="agregar_citas.php" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
                 </div>                
                 <div class="col-lg-1 text-right pull-right">
@@ -25,7 +25,7 @@ include_once("../assets/includes/menu.php") ?>
             </div>
             <!-- /.row -->
 
-            <div class="row ">
+            <div class="col-lg-12">
                 <br>
                 <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
                         <thead>
@@ -36,7 +36,7 @@ include_once("../assets/includes/menu.php") ?>
                                 <th>Paciente</th>
                                 <th>Medico</th>    
                                 <th>Estado</th>
-                                <th>Programa</th>
+                               
                                 <th>Acciones</th>  
                             </tr>
                         </thead>                                            

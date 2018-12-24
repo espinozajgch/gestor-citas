@@ -247,7 +247,7 @@ class terapias {
          //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT pt.estado,p.id_paciente as id_p, pt.id_programa_terapeutico as programa, p.nombre as nombre, COUNT(t.id_terapia) Terapias FROM paciente p INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia WHERE pt.estado NOT LIKE '%culminado%' AND pt.estado NOT LIKE '%cancelado%' GROUP BY p.nombre";
+        $sql = "SELECT pt.estado,p.id_paciente as id_p, pt.id_programa_terapeutico as programa, p.nombre as nombre, p.apellidop, p.apellidom ,COUNT(t.id_terapia) Terapias FROM paciente p INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia WHERE pt.estado NOT LIKE '%culminado%' AND pt.estado NOT LIKE '%cancelado%' GROUP BY p.nombre";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         
@@ -271,7 +271,7 @@ class terapias {
             }
             for ($i=0; $i<$longitud; $i++){
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
-                $json[$i]['Paciente'] = $resultados[$i]["nombre"];
+                $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
                 $json[$i]['Acciones'] = "
                         <a title=\"Generar invoice\" id=\"btn_reserva\" 
@@ -374,7 +374,7 @@ class terapias {
                     <a title=\"Reservar\" 
                         class=\"btn btn-info\"  
                         onclick = \"seleccionar_terapia($id_terapia, 1)\">
-                        <i class=\"fa fa-edit\"></i>
+                        <i class=\"fa fa-calendar\"></i>
                     </a>";
                     if ($id_referer==1){//Agregar boton de eliminar terapia
                     $str_btn .= "
@@ -543,25 +543,25 @@ class terapias {
             }
             for ($i=0; $i<$longitud; $i++){
                 //echo $resultado[$i]["id_terapia"]." - terapia";
-                if ($resultado[$i]["estado_terapia"] == "activa"){
+                //if ($resultado[$i]["estado_terapia"] == "activa"){
                     $str_btn = "<a title=\"Cancelar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",1)\" class=\"btn btn-danger\" href=#><i class=\"fa fa-trash\"></i></a>";
-                }
-                else{
-                    $str_btn = "<a title=\"Habilitar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",2)\" class=\"btn btn-success\" href=#><i class=\"fa fa-edit\"></i></a>";
-                }
-                $json[$i]['N'] = "<a href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\">".($i+1)."</a>";
+                //}
+                //else{
+                //    $str_btn = "<a title=\"Habilitar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",2)\" class=\"btn btn-success\" href=#><i class=\"fa fa-edit\"></i></a>";
+                //}
+                $json[$i]['N'] = $i+1;
                 $json[$i]['Nombre'] = $resultado[$i]["nombre_terapia"];
                 $json[$i]['Descripcion'] = $resultado[$i]["descripcion_terapia"];
                 $json[$i]['Precio'] = $resultado[$i]["precio_terapia"];
-                $json[$i]['Estado'] = $resultado[$i]["estado_terapia"];
+                //$json[$i]['Estado'] = $resultado[$i]["estado_terapia"];
                 $json[$i]['Acciones'] = "
                     <a title=\"Editar\" class=\"btn btn-info\" href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"><i class=\"fa fa-edit\"></i></a>
-                    -
+                    
                     ".$str_btn."
                     ";
 
             }   
-            $json[1]['html'] = $str;
+           // $json[1]['html'] = $str;
             return $json;
         }
         else{
