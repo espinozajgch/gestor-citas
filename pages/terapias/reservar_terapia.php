@@ -43,15 +43,22 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <input id="id_oculto" type="text" hidden="">
     </div>
     <div class="form-group col-4 col-sm-4 col-md-4">
-        <small><strong><label for="name">Nombre</label></strong></small>
+        <small><strong><label for="name">Nombres</label></strong></small>
         <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" readonly>
         <div id="error_name" class="text-danger" style="display:none">
             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
         </div>
     </div>
     <div class="form-group col-4 col-sm-4 col-md-4">
-        <small><strong><label for="last_name">Apellido</label></strong></small>
-        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
+        <small><strong><label for="last_namep">Apellido Parterno</label></strong></small>
+        <input type="text" class="form-control" id="last_namep" placeholder="Apellido Parterno" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
+        <div id="error_last_name" class="text-danger" style="display:none">
+            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+        </div>
+    </div>  
+    <div class="form-group col-4 col-sm-4 col-md-4">
+        <small><strong><label for="last_namem">Apellido Materno</label></strong></small>
+        <input type="text" class="form-control" id="last_namem" placeholder="Apellido Materno" value="<?php //echo Usuarios::obtener_apellido($bd,$hash); ?>" autocomplete="off" readonly>
         <div id="error_last_name" class="text-danger" style="display:none">
             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
         </div>
@@ -126,16 +133,24 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 $("#error_rut").hide(5000);
             }
             else{
+                rut =  $("#rut_paciente").val();
+                if(rut.indexOf("-") == (-1)){
+                    parte1 = rut.substr(0,(rut.length)-1);
+                    parte2 = rut.substr((rut.length)-1,rut.length);
+                    rut = parte1 + "-" + parte2;
+                    //console.log(rut); 
+                }
                 $.post("citas/citas_controlador.php",{
                     id_operacion: 1,
-                    rut: $("#rut_paciente").val()},
+                    rut: rut},
                     function (result){
                         var json = JSON.parse(result);
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
                             $("#name").val(json[0].nombre);
-                            $("#last_name").val(json[0].apellidop);                            
+                            $("#last_namep").val(json[0].apellidop);  
+                            $("#last_namem").val(json[0].apellidom);                            
                             $("#id_oculto").val(json[0].id_paciente);
                             $("#tabla_paciente").DataTable().destroy();
                             cargar_tabla_terapias();
@@ -143,8 +158,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                         }
                         else{
                             $("#name").val("");
-                            $("#last_name").val("");  
-                            alert ("Este paciente no existe");
+                            $("#last_namep").val("");  
+                            $("#last_namem").val("");   
+                            //alert ("Este paciente no existe");
                         }
                     }
                 );

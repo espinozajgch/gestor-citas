@@ -285,7 +285,8 @@ $estilo_par = "";
             validar_inputs("#fijo", "#error_fijo"); 
             validar_inputs("#direccion", "#error_direccion");
 
-
+            //identificacion  = $("#doc").val();
+                
             if(!error){
                 $("#loader-wrapper").fadeIn("fast");
                 accion = $("#accion").val();
@@ -303,6 +304,14 @@ $estilo_par = "";
                 //EDITAR
                 if(accion == 2){
                     hash_usuario = $("#hash_usuario").val();
+                }
+
+                if(identificacion.indexOf("-") == (-1)){
+                    part1 = identificacion.substr(0,(identificacion.length)-1);
+                    part2 = identificacion.substr((identificacion.length)-1,identificacion.length);
+                    identificacion = parte1 + "-" + parte2;
+                    //console.log(identificacion); 
+
                 }
                 
                 guardar_particular(accion, identificacion, nombre, apellidop, apellidom, email, hash_usuario, telefonos, direccion, phone);

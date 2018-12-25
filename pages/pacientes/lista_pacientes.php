@@ -6,7 +6,7 @@
                 <th>Nombre</th>
                 <th>Telefono</th>
                 <th>Email</th>
-                <th>Citas</th>
+                <!--th>Citas</th-->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -16,7 +16,7 @@
                 <th>Nombre</th>
                 <th>Telefono</th>
                 <th>Email</th>
-                <th>Citas</th>
+                <!--th>Citas</th-->
                 <th>Acciones</th>
             </tr>
         </tfoot>
@@ -45,15 +45,16 @@
 
 				$lista .= ' <tr id="'.  $particulares['id_paciente'] .'">
                             <td>'. $particulares["RUT"] .'</td>
-                            <td>'. $particulares["nombre"] .'</td>
+                            <td>'. $particulares["nombre"] .' '. $particulares["apellidop"] .''. $particulares["apellidom"] .'</td>
                             <td>'. $particulares["celular"] .'</td>
                             <td>'. $particulares["email"] .'</td>
-                            <td class=" text-center pull-center"><span class="badge badge-info">'. $cantidad .'</span></td>
                             <td class="center text-center pull-center" style="width: 15%">
-                                <btn class="btn btn-sm btn-success button_on" cod="'.  $particulares['id_paciente'] .'" title="Habilitar" style="'. $hab .'"><i class="fa fa-eye"></i></btn>
-                                <btn class="btn btn-sm btn-danger button_off" cod="'.  $particulares['id_paciente'] .'" title="Deshabilitar" style="'. $des .'"><i class="fa fa-eye-slash"></i></btn>
+                                
+                                <a class="btn btn-sm btn-success shared" href="agregar_citas.php" title="Agregar"><i class="fa fa-calendar fa-bg"></i></a>
                                 <a class="btn btn-sm btn-info shared" href="historia_medica_de_paciente.php?id='.  $particulares['id_paciente'] .'" title="Historia Medica"><i class="fa fa-file"></i></a>
                                 <a class="btn btn-sm btn-info shared" href="agregar_usuario.php?accion=2&id='.  $particulares['id_paciente'] .'" title="Editar"><i class="fa fa-edit"></i></a>
+                                <btn class="btn btn-sm btn-success button_on" cod="'.  $particulares['id_paciente'] .'" title="Habilitar" style="'. $hab .'"><i class="fa fa-eye"></i></btn>
+                                <btn class="btn btn-sm btn-danger button_off" cod="'.  $particulares['id_paciente'] .'" title="Deshabilitar" style="'. $des .'"><i class="fa fa-eye-slash"></i></btn>
                             </td>
                         </tr>';
 

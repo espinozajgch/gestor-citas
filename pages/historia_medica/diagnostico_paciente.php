@@ -6,6 +6,7 @@ require_once("../../assets/class/usuario/usuarios_data.php");
 
 if(isset($_REQUEST['id_hm'])){
 	$id_hm = $_GET['id_hm'];
+	$id = $_GET['tipo'];
 
 	$bd = connection::getInstance()->getDb();
 
@@ -26,6 +27,7 @@ if(isset($_REQUEST['id_hm'])){
 	$historia = Pacientes::obtener_diagnostico($bd, $id_hm);
 	$historia = str_replace("<br/>", "\n", $historia);
 	$historia = strip_tags($historia);
+	$historia = utf8_decode($historia);
 	$fecha = Pacientes::obtener_fecha_historia($bd, $id_hm);
 }
 

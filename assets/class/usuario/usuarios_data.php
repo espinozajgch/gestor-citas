@@ -737,7 +737,7 @@
 
 		public static function obtener_lista_pacientes($bd){
 
-			$consulta = "SELECT u.id_paciente, u.RUT, u.nombre, u.email, u.celular, u.id_paciente, estado_paciente FROM paciente u ORDER BY id_paciente DESC";
+			$consulta = "SELECT u.id_paciente, u.RUT, u.nombre, u.apellidop, u.apellidom, u.email, u.celular, u.id_paciente, estado_paciente FROM paciente u ORDER BY id_paciente DESC";
 
 			try {
 				$comando = $bd->prepare($consulta);
