@@ -94,13 +94,13 @@ class terapias {
         return $pdo->execute(array($nombre, $descripcion, $precio));
     }
     
-    public static function actualizar_programa_terapeutico_basico($id_programa, $descripcion){
+    public static function actualizar_programa_terapeutico_basico($id_programa, $descripcion, $descuento){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_terapeutico
-        SET descripcion_programa_terapeutico=?
+        SET descripcion_programa_terapeutico=?, descuento = ?
             WHERE id_programa_terapeutico = ".$id_programa;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array($descripcion));
+        return $pdo->execute(array($descripcion, $descuento));
     }
     
     public static function cancelar_programa_terapeutico($id_programa){
@@ -219,14 +219,30 @@ class terapias {
         }
     }
     
-    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $retornar_id=false){
+    public static function obtener_descuento_programa($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["descuento"];
+        }
+        else{            
+            return false;
+        }
+    }    
+    
+    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false){
         $bd = connection::getInstance()->getDb();
         //echo "aaa".$id_paciente;
-        $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico)
-            VALUES (?,?)";
+        $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento)
+            VALUES (?,?,?)";
         //echo $consulta;
         $comando = $bd->prepare($consulta);
-        $resultado = $comando->execute(array($id_paciente, $nombre_programa));
+        $resultado = $comando->execute(array($id_paciente, $nombre_programa,$descuento));
         if ($resultado){
             
             if ($retornar_id){

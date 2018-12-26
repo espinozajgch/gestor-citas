@@ -78,6 +78,10 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $lista_terapias = $_POST["terapias_individual"];
     $terapia = $lista_terapias[0];
     $cantidad = $_POST["cantidad"];
+    $descuento = $_POST["descuento_aplicado"];
+    if ($descuento == ""){
+        $descuento = 0;
+    }
     $count_array =count($lista_terapias);
     $str_debug.="-Se agregaran $cantidad terapias-";
     for ($i=0; $i<$cantidad; $i++){
@@ -100,7 +104,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     }
     else{
         $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
-        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
+        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true);    
         if ($id_insert!=0){
             $str_debug.="-Programa creado con el indice $id_insert-";
             $json[0]["id_programa"] = $id_insert;
@@ -171,6 +175,10 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $str_debug              =   "Inicio ";
     $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
+    $descuento = $_POST["descuento"];
+    if ($descuento == ""){
+        $descuento = 0;
+    }
     print_r($lista_terapias);
     $count_array =count($lista_terapias);
     for ($i=0; $i<$cantidad; $i++){
@@ -179,10 +187,8 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
-    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa)){
-        //Eliminar citas existentes
-        //if (terapias::eliminar_terapias_programa($id_programa, true)){
-            //Ingresar las que se quedaron            
+    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa, $descuento)){        
+        if(count($lista_terapias>0)){
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";
@@ -194,11 +200,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
                 $str_debug.="Error en asignacion de terapia";
                 $json[0]["estado"]      =   0;
             }
-        //}
-        /*else{
-            $str_debug.="Error en eliminacion de terapias";
-            $json[0]["estado"]      =   0;
-        } //*/       
+        }            
     }
     else{
         $str_debug.="Error en actualizacion de informacion basica";

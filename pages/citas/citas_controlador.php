@@ -32,11 +32,13 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     if ($resultado){
         $resultado[0]['estado'] = true;
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
+        $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
         
     }
     else{
         $resultado[0]['estado'] = false;
         $resultado[0]["programa"] = false;
+        $resultado[0]["descuento"] = false;
     }
     
     $json = json_encode($resultado);
