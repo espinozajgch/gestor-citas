@@ -135,25 +135,20 @@ $rut_paciente = "";
                     else{
                         $operacion = 2;
                         echo "false";
-                    }
-                    
+                    }                    
                 }
                 else{
                     $operacion = 7;
                     echo "true";
-                }
-                
+                }                
             }
             else{
                 $operacion = 2;
                 echo "false";
             }
         ?>)
-        {
-            //alert ("Modificar");
+        {            
             obtener_informacion_cita();
-            
-
         }
         <?php 
             if (isset($_GET["ref"])){
@@ -916,7 +911,7 @@ function validar_inputs(input, div_error){
                         }                      
                         else if (respuesta.estado == 1){//Se agregó un paciente
                             mensaje_final+= "Se registró el nuevo paciente<br>";
-                            $("#id_oculto").val(respuesta.mensaje);   
+                            $("#id_oculto").val(respuesta.res);   
                         }
                     },
                     error: function(data){
@@ -976,7 +971,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
+                    setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";

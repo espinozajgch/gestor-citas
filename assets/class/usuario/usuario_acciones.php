@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	                    $id_historia    =   $id;
 	                    historico::agregar_entrada($id_historia, $tipo_entrada, $descripcion, $nivel);                                    
 	                    $id_hm = pacientes::agregar($bd, $identificacion, $nombre, $apellidop, $apellidom, $email, $telefono, $celular, $direccion, $estado, $id);
-                            
+                            $res = $id_hm;
 	                }
 	                else{
 	                    echo "ERROR AL CREAR LA HISTORIA. CONTACTE AL ADMIN";
