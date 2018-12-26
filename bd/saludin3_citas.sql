@@ -19,7 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `saludin3_citas`
 --
-
+CREATE DATABASE IF NOT EXISTS `saludin3_citas` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `saludin3_citas`;
 -- --------------------------------------------------------
 
 --

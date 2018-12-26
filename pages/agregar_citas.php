@@ -49,8 +49,10 @@ $rut_paciente = "";
         }        
         if (isset($_GET["ref"])){
             $link = $_GET["ref"]."&rut_paciente=".$_GET["rut_paciente"];
-
             $rut_paciente = $_GET["rut_paciente"];
+        }
+        else if (isset ($_GET["cita"])){
+            $link = "citas.php?opcion=1";
         }
 
 ?>
@@ -952,7 +954,7 @@ function validar_inputs(input, div_error){
                                     id_programa = respuesta[0].id_programa;
                                     id_terapia_programa = respuesta[0].id_pt_t_t;
                                 }
-                                //console.log(respuesta[0].str_debug);
+                                console.log(respuesta[0].str_debug);
                             }).fail(function() {
                                 console.log( "error" );
                               })
@@ -974,6 +976,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
+                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -991,7 +994,7 @@ function validar_inputs(input, div_error){
                 $("#advertencia_general").fadeIn(100).fadeOut(5000);
             }
             
-            
+         
         }
                 
         /*function enviar_formulario(){
@@ -1123,7 +1126,14 @@ function validar_inputs(input, div_error){
             $.post("citas/citas_controlador.php",
             {
             id_operacion : <?php
-                if ((isset($_GET["cita"]))||((isset($_GET["id_ptt"])))){
+            $condicion_1 = $condicion_2 = false;
+            if ((isset($_GET["cita"]))||((isset($_GET["id_ptt"])))){
+                $condicion_1 = true;
+            }
+            if (isset($_GET["mod"])){
+                $condicion_2 = true;
+            }
+                if ($condicion_1 && $condicion_2){
                     if (isset($_GET["cita"])){
                         echo "\"7\",
                         cita: \"".$_GET["cita"]."\",

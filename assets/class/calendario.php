@@ -46,7 +46,7 @@ class calendario {
         //para el calendario de FULLCALENDAR        
         $longitud = count($resultados);
         if ($longitud<1){
-            $json[$i]['title']  = "No hay información";
+            $json[0]['title']  = "No hay información";
         }
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['title']  = $resultados[$i]["descripcion_feriados"];
@@ -181,6 +181,11 @@ class calendario {
         //print_r($resultados);
         $longitud = count($resultados);
         //echo $longitud;        
+        if ($longitud<1){
+            $json[0]['Descripcion'] = "";
+            $json[0]['Fecha'] = "";
+            $json[0]['N'] = "No hay información que mostrar";
+        }
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['Descripcion'] = $resultados[$i]["descripcion_feriados"];
             $json[$i]['Fecha'] = $resultados[$i]["fecha_feriados"];

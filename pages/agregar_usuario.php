@@ -309,7 +309,7 @@ $estilo_par = "";
                 if(identificacion.indexOf("-") == (-1)){
                     part1 = identificacion.substr(0,(identificacion.length)-1);
                     part2 = identificacion.substr((identificacion.length)-1,identificacion.length);
-                    identificacion = parte1 + "-" + parte2;
+                    identificacion = part1 + "-" + part2;
                     //console.log(identificacion); 
 
                 }
