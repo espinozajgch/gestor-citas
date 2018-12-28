@@ -32,7 +32,13 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     if ($resultado){
         $resultado[0]['estado'] = true;
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
-        $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+        if ($resultado[0]["programa"]!=false){
+            $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+        }
+        else{
+            $resultado[0]["descuento"] = 0;
+        }
+        
         
     }
     else{
@@ -59,7 +65,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
      * precio
      * observaciones
      */
-    $fecha_inicio   =   $_POST["fecha_inicio"];
+    $fecha_inicio   = calendario::formatear_fecha(3,$_POST["fecha_inicio"]);
     $hora_inicio    =   $_POST["hora_inicio"];
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
@@ -224,7 +230,7 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     $json_retorno[0]['estado'] = 1;
     
     $id_cita        =   $_POST["cita"];
-    $fecha_inicio   =   $_POST["fecha_inicio"];
+    $fecha_inicio   = calendario::formatear_fecha(3,$_POST["fecha_inicio"]);
     $hora_inicio    =   $_POST["hora_inicio"];
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
@@ -365,4 +371,31 @@ else if ($id_operacion == 11){//VALIDAR UNA CITA INDIVIDUAL, SIN PROGRAMA
     }
     echo json_encode($json);
 }
-    
+else if ($id_operacion == 12){
+    $id_cita = $_POST["id_cita"];
+    $id_programa = $_POST["id_programa"];
+    $id_terapia = $_POST["id_terapia"];
+    $json;
+    if (citas::cancelar_cita($id_cita)){        
+        if ($id_programa!=false){
+            if (terapias::cancelar_cita($id_programa, $id_cita)){
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita cancelada";
+            }
+            else{
+                $json[0]["estado"]=0;
+                $json[0]["str_debug"]="Ocurrió un error inesperado";
+            }
+            
+        }
+        else{
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita cancelada";
+            }
+    }
+    else{
+        $json[0]["estado"]=0;
+        $json[0]["str_debug"]="Ocurrió un error inesperado";
+    }
+    echo json_encode($json);
+}

@@ -378,8 +378,9 @@ class terapias {
             FROM terapia            
             INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
             INNER JOIN programa_terapeutico prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
-            LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm"
-            . " WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa";
+            LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm            
+            WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa
+            ORDER BY programa_tiene_terapia.id_programa_tiene_terapia";
         
         $bd = connection::getInstance()->getDb();
         //echo $sql;

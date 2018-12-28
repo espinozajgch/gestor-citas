@@ -49,7 +49,10 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         }
     }
     else if ($_POST["id_operacion"]==5||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==5))){
-        
+        /*
+         * Cargar el calendario de medicos
+         * Usos: Formulario agregar_citas.php
+         */
         $id_medicos = $_GET["medicos"];
         if ($id_medicos == ""){
             $eventos_json = calendario::devolver_eventos_medicos_json();

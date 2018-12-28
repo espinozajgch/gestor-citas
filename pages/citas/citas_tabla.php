@@ -31,6 +31,7 @@ include_once("../assets/includes/menu.php") ?>
                         <thead>
                             <tr>
                                 <th>N</th>
+                                <th>Creacion</th>
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Paciente</th>

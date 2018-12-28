@@ -780,7 +780,7 @@ function validar_inputs(input, div_error){
         }
         
         function verificar_fecha_regex (campo){
-            var regex   = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
+            var regex   = /(0?[1-9]|[12][0-9]|3[01])$-(0?[1-9]|1[012])\-^\d{4}\\/;
             var res     = regex.test($("#"+campo).val());
             //alert ("Campo: "+campo+", resp: "+res);
             return res;
@@ -800,9 +800,9 @@ function validar_inputs(input, div_error){
         function verificar_campos_inputs(){
             var bandera = true;
             //Verificar la fecha
-            if (!verificar_fecha_regex("fecha_a")){
+           /* if (!verificar_fecha_regex("fecha_a")){
                 bandera = false;
-            }
+            }//*/
             //Verficar el rut
             if (!verificar_regex("name", "[a-zA-Z0-9]+")){
                 bandera = false;
@@ -971,7 +971,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
+                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -1268,7 +1268,8 @@ function validar_inputs(input, div_error){
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
-                    var fecha_seleccionada      =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
+                    //var fecha_seleccionada      =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
+                    var fecha_seleccionada      =   (arg.start.getDate())+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getFullYear();                  
                     var fecha_seleccionada_b    =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
                     var hora_seleccionada       =   arg.start.getHours()+":"+arg.start.getMinutes()+":"+arg.start.getSeconds();
                     var hora_seleccionada_b     =   arg.end.getHours()+":"+arg.end.getMinutes()+":"+arg.end.getSeconds();                    

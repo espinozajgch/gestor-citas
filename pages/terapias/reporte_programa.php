@@ -4,6 +4,7 @@
 
 require('../../vendor/fpdf/invoice.php');
 require_once '../../assets/class/terapias.php';
+require_once '../../assets/class/calendario.php';
 
 $numero_invoice             =   1;
 $fecha                      =   date("d/m/Y");
@@ -104,7 +105,7 @@ if ($resultado){
             $fecha_t = " ";
         }
         $subtotal += $precio_terapia;        
-            $line = array( "FECHA TERAPIA"    => "$fecha_t",
+            $line = array( "FECHA TERAPIA"    => calendario::formatear_fecha(1,$fecha_t),
                    "DESCRIPCION"  => "$descripcion_terapia",
                    "P. UNITARIO"      => "$$precio_terapia",
                    "SUB TOTAL" => "$".number_format($subtotal,2)."");

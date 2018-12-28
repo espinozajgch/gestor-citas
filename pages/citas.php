@@ -229,12 +229,12 @@ $usuario  = "";
                 "ajax":"../assets/class/calendario_controlador.php?id_operacion=6",
                 "columns": [
                     {"data": "N"},
+                    {"data": "Creacion"},
                     {"data": "Fecha"},
                     {"data": "Hora"},
                     {"data": "Paciente"},
                     {"data": "Medico"},                    
-                    {"data": "Estado"},
-                    
+                    {"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]
             });
@@ -252,6 +252,27 @@ $usuario  = "";
             if (respuesta[0].estado == 1){
                 //Validado con exito
                 alert ("Validado con exito");
+                window.location = "citas.php?opcion=1";
+            }
+            else{
+                alert ("Ocurrio un error");
+            }
+        });
+    }
+    
+    function cancelar_cita(id_cita, id_programa, id_terapia){
+        $.post("citas/citas_controlador.php",
+        {
+            id_operacion: 12,
+            id_cita: id_cita,
+            id_programa: id_programa,
+            id_terapia: id_terapia
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                //Validado con exito
+                alert ("La cita fue cancelada");
+                window.location = "citas.php?opcion=1";
             }
             else{
                 alert ("Ocurrio un error");

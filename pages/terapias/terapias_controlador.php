@@ -69,24 +69,24 @@ else if ($id_operacion == 4){//Obtener las terapias para el pillbox
     echo json_encode($json);
 }
 else if ($id_operacion == 5){//Crear un programa terapeutico
-    $json;
-    $str_debug="";
+    $json;    
     $id_paciente = $_POST["id_paciente"];
     $nombre_programa = $_POST["nombre_programa"];
     //Obtener el ID del historial del paciente
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
-    $lista_terapias = $_POST["terapias_individual"];
-    $terapia = $lista_terapias[0];
+    $lista_terapias;         
+    $json[0]["estado"]      =   1;
+    $str_debug              =   "Inicio ";
+    $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
-    $descuento = $_POST["descuento_aplicado"];
+    $descuento = $_POST["descuento"];    
     if ($descuento == ""){
         $descuento = 0;
-    }
-    $count_array =count($lista_terapias);
-    $str_debug.="-Se agregaran $cantidad terapias-";
+    }    
+    $str_debug.="-Se agregaran $cantidad terapias-";    
     for ($i=0; $i<$cantidad; $i++){
-        $lista_terapias[$count_array+$i]=$terapia;
-    }
+        $lista_terapias[$i]=$terapia;
+    }    
     $json[0]["estado"]=1;
     //Verificamos que el paciente no tenga un programa terapeutico actaivo
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
@@ -113,9 +113,9 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
                 $cantida_terapias = count($lista_terapias);
                 historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
                 $str_debug.="-Terapias agregadas, historico actualizado-";
-                $json[0]["estado"]=0;
+                $json[0]["estado"]=1;
                 $json[0]["id_pr_t_t"] = $id_terapia_programa;
-            }
+            }//*/
         }
         else{
             $str_debug.="-Error al agregar terapias-";
@@ -179,8 +179,8 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     if ($descuento == ""){
         $descuento = 0;
     }
-    print_r($lista_terapias);
-    $count_array =count($lista_terapias);
+    //print_r($lista_terapias);
+    $count_array =count($terapia);
     for ($i=0; $i<$cantidad; $i++){
         $lista_terapias[$i]=$terapia;
     }

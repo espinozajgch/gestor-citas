@@ -30,6 +30,23 @@ class calendario {
         }
     }
     
+    public static function formatear_fecha($tipo, $fecha){
+        //TIPO 1: dd-mm-yyyy
+        //TIPO 2: mm-dd-yyyy
+        //TIPO 3: yyyy-mm-dd
+        $fecha_ = new DateTime($fecha);
+        if ($tipo == 1){
+            return $fecha_->format("d-m-Y");
+        }
+        else if ($tipo == 2){
+            return $fecha_->format("m-d-Y");
+        }
+        else if ($tipo == 3){
+            return $fecha_->format("Y-m-d");
+        }
+        else return false;
+    }
+    
     public static function devolver_eventos_json($formato_url = "a"){
         //Una variable donde almacenaremos los resultados con el formato requerido
         $json;
@@ -77,24 +94,33 @@ class calendario {
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
         if ($id_medico){
-            $sql = "SELECT id_admin, reserva_medica.id_rm, admin.nombre as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
+            $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
     . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
     . "FROM `admin` \n"
     . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
     . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        WHERE ".$id_medico." AND reserva_medica.estado NOT LIKE \"finalizada\" AND admin.estado LIKE \"activo\" GROUP BY reserva_medica.id_rm";
+        WHERE ".$id_medico." 
+            AND reserva_medica.estado NOT LIKE \"finalizada\"
+            AND reserva_medica.estado NOT LIKE \"atendida\"
+            AND reserva_medica.estado NOT LIKE \"cancelado\"
+            AND admin.estado LIKE \"activo\" 
+            GROUP BY reserva_medica.id_rm";
         }
         else{
-            $sql = "SELECT id_admin, reserva_medica.id_rm, admin.nombre as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
+            $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
     . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
     . "FROM `admin` \n"
     . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
     . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
     . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        AND reserva_medica.estado NOT LIKE \"finalizada\" AND admin.estado LIKE \"activo\"";
+        AND reserva_medica.estado NOT LIKE \"finalizada\"
+            AND reserva_medica.estado NOT LIKE \"atendida\"
+            AND reserva_medica.estado NOT LIKE \"cancelado\"
+        AND admin.estado LIKE \"activo\"
+        GROUP BY reserva_medica.id_rm";
         }
         
         $pdo = $bd->prepare($sql);
@@ -246,10 +272,10 @@ class calendario {
                 AND reserva_medica.estado NOT LIKE \"cancelado\" GROUP BY id_rm";//*/
         
         //echo $sql;
-        $sql ='SELECT rm.id_rm as id_rm, rm.fecha_inicio as fecha_inicio, 
+        $sql ='SELECT rm.id_rm as id_rm, rm.fecha_inicio as fecha_inicio, date(rm.fecha_hora_reserva) as fecha_r,
             rm.hora_inicio as hora_inicio, rm.estado as estado_rm, 
             p.nombre as nombre, p.apellidop as apellidop, 
-            p.apellidom, a.nombre as nombre_medico ,
+            p.apellidom, GROUP_CONCAT(a.nombre) as nombre_medico ,
             pt.descripcion_programa_terapeutico as nombre_programa, pt.id_programa_terapeutico as id_programa,
             ptt.terapia_id_terapia as id_terapia
             FROM reserva_medica rm 
@@ -259,7 +285,9 @@ class calendario {
             INNER JOIN admin a ON a.id_admin=mtr.admin_id_admin 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.reserva_medica_id_rm = rm.id_rm
             LEFT JOIN programa_terapeutico pt ON ptt.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico
-            WHERE rm.estado NOT LIKE "cancelado" AND rm.estado NOT LIKE "atendida" order by fecha_inicio DESC';
+            WHERE rm.estado NOT LIKE "cancelado" 
+            GROUP BY rm.id_rm
+            order by fecha_hora_reserva DESC';
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos
@@ -268,6 +296,7 @@ class calendario {
         $longitud = count($resultados);        
         if ($longitud<1){
             $json[0]['N'] = "No hay información que mostrar";
+            $json[0]['Creacion'] = "";            
             $json[0]['Medico'] = "";
             $json[0]['Paciente'] = "";
             $json[0]['Hora'] = "";
@@ -283,7 +312,7 @@ class calendario {
             $json[$i]['Medico'] = $resultados[$i]["nombre_medico"];
             $json[$i]['Paciente'] = $resultados[$i]["nombre"]." ".$resultados[$i]["apellidop"];
             $json[$i]['Hora'] = $resultados[$i]["hora_inicio"];
-            $json[$i]['Fecha'] = $resultados[$i]["fecha_inicio"];            
+            $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_inicio"]);
             if ($resultados[$i]["nombre_programa"]==""||$resultados[$i]["nombre_programa"]==null){
                 $nombre_programa = "No pertenece";
                 $id_programa = "false";
@@ -296,6 +325,7 @@ class calendario {
             }
             $json[$i]['Programa'] = $nombre_programa;
             $json[$i]['Estado'] = $resultados[$i]["estado_rm"];
+            $json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
             $json[$i]['N'] = ($i+1);
             $json[$i]['Acciones'] = "
                 <a title=\"Validar cita\" 
@@ -305,7 +335,7 @@ class calendario {
                 </a>
                 <a title=\"Detalle\" 
                     class=\"btn btn-info\"  
-                    href=\"agregar_citas.php?cita=".$resultados[$i]["id_rm"]."\" >
+                    href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."\" >
                     <i class=\"fa fa-eye\"></i>
                 </a>
                 <a title=\"Cancelar\" 
