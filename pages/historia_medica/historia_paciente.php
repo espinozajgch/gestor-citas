@@ -26,12 +26,12 @@ if(isset($_REQUEST['id_hm'])){
 
 	if($id==1){
 		$historia = Pacientes::obtener_historia($bd, $id_hm);
-		$texto = "Diagnostico General";
+		$texto = "Historial";
 	}
 	else
 	if($id==2){
 		$historia = Pacientes::obtener_diagnostico($bd, $id_hm);
-		$texto = "Diagnostico";
+		$texto = "Indicaciones Generales";
 	}
 	else
 	if($id==3){

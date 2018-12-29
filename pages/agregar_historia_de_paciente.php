@@ -108,7 +108,7 @@ $id_hm = "";
                     <div class="form-group">
                     <!--label> historia y Condiciones</label-->
                         <div class="form-group col-12 col-sm-12 col-md-12">
-                            <small><strong><label for="diagnostico_general">Diagnostico General</label></strong></small>
+                            <small><strong><label for="diagnostico_general">Historial</label></strong></small>
                             <textarea row="5" col="10" class="form-control" id="diagnostico_general"><?php echo $diagnostico_general ?></textarea>
                             <div id="error_direccion" class="text-danger" style="display:none">
                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
@@ -116,7 +116,7 @@ $id_hm = "";
                         </div>
 
                         <div class="form-group col-12 col-sm-12 col-md-12">
-                            <small><strong><label for="diagnostico">Diagnostico</label></strong></small>
+                            <small><strong><label for="diagnostico">Indicaciones Generales</label></strong></small>
                             <textarea row="5" col="10" class="form-control" id="diagnostico"><?php echo $diagnostico ?></textarea>
                             <div id="error_direccion" class="text-danger" style="display:none">
                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>

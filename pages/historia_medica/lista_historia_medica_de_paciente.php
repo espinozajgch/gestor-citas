@@ -2,9 +2,9 @@
 	<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
         <thead>
             <tr>
-            	<th>Fecha</th>
-                <th>Diagnostico General</th>
-                <th>Diagnostico</th>
+                <th>Fecha</th>
+                <th>Historial </th>
+                <th>Indicaciones Generales</th>
                 <th>Indicaciones</th>
                 <th>Acciones</th>
             </tr>
@@ -12,8 +12,8 @@
         <tfoot>
             <tr>
                 <th>Fecha</th>
-                <th>Diagnostico General</th>
-                <th>Diagnostico</th>
+                <th>Historial </th>
+                <th>Indicaciones Generales</th>
                 <th>Indicaciones</th>
                 <th>Acciones</th>
             </tr>

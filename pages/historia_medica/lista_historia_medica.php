@@ -3,8 +3,8 @@
         <thead>
             <tr>
                 <th>Fecha</th>
-                <th>Diagnostico General</th>
-                <th>Diagnostico</th>
+                <th>Historial </th>
+                <th>Indicaciones Generales</th>
                 <th>Indicaciones</th>
                 <th>Paciente</th>
                 <th>Acciones</th>
@@ -13,8 +13,8 @@
         <tfoot>
             <tr>
                 <th>Fecha</th>
-                <th>Diagnostico General</th>
-                <th>Diagnostico</th>
+                <th>Historial </th>
+                <th>Indicaciones Generales</th>
                 <th>Indicaciones</th>
                 <th>Paciente</th>
                 <th>Acciones</th>
