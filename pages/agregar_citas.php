@@ -112,6 +112,7 @@ $rut_paciente = "";
         var bandera_nuevo_usuario = false;
         var bandera_email_disponible = true;
         var preseleccion = "";
+        var terapia_seteada= false;
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
@@ -172,7 +173,20 @@ $rut_paciente = "";
             $("#contacto").hide();
             $("#chequeo").hide();
         }
+        if (<?php
+        if (isset($_GET["finalizado"])){
+            echo "true";
+        }
+        else {
+            echo "false";
+        }
+        ?>){
+                $("#grand_container input").prop("disabled", true);
+                $("#btnguardar").html(" ").prop("onclick", "false").hide();
+                
+        }
         
+        inicializar_lista_terapias("terapias_individual");
     });
     </script>
 <style>
@@ -248,7 +262,7 @@ input:checked + .slider:before {
 
     <?php include_once("../assets/includes/menu.php") ?>
 
-        <div id="page-wrapper">
+            <div id="page-wrapper" id="grand_container">
             <!--input id="rut_paciente" type="text" hidden="" value="<?php //echo $rut_paciente ?>"-->
             <div class="row">
                 <div class="col-lg-6">
@@ -473,6 +487,19 @@ input:checked + .slider:before {
                                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                             </div>
                                     </div>
+                                    <div class="form-group col-6 col-sm-6 col-md-6">  
+                                        <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
+                                        <select class="form-control js-data-example-ajax" id="terapias_individual" onchange="set_terapia()"></select>
+                                        <div hidden="true">
+                                            <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
+                                        </div>
+
+
+                                            <div id="error_iva" class="text-danger" style="display:none">
+                                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                            </div>
+                                    </div> 
+                                         
                                     <div class="form-group col-12 col-sm-12 col-md-12">
                                         <small><strong><label for="observaciones">Observaciones</label></strong></small>
                                         <textarea row="3" class="form-control" id="observaciones"><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
@@ -811,11 +838,12 @@ function validar_inputs(input, div_error){
             if (verificar_normal("medicos","")){
                 bandera = false;
             }
-            
             if (bandera_email_disponible == false){                
                 bandera = false;
             }
-            
+            if (terapia_seteada == false){
+                bandera = false;
+            }
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
             if (validar_inputs("#name", "#error_name")) bandera = false;
             if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
@@ -843,6 +871,7 @@ function validar_inputs(input, div_error){
             bandera = verificar_campos_inputs();            
             var mensaje_final="Resultado:";
             var bandera_exito=true;
+            //alert (terapia_seteada);
             if (bandera){//Procedemos con la doble verificación
                 //Guardamos los campos de manera temporal en algunas variables                
                 var identificacion  = $("#rut_paciente").val();
@@ -922,38 +951,58 @@ function validar_inputs(input, div_error){
                 })
                 ).done(function (){//Por ultimo se procesa la información de ingreso de la cita
                 if (bandera){  
-
+                    
                     ///console.log(bandera);   
                     var nom_apellido = $("#name").val()+" "+$("#last_name").val();                      
-                    if ($("#check_slider").prop("checked")){
+                    if ($("#check_slider").prop("checked")||(terapia_seteada)){
                     //Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
                         bandera = false;
+                        
+                        var terapias;
+                        var terapias_individual;
+                        var descripcion;
+                        var nombre_programa;
+                        var especial;
+                        if (terapia_seteada){
+                            terapias = $("#terapias_individual").val();
+                            terapias_individual = $("#terapias_individual").val();
+                            descripcion = "Primera terapia de "+nom_apellido;
+                            nombre_programa = "Primera terapia de "+nom_apellido;
+                            especial = true;
+                        }
+                        else{
+                            terapias = 1;
+                            terapias_individual = 1;
+                            descripcion = "Diagnóstico preliminar de "+nom_apellido;
+                            nombre_programa = "Diagnóstico preliminar de "+nom_apellido;
+                            especial = false;
+                        }
                         //Verificar que el paciente no tenga un programa activo
                         var id_programa = false;
                         $.when(       
                             $.post("terapias/terapias_controlador.php",
                             {
                                 id_operacion:       5,
-                                terapias_previas:   false,                
+                                especial:   especial,                
                                 id_paciente:        $("#id_oculto").val(),
-                                terapias:           1,
-                                terapias_individual:1,
+                                terapias:           terapias,
+                                terapias_individual:terapias_individual,
                                 cantidad:           1,
-                                descripcion:        "Diagnóstico preliminar de "+nom_apellido,
+                                descripcion:        descripcion,
                                 id:                 $("#id_oculto").val(),
-                                nombre_programa:    "Diagnóstico preliminar de "+nom_apellido
+                                nombre_programa:    nombre_programa
                             }).done(function (result){       
                                 //console.log("aqui");        
                                 var respuesta = JSON.parse(result);
                                 if (respuesta[0].estado == 1){//Se creo el programa terapeutico
                                     id_programa = respuesta[0].id_programa;
-                                    id_terapia_programa = respuesta[0].id_pt_t_t;
+                                    id_terapia_programa = respuesta[0].id_pr_t_t;
+                                    alert (id_programa + " - " +id_terapia_programa);
                                 }
                                 console.log(respuesta[0].str_debug);
                             }).fail(function() {
                                 console.log( "error" );
                               })
-
                         ).then(function(){                                        
                                     mensaje_final+=procesar_informacion(id_terapia_programa);
                         });
@@ -1117,7 +1166,8 @@ function validar_inputs(input, div_error){
             else{
                 terapias =<?php if (isset($_GET["id_ptt"])){echo "true";}else echo "false";?>;
                 id_terapias = <?php if (isset($_GET["id_ptt"])){echo $_GET["id_ptt"];}else echo "false";?>;
-            }            
+            }          
+            alert (terapias + "-" + id_terapias);
             $.post("citas/citas_controlador.php",
             {
             id_operacion : <?php
@@ -1142,7 +1192,8 @@ function validar_inputs(input, div_error){
                     
                 }
                 else{
-                    echo "\"2\"";
+                    echo "\"2\",
+                        pagado:false";
                 }
             ?>,
             terapia         : terapias,
@@ -1404,6 +1455,42 @@ function validar_inputs(input, div_error){
         $("#contacto").hide();
     }
         
+    }
+    
+    function inicializar_lista_terapias(id){     
+        //alert (id);
+            $('#'+id).select2({
+                ajax: {
+                    url: 'terapias/terapias_controlador.php',
+                    dataType: 'json',
+                    type: "GET",
+                    data: function (params) {
+                        //alert ("a");
+                      var query = {
+                            search: params.term,
+                            type: 'public',
+                            id_operacion: 4
+                        }                        
+                        return query;
+                    },
+                    processResults: function (data){
+                         return {                               
+                            results: $.map(data, function(obj) {
+                                //alert (obj.id + " - " + obj.text);
+                                return { id: obj.id, text: obj.text, selected: obj.selected };
+                            })
+                        };
+                    }
+                }
+            }).ready(function (){
+                //En cuanto se cargue esto verificamos si se está verificando
+                //en cuyo caso cargaremos las opciones que se necesitan                
+            });
+        }
+        
+    function set_terapia(){
+        
+        terapia_seteada = true;
     }
   </script>
   <script src="../vendor/select2/js/select2.full.min.js"></script>

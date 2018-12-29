@@ -15,10 +15,15 @@ if (isset($_GET["id_paciente"])){
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     $condicion = "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;
 }
+else if (isset ($_GET["individual"])){
+    $id_reserva = $_GET["reserva"];
+    $condicion = "WHERE rm.id_rm =".$id_reserva;
+}
 else if (isset ($_GET["reserva"])){
     $id_reserva = $_GET["reserva"];
     $condicion = "WHERE programa_tiene_terapia.id_programa_tiene_terapia =".$id_reserva;
 }
+
 
 $modo_pago                  =   "MODO DE PAGO";
 $fecha_vencimiento          =   "02/01/2018";
@@ -32,11 +37,12 @@ $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p,
     terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, 
     terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, 
     terapia.id_terapia as id_t, programa_terapeutico.descripcion_programa_terapeutico as desc_p,
-    programa_terapeutico.descuento as descuento_p
+    programa_terapeutico.descuento as descuento_p, ep.nombre as nombre_ep
     FROM terapia 
     INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia 
     INNER JOIN programa_terapeutico ON programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico = programa_terapeutico.id_programa_terapeutico 
     INNER JOIN paciente ON programa_terapeutico.paciente_id_paciente = paciente.id_paciente 
+    INNER JOIN estatus_pago ep ON ep.id_ep=programa_terapeutico.estatus_pago_id_ep
     LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm\n"
     .$condicion ;
 $bd = connection::getInstance()->getDb();
@@ -69,6 +75,10 @@ NOMBRE: ".$resultado[0]["nombre_p"]." ".$resultado[0]["apellido_p"]."\n".
     "R.U.T: asd                     Teléfono: ".$resultado[0]["celular_p"].
         "\nEMAIL: ".$resultado[0]["email_p"].
         "\nDIRECCIÓN: ".$resultado[0]["direccion_p"].""));
+$y = 90;
+$pdf->SetXY(10, $y);
+$pdf->Cell(0,10,'PAGO: '.$resultado[0]["nombre_ep"],0,0,'R');
+
 $cols=array( "FECHA TERAPIA"    => 45,
              "DESCRIPCION"  => 88,
              "P. UNITARIO"=> 26,
@@ -104,8 +114,11 @@ if ($resultado){
         if ($fecha_t==null){
             $fecha_t = " ";
         }
+        else{
+            $fecha_t = calendario::formatear_fecha(1, $fecha_t);
+        }
         $subtotal += $precio_terapia;        
-            $line = array( "FECHA TERAPIA"    => calendario::formatear_fecha(1,$fecha_t),
+            $line = array( "FECHA TERAPIA"    => $fecha_t,
                    "DESCRIPCION"  => "$descripcion_terapia",
                    "P. UNITARIO"      => "$$precio_terapia",
                    "SUB TOTAL" => "$".number_format($subtotal,2)."");

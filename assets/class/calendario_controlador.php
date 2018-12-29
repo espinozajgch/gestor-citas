@@ -17,7 +17,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         $fecha = $_POST["fecha"];
         $descripcion = $_POST["descripcion"];
         
-        $resultado = calendario::agregar_dia_feriado($fecha, $descripcion);
+        $resultado = calendario::agregar_dia_feriado(calendario::formatear_fecha(3,$fecha), $descripcion);
         
         echo $resultado;
     }
@@ -41,7 +41,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         //echo "algo";
     }
     else if ($_POST["id_operacion"]==4){//Actualizar una fecha feriada
-        if (calendario::actualizar_fecha($_POST["id_dia"],$_POST["fecha"], $_POST["descripcion"])){
+        if (calendario::actualizar_fecha($_POST["id_dia"],  calendario::formatear_fecha(3,$_POST["fecha"]), $_POST["descripcion"])){
             echo "1";
         }
         else{

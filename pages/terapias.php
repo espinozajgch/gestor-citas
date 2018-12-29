@@ -319,8 +319,27 @@ $usuario  = "";
                 "initComplete": function (settings, json){
                     $("#texto_programa").html(json.data[0].desc_prt);
                     $("#botones_dinamicos").html(json.data[0].btn_validar_prg);
+                    $("#botones_dinamicos").append(json.data[0].otros_botones);
+                    
                 }
             });
+    }
+    
+    function establecer_pago(id_programa, tipo_pago){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion    : 19,
+            tipo_pago       : tipo_pago,
+            id_programa     : id_programa
+        }, function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){//Exito
+                alert ("Metodo de pago establecido");
+            }
+            else{
+                alert ("Ocurrió un error, contacte al admin");
+            }
+        });
     }
     
     function seleccionar_terapia(id_terapia, estado, modificar = false){

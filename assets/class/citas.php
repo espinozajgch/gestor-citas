@@ -182,15 +182,46 @@ class citas {
     }
     
     public static function validar_cita($id_cita){
+        $estado_actual =citas::obtener_estado_cita($id_cita);
+        $estado_nuevo = "pendiente";
+        if ($estado_actual=="pendiente"){
+            $estado_nuevo = "pagado";
+        }
+        else if ($estado_actual == "pagado"){
+            $estado_nuevo = "atendida";
+        }
+        else if ($estado_actual == "atendida"){
+            $estado_nuevo = "atendida";
+        }
+        else if ($estado_actual == "cancelado"){
+            $estado_nuevo = "cancelado";
+        }
+        
+        
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE reserva_medica
         SET estado=?
             WHERE id_rm = ".$id_cita;
         $pdo = $bd->prepare($sql);        
         //echo "<br>".$sql;
-        return $pdo->execute(array("atendida"));
+        return $pdo->execute(array($estado_nuevo));
     }    
     
+    public static function obtener_estado_cita($id_cita){
+        $sql = "SELECT DISTINCT * 
+            FROM `reserva_medica` 
+            WHERE `id_rm`=$id_cita";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["estado"];
+        }
+        else{            
+            return false;
+        }
+    }
     
     public static function obtener_nombre_medicos ($id_cita){
         $bd = connection::getInstance()->getDb();
