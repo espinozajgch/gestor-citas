@@ -279,5 +279,9 @@ $usuario  = "";
             }
         });
     }
+    
+    function generar_invoice_individual(id_reserva){
+        window.open("terapias/terapias_controlador.php?id_operacion=15&individual=true&reserva="+id_reserva, "_newtab");
+    }
 </script>
 </html>

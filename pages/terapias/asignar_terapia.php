@@ -55,8 +55,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <div class="form-group col-xs-2 col-sm-2 col-md-2 mt-5" id="contenedor_descuento" style="display: none;">
             <small><strong><label for="medico">Descuento aplicado</label></strong></small>
             <input type="number" class="form-control" id="descuento_aplicado" placeholder="%" >
-        </div>
-        
+        </div>        
         <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
             <small><strong><label for=name_>RUT</label></strong></small>
             <div class="input-group col-3 col-sm-3 col-md-3">
@@ -122,7 +121,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <br>
             <button type="button" id="btnguardar" class="btn btn-success btn-sm" onclick="redirigir_terapia()" style="display: none;"><i class="fa fa-arrow-right"></i></button>
-        </div>
+        </div>        
         <div class="form-group col-xs-6 col-sm-6 col-md-6" id="contenedor_botones_dinamicos">            
         </div>
      

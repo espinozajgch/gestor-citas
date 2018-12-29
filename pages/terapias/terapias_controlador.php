@@ -79,10 +79,18 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $str_debug              =   "Inicio ";
     $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
-    $descuento = $_POST["descuento"];    
-    if ($descuento == ""){
+    $descuento;
+    if (isset($_POST["descuento"])){
+        $descuento = $_POST["descuento"];    
+        if ($descuento == ""){
+            $descuento = 0;
+        }    
+    }
+    else{
         $descuento = 0;
-    }    
+    }
+    //$especial = $_POST["especial"];
+    
     $str_debug.="-Se agregaran $cantidad terapias-";    
     for ($i=0; $i<$cantidad; $i++){
         $lista_terapias[$i]=$terapia;
@@ -333,6 +341,18 @@ else if ($id_operacion == 18){//ELIMINAR TERAPIA
     $id_terapia     = $_POST["terapia"];
     $json;
     if (terapias::eliminar_terapia_individual($id_programa, $id_terapia)){
+        $json[0]["estado"]=1;
+    }
+    else{
+        $json[0]["estado"]=0;
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 19){//Establecer modo de pago
+    $id_programa    = $_POST["id_programa"];
+    $tipo_pago      = $_POST["tipo_pago"];
+    $json;
+    if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
         $json[0]["estado"]=1;
     }
     else{

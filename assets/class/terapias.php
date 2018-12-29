@@ -169,6 +169,16 @@ class terapias {
         return $pdo->execute();
     }
     
+    public static function establecer_modo_pago ($id_programa, $modo_pago){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET estatus_pago_id_ep=?
+            WHERE id_programa_terapeutico = ".$id_programa;
+        $pdo = $bd->prepare($sql);       
+        //echo $sql;
+        return $pdo->execute(array("$modo_pago"));
+    }
+    
     public static function obtener_id_programa_paciente ($id_paciente){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente." 
@@ -445,7 +455,7 @@ class terapias {
                         onclick=\"validar_terapia(".$resultado[$i]["ptt_id"].", ".$resultado[$i]["id_terapia"].", ".$resultado[$i]["id_rm"].")\">
                         <i class=\"fa fa-check\"></i>
                     </a>";
-                    $bandera_validar_programa = false;
+                    //$bandera_validar_programa = false;
                 }                
                 else if ($resultado[$i]["estado_t"]=="cancelado") {
                     $str_btn = "
@@ -479,9 +489,23 @@ class terapias {
                         class=\"btn btn-success\"
                         onclick=\"validar_programa(".$resultado[0]["prt_id"].")\">
                         <i class=\"fa fa-check\"></i>
-                    </a>";
+                    </a>                    
+";
                 $json[0]["btn_validar_prg"]=$str_btn_validar;
             }
+            $otros_botones="
+                <a title=\"Establecer pago completo\" 
+                        class=\"btn btn-info\"
+                        onclick=\"establecer_pago(".$resultado[0]["prt_id"].",2)\">
+                        <i class=\"fa fa-list-alt\"></i>
+                    </a>
+                    <a title=\"Establecer pago parcial\" 
+                        class=\"btn btn-warning\"
+                        onclick=\"establecer_pago(".$resultado[0]["prt_id"].",3)\">
+                        <i class=\"fa fa-list-alt\"></i>
+                    </a>
+                ";
+            $json[0]["otros_botones"]=$otros_botones;
             //$json[1]['html'] = $str;
             return $json;
         }

@@ -73,6 +73,15 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
+    if (isset($_POST["pagado"])){        
+        $pagado         =   $_POST["pagado"];
+        if ($pagado == "true") $pagado = "pagado";
+        else $pagado = "pendiente";
+    }
+    else{
+        $pagado         =   "pagado";
+    }
+    
     //$chequeo        =   $_POST["chequeo"];
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
     $tipo_insercion =   1;
@@ -84,7 +93,7 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado) 
         VALUES (?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, "pagado"));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -210,7 +219,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[0]['estado']=1;
         
         $json[$i+1]['rut']            =   $resultados[$i]["rut"];
-        $json[$i+1]['fecha_inicio']   =   $resultados[$i]["fecha_inicio"];
+        $json[$i+1]['fecha_inicio']   =   calendario::formatear_fecha(1,$resultados[$i]["fecha_inicio"]);
         $json[$i+1]['hora_inicio']    =   $resultados[$i]["hora_inicio"];
         $json[$i+1]['hora_fin']       =   $resultados[$i]["hora_fin"];
         $json[$i+1]['medio_contacto'] =   $resultados[$i]["medio_contacto_id_mc"];

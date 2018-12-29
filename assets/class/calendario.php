@@ -214,7 +214,7 @@ class calendario {
         }
         for ($i=0; $i<$longitud; $i++){
             $json[$i]['Descripcion'] = $resultados[$i]["descripcion_feriados"];
-            $json[$i]['Fecha'] = $resultados[$i]["fecha_feriados"];
+            $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_feriados"]);
             $json[$i]['N'] = "<a href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\">".($i+1)."</a>";
         }
         //FORMATO de json
@@ -277,7 +277,7 @@ class calendario {
             p.nombre as nombre, p.apellidop as apellidop, 
             p.apellidom, GROUP_CONCAT(a.nombre) as nombre_medico ,
             pt.descripcion_programa_terapeutico as nombre_programa, pt.id_programa_terapeutico as id_programa,
-            ptt.terapia_id_terapia as id_terapia
+            ptt.terapia_id_terapia as id_terapia, ptt.id_programa_tiene_terapia as ptt_id
             FROM reserva_medica rm 
             INNER JOIN paciente_tiene_reserva ptr ON rm.id_rm=ptr.reserva_medica_id_rm 
             INNER JOIN paciente p ON ptr.paciente_id_paciente=p.id_paciente 
@@ -326,23 +326,49 @@ class calendario {
             $json[$i]['Programa'] = $nombre_programa;
             $json[$i]['Estado'] = $resultados[$i]["estado_rm"];
             $json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
-            $json[$i]['N'] = ($i+1);
-            $json[$i]['Acciones'] = "
-                <a title=\"Validar cita\" 
+            $json[$i]['N'] = ($i+1);           
+            
+            $str_brn= "
+                <button title=\"Validar cita\" 
                     class=\"btn btn-success\"  
-                    onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" >
-                    <i class=\"fa fa-check\"></i>
-                </a>
+                    onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\"
+                    ";
+            if ($resultados[$i]["estado_rm"]=="atendida"){
+                //echo $resultados[$i]["estado_rm"];
+                $str_brn.=" disabled";
+            }
+            $str_brn.=">
+            <i class=\"fa fa-check\"></i>
+                </button>
                 <a title=\"Detalle\" 
                     class=\"btn btn-info\"  
-                    href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."\" >
+                    href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
+            if ($resultados[$i]["estado_rm"]=="atendida"){
+                //echo $resultados[$i]["estado_rm"];
+                $str_brn.="&finalizado=true";
+            }            
+            $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
                 </a>
-                <a title=\"Cancelar\" 
+                <button title=\"Cancelar\" 
                     class=\"btn btn-danger\"  
-                    onclick =\"cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" >
+                    onclick =\"cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" 
+                        ";
+            if ($resultados[$i]["estado_rm"]=="atendida"){
+                //echo $resultados[$i]["estado_rm"];
+                $str_brn.=" disabled";
+            }
+            $str_brn.=">
                     <i class=\"fa fa-times-circle\"></i>
-                </a>";
+                </button>
+                <a title=\"Generar INVOICE\" 
+                        class=\"btn btn-success\"
+                        onclick=\"generar_invoice_individual(".$resultados[$i]["id_rm"].")\">
+                        <i class=\"fa fa-file\"></i>
+                    </a>
+";
+            
+            $json[$i]['Acciones'] = $str_brn;
         }
         //FORMATO de json        
         $json = json_encode($json);
