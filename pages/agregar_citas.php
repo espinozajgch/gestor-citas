@@ -54,6 +54,8 @@ $rut_paciente = "";
         else if (isset ($_GET["cita"])){
             $link = "citas.php?opcion=1";
         }
+        
+        
 
 ?>
 <!DOCTYPE html>
@@ -185,7 +187,16 @@ $rut_paciente = "";
                 $("#btnguardar").html(" ").prop("onclick", "false").hide();
                 
         }
-        
+        if (
+        <?php
+        if (isset($_GET["nueva"])){
+            echo "true";
+        }
+        else echo "false";
+        ?>)        
+        {
+            $("#contenedor_lista_terapias").show();
+        }
         inicializar_lista_terapias("terapias_individual");
     });
     </script>
@@ -487,7 +498,7 @@ input:checked + .slider:before {
                                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                             </div>
                                     </div>
-                                    <div class="form-group col-6 col-sm-6 col-md-6">  
+                                         <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias" style="display: none;">  
                                         <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
                                         <select class="form-control js-data-example-ajax" id="terapias_individual" onchange="set_terapia()"></select>
                                         <div hidden="true">
@@ -841,7 +852,7 @@ function validar_inputs(input, div_error){
             if (bandera_email_disponible == false){                
                 bandera = false;
             }
-            if (terapia_seteada == false){
+            if (terapia_seteada == false && (<?php if (isset($_GET["nueva"])){echo "true";}else echo "false";?>)){
                 bandera = false;
             }
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
@@ -983,21 +994,25 @@ function validar_inputs(input, div_error){
                             $.post("terapias/terapias_controlador.php",
                             {
                                 id_operacion:       5,
-                                especial:   especial,                
                                 id_paciente:        $("#id_oculto").val(),
                                 terapias:           terapias,
                                 terapias_individual:terapias_individual,
                                 cantidad:           1,
                                 descripcion:        descripcion,
                                 id:                 $("#id_oculto").val(),
-                                nombre_programa:    nombre_programa
+                                nombre_programa:    nombre_programa,
+                                especial            : <?php if(isset($_GET["nueva"]))
+                                                            {
+                                                                echo "true";                                                                
+                                                            }
+                                                            else echo "false";?>
                             }).done(function (result){       
                                 //console.log("aqui");        
                                 var respuesta = JSON.parse(result);
                                 if (respuesta[0].estado == 1){//Se creo el programa terapeutico
                                     id_programa = respuesta[0].id_programa;
                                     id_terapia_programa = respuesta[0].id_pr_t_t;
-                                    alert (id_programa + " - " +id_terapia_programa);
+                                    //alert (id_programa + " - " +id_terapia_programa);
                                 }
                                 console.log(respuesta[0].str_debug);
                             }).fail(function() {
@@ -1167,7 +1182,7 @@ function validar_inputs(input, div_error){
                 terapias =<?php if (isset($_GET["id_ptt"])){echo "true";}else echo "false";?>;
                 id_terapias = <?php if (isset($_GET["id_ptt"])){echo $_GET["id_ptt"];}else echo "false";?>;
             }          
-            alert (terapias + "-" + id_terapias);
+            //alert (terapias + "-" + id_terapias);
             $.post("citas/citas_controlador.php",
             {
             id_operacion : <?php
@@ -1324,7 +1339,9 @@ function validar_inputs(input, div_error){
                     var fecha_seleccionada_b    =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
                     var hora_seleccionada       =   arg.start.getHours()+":"+arg.start.getMinutes()+":"+arg.start.getSeconds();
                     var hora_seleccionada_b     =   arg.end.getHours()+":"+arg.end.getMinutes()+":"+arg.end.getSeconds();                    
-                    //alert("A");
+                    var hoy                     =   new Date();
+                    /*alert (hoy);
+                    alert (arg.start);//*/
                     if (arg.allDay){                        
 //                        $("#fecha_a").val(fecha_seleccionada);
 //                        $("#hora_a").val(hora_seleccionada);
@@ -1337,7 +1354,25 @@ function validar_inputs(input, div_error){
                     else{//Sino procedemos a colocar las dos fechas juntas
                         //Asegurarse que no se seleccionen horas no laborables
                         //alert (arg.start.getHours());
-                        if ((arg.start.getHours()>=9)&&(arg.start.getHours()<17)){
+                        var condicion_1, condicion_2;
+                        //var hoy = $.fullCalendar.formatDate(new Date(), 'yyyy-MM-dd');
+                        //alert (hoy);
+                        if (!(arg.start.getHours()>=9)&&!(arg.start.getHours()<17)){
+                            condicion_1 = false;                         
+                        }
+                        else {
+                            condicion_1 = true;
+                            
+                        }
+                        if (arg.start<hoy){
+                            condicion_2 = false;                            
+                        }
+                        else{
+                            
+                            condicion_2 = true;
+                        }
+                        //alert (condicion_1 + " - - - " + condicion_2);
+                        if (condicion_1 && condicion_2){//Si la fecha no está en horario de oficina
                             $("#fecha_a").val(fecha_seleccionada);
                             $("#hora_a").val(hora_seleccionada);
                         

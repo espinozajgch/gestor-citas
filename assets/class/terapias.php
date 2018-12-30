@@ -179,10 +179,13 @@ class terapias {
         return $pdo->execute(array("$modo_pago"));
     }
     
-    public static function obtener_id_programa_paciente ($id_paciente){
+    public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente." 
                 AND estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\"";
+        if (!$especial){
+            $sql.=" AND especial <> true";
+        }
         $bd = connection::getInstance()->getDb();
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -245,14 +248,24 @@ class terapias {
         }
     }    
     
-    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false){
+    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false, $especial = false){
         $bd = connection::getInstance()->getDb();
+        $array;
         //echo "aaa".$id_paciente;
-        $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento)
+        if ($especial){
+            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento, especial)
+            VALUES (?,?,?,?)";
+            $array = array ($id_paciente, $nombre_programa,$descuento, $especial);
+        }
+        else{
+            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento)
             VALUES (?,?,?)";
+            $array = array ($id_paciente, $nombre_programa,$descuento);
+        }
+        
         //echo $consulta;
         $comando = $bd->prepare($consulta);
-        $resultado = $comando->execute(array($id_paciente, $nombre_programa,$descuento));
+        $resultado = $comando->execute($array);
         if ($resultado){
             
             if ($retornar_id){
@@ -293,7 +306,17 @@ class terapias {
          //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT pt.estado,p.id_paciente as id_p, pt.id_programa_terapeutico as programa, p.nombre as nombre, p.apellidop, p.apellidom ,COUNT(t.id_terapia) Terapias FROM paciente p INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia WHERE pt.estado NOT LIKE '%culminado%' AND pt.estado NOT LIKE '%cancelado%' GROUP BY p.nombre";
+        $sql = "SELECT pt.estado,p.id_paciente as id_p, pt.id_programa_terapeutico as programa,
+            p.nombre as nombre, p.apellidop, p.apellidom ,
+            COUNT(t.id_terapia) Terapias 
+            FROM paciente p 
+            INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
+            INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
+            INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
+            WHERE pt.estado NOT LIKE '%culminado%' 
+            AND pt.estado NOT LIKE '%cancelado%' 
+            AND pt.especial <> true
+            GROUP BY p.nombre";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         
@@ -539,25 +562,27 @@ class terapias {
         return $pdo->execute(array("culminado"));
     }
     
-    public static function terapias_paciente ($id_paciente, $format = 'JSON', $solo_activas = false){
+    public static function terapias_paciente ($id_paciente, $format = 'JSON', $solo_activas = false, $especial = false){
         $bd = connection::getInstance()->getDb();
         
         $sql = "SELECT pt.id_programa_terapeutico as id_programa, pt.descripcion_programa_terapeutico as desc_pt, t.id_terapia as id_t, t.nombre_terapia as nombre_t FROM paciente p\n"
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE pt.estado LIKE \"%activo%\" AND p.id_paciente = ".$id_paciente;
+    . "WHERE pt.estado LIKE \"%activo%\" AND p.id_paciente = ".$id_paciente." AND pt.especial <> true ";
         if ($solo_activas){
             $sql.= " AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
         }
-        $pdo = $bd->prepare($sql);
+        $pdo = $bd->prepare($sql);        
         //echo $sql;
-
+        
         $pdo->execute();    
         $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);    
         $longitud = count($resultados);
         $json_retorno;
         $json_retorno[0]['estado']=0;
+        $json_retorno[0]['sql']=$sql;
+        $json_retorno[0]['filas']=$longitud;
         if ($longitud>0) 
         {
             $json_retorno[0]['estado']          =   1;

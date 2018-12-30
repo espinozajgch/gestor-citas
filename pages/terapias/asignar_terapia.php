@@ -37,7 +37,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
             <button class="btn btn-sm btn-info shared" id="btn_invoice" style="display: none" title="Cancelar programa" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
-        </div>
+        </div>         
         <!--div class="col-lg-12">
            <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
         </div-->
@@ -118,12 +118,13 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             <input type="number" class="form-control" id="cantidad" placeholder="#" >
         </div>
         
-        <div class="form-group col-xs-2 col-sm-2 col-md-2">
+        <div class="form-group col-xs-4 col-sm-4 col-md-4">
             <br>
             <button type="button" id="btnguardar" class="btn btn-success btn-sm" onclick="redirigir_terapia()" style="display: none;"><i class="fa fa-arrow-right"></i></button>
         </div>        
-        <div class="form-group col-xs-6 col-sm-6 col-md-6" id="contenedor_botones_dinamicos">            
-        </div>
+        <div class="form-group col-4 col-sm-4 col-md-4">
+            <div id="botones_dinamicos"></div>
+        </div> 
      
 
 <!--        <div class="col-md-8 col-sm-8 col-xs-8 py-2 margin-bottom-20 text-right ">
@@ -411,6 +412,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     operacion = 11;                            
                     if(json[0].estado == 1){   
                         alert ("Procesado con exito");
+                        window.location = "terapias.php?opcion=1";
                     }
                     else{
                         alert ("Ocurrió un error");

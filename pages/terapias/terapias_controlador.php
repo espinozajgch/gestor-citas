@@ -80,6 +80,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
     $descuento;
+    $especial;
     if (isset($_POST["descuento"])){
         $descuento = $_POST["descuento"];    
         if ($descuento == ""){
@@ -89,6 +90,11 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     else{
         $descuento = 0;
     }
+    if (isset($_POST["especial"])){
+        if ($_POST["especial"]=="true") $especial = true;
+        else $especial = false;
+    }
+    else $especial = false;
     //$especial = $_POST["especial"];
     
     $str_debug.="-Se agregaran $cantidad terapias-";    
@@ -112,7 +118,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     }
     else{
         $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
-        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true);    
+        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true,$especial);
         if ($id_insert!=0){
             $str_debug.="-Programa creado con el indice $id_insert-";
             $json[0]["id_programa"] = $id_insert;
@@ -146,7 +152,7 @@ else if ($id_operacion == 6){
 else if ($id_operacion == 7){//Cargar opciones previas
     $id_paciente = $_POST["paciente"];    
     //echo "a";
-    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false));
+    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false,false));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     $id_paciente = $_POST["id_paciente"];
