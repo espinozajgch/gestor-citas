@@ -102,9 +102,10 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
         $lista_terapias[$i]=$terapia;
     }    
     $json[0]["estado"]=1;
-    //Verificamos que el paciente no tenga un programa terapeutico actaivo
+    //Verificamos que el paciente no tenga un programa terapeutico actaivo y que la peticion
+    //actual no tenga caracter especial
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
-    if ($id_programa){//Debemos actualizar
+    if ($id_programa && !$especial){//Debemos actualizar
         $str_debug.="-El paciente tiene un programa activo, actualizar lista de terapias-";
         if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){            
             $str_debug.="-Terapia agregada-";
@@ -117,7 +118,13 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
         }
     }
     else{
-        $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
+        if ($especial){
+            $str_debug.="-La presente consulta es especial, programa ficticio-";
+        }
+        else{
+            $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
+        }
+        
         $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true,$especial);
         if ($id_insert!=0){
             $str_debug.="-Programa creado con el indice $id_insert-";

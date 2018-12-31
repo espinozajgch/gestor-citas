@@ -1,10 +1,11 @@
 <?php
-// (c) Xavier Nicolay
-// Exemple de génération de devis/facture PDF
+
+
 
 require('../../vendor/fpdf/invoice.php');
 require_once '../../assets/class/terapias.php';
 require_once '../../assets/class/calendario.php';
+
 
 $numero_invoice             =   1;
 $fecha                      =   date("d/m/Y");
@@ -55,96 +56,168 @@ $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);
 
 //FPDF
 $pdf = new PDF_Invoice( 'P', 'mm', 'A4' );
-//$pdf->
-$pdf->AddPage();
-$pdf->addSociete( utf8_decode("SALUDINTEGRAL"),
- utf8_decode("Nuestra dirección\n" .
-                  "Calle\n".
-                  "Otra dirección\n"));
-$pdf->fact_dev( "SALUDINTEGRAL", "$numero_invoice" );
-//$pdf->temporaire( "Devis temporaire" );
-$pdf->addDate( "$fecha");
-//$pdf->addClient($resultado[0]["rut"]);
-$pdf->addPageNumber("1");
-//$pdf->addClientAdresse(utf8_decode($resultado[0]["direccion_p"]));
-//$pdf->addReglement("$modo_pago");
-//$pdf->addEcheance("$fecha_vencimiento");
-//$pdf->addNumTVA("FR888777666");
-$pdf->addReference(utf8_decode("
-NOMBRE: ".$resultado[0]["nombre_p"]." ".$resultado[0]["apellido_p"]."\n".
-    "R.U.T: asd                     Teléfono: ".$resultado[0]["celular_p"].
-        "\nEMAIL: ".$resultado[0]["email_p"].
-        "\nDIRECCIÓN: ".$resultado[0]["direccion_p"].""));
-$y = 90;
-$pdf->SetXY(10, $y);
-$pdf->Cell(0,10,'PAGO: '.$resultado[0]["nombre_ep"],0,0,'R');
 
-$cols=array( "FECHA TERAPIA"    => 45,
-             "DESCRIPCION"  => 88,
-             "P. UNITARIO"=> 26,
-             "SUB TOTAL" => 31);
-$pdf->addCols( $cols);
-$cols=array( "FECHA TERAPIA"    => "L",
-             "DESCRIPCION"  => "L",
-             "P. UNITARIO"      => "R",
-             "SUB TOTAL" => "R");
-$pdf->addLineFormat( $cols);
-//$pdf->addLineFormat($cols);
+//CONFIGURACION DE PAGINA
+$fin = false;
+$pagina = 1;
+$i = 0;
+while (!$fin){
+    $margen_der = 20;
+    $margen_izq = 10;
+    $margen_sup = 10;
+    $margen_inf = 10;
 
-$y    = 109;    
-if ($resultado){
-    $longitud = count($resultado);
-    //echo $longitud;
-    //$json[0]["estado"] = 1;
-    $str="";
-    if ($longitud<1){
-        $line = array( "FECHA TERAPIA"    => "-",
-                   "DESCRIPCION"  => "-",
-                   "P. UNITARIO"      => "-",
-                   "SUB TOTAL" => "-");
-        $size = $pdf->addLine( $y, $line );
-        $y   += $size + 3;
+    $x_inicio       = $margen_izq;
+    $y_inicio       = $margen_sup;
+    $x_fin          = $pdf->GetPageWidth() - $margen_der;
+    $y_fin          = $pdf->GetPageHeight() - $margen_inf;
+    $pagina_actual  = 1;
+    $x_actual       = $x_inicio;
+    $y_actual       = $y_inicio;
+
+    //Agregamos una página nueva
+    $pdf->AddPage();
+
+    //Agregar el logo
+    $x_actual = $x_fin - 135;
+    $pdf->agregarImagen($x_actual, $y_actual, 100, 100, "../../dist/img/logo_salud.jpg", 'R'); 
+    $x_actual = $x_inicio;
+    $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  date("d-m-Y"),"Emisión");
+    $x_actual = $x_fin - 30;
+    $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  $pagina,"Página");
+    $y_actual += 23;
+    $x_actual = $x_inicio;
+    //La página se agrega de ultimo
+    $pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 5, 124, 239, 130, "Agende su hora al: 226328948");
+    $y_actual+=10;
+    $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
+    $y_actual+=5;
+    $pdf->agregar_texto("NOMBRES Y APELLIDOS: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual += 50;
+    $pdf->agregar_texto($resultado[0]["nombre_p"]." ".$resultado[0]["apellido_p"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+    $x_actual += 70;
+    $pdf->agregar_texto("RUT: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual += 10;
+    $pdf->agregar_texto($resultado[0]["rut"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+    $x_actual = $x_inicio;
+    $y_actual+=5;
+    $pdf->agregar_texto("TELÉFONO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual += 25;
+    $pdf->agregar_texto($resultado[0]["celular_p"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+    $x_actual += 95;
+    $pdf->agregar_texto("EMAIL: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual += 15;
+    $pdf->agregar_texto($resultado[0]["email_p"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+    $y_actual+=5;
+    $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
+    $y_actual+=5;
+    $x_actual = $x_inicio;
+    $pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 15, 255, 50, 50, "AVISO: Aquellas horas previamente agendadas y pagadas serán consideradas como realizadas en el caso de no asistir\n sin dar previo aviso, por lo cual recomendamos en el caso de no poder asistir, reagendar su hora al fono: 226328948 al menos con 12 horas de anticipación.", 255, 255, 255, true);
+    $y_actual+=20;
+    $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
+    $y_actual+=5;
+    $desc_programa = $resultado[0]["desc_p"];
+    if ($desc_programa!=null){
+        $pdf->agregar_texto("PROGRAMA TERAPEUTICO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+        $x_actual += 55;
+        $pdf->agregar_texto($desc_programa, "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+        $y_actual+=5;
+        $x_actual = $x_inicio;
     }
-    $subtotal = 0;
-    for ($i = 0; $i<$longitud; $i++){
-        $nombre_programa        = utf8_decode($resultado[$i]["desc_p"]);
-        $descripcion_terapia    = utf8_decode($resultado[$i]["nombre_t"]);
-        $precio_terapia         = utf8_decode($resultado[$i]["precio_t"]);
-        $fecha_t                = $resultado[$i]["fecha_c"];
-        if ($fecha_t==null){
-            $fecha_t = " ";
+    $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual+=15;
+    $pdf->agregar_texto($resultado[0]["nombre_ep"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+
+    $y = 90;
+
+    $cols=array( "FECHA TERAPIA"    => 45,
+                 "DESCRIPCION"  => 88,
+                 "P. UNITARIO"=> 26,
+                 "SUB TOTAL" => 31);
+    $pdf->addCols( $cols);
+    $cols=array( "FECHA TERAPIA"    => "L",
+                 "DESCRIPCION"  => "L",
+                 "P. UNITARIO"      => "R",
+                 "SUB TOTAL" => "R");
+    $pdf->addLineFormat( $cols);
+    //$pdf->addLineFormat($cols);
+
+    $y    = 109;    
+    if ($resultado){
+        $longitud = count($resultado);
+        //echo $longitud;
+        //$json[0]["estado"] = 1;
+        $str="";
+        if ($longitud<1){
+            $line = array( "FECHA TERAPIA"    => "-",
+                       "DESCRIPCION"  => "-",
+                       "P. UNITARIO"      => "-",
+                       "SUB TOTAL" => "-");
+            $size = $pdf->addLine( $y, $line );
+            $y   += $size + 3;
         }
-        else{
-            $fecha_t = calendario::formatear_fecha(1, $fecha_t);
+        $subtotal = 0;
+        
+        while (($i < $longitud) && ($y<200)){
+        //for ($i = 0; $i<$longitud; $i++){
+            $nombre_programa        = utf8_decode($resultado[$i]["desc_p"]);
+            $descripcion_terapia    = utf8_decode($resultado[$i]["nombre_t"]);
+            $precio_terapia         = utf8_decode($resultado[$i]["precio_t"]);
+            $fecha_t                = $resultado[$i]["fecha_c"];
+            if ($fecha_t==null){
+                $fecha_t = " ";
+            }
+            else{
+                $fecha_t = calendario::formatear_fecha(1, $fecha_t);
+            }
+            $subtotal += $precio_terapia;        
+                $line = array( "FECHA TERAPIA"    => $fecha_t,
+                       "DESCRIPCION"  => "$descripcion_terapia",
+                       "P. UNITARIO"      => "$".number_format($precio_terapia,2)."",
+                       "SUB TOTAL" => "$".number_format($subtotal,2)."");
+
+
+            $size = $pdf->addLine( $y, $line );
+            $y   += $size + 3;
+            $i++;
         }
-        $subtotal += $precio_terapia;        
-            $line = array( "FECHA TERAPIA"    => $fecha_t,
-                   "DESCRIPCION"  => "$descripcion_terapia",
-                   "P. UNITARIO"      => "$$precio_terapia",
-                   "SUB TOTAL" => "$".number_format($subtotal,2)."");
-        
-        
-        $size = $pdf->addLine( $y, $line );
-        $y   += $size + 3;
+        if ($i>=$longitud){
+            $descuento = ($resultado[0]["descuento_p"]/100)*$subtotal;
+            $max_altura = $pdf->GetPageHeight();
+            $y = $max_altura - 80;
+            $line = array( "FECHA TERAPIA"    => " ",
+                           "DESCRIPCION"  => "SUB TOTAL",
+                           "P. UNITARIO"  =>" ",
+                           "SUB TOTAL" =>"$".number_format($subtotal,2));
+            $size = $pdf->addLine( $y, $line );
+            $y   += $size+3;            
+            
+            $line = array( "FECHA TERAPIA"    => " ",
+                           "DESCRIPCION"  => "DESCUENTO AL PAGO DE CONTADO",
+                           "P. UNITARIO"  =>number_format($resultado[0]["descuento_p"],2)."%",
+                           "SUB TOTAL" =>" - $".number_format(($descuento),2));
+            $size = $pdf->addLine( $y, $line );
+            $y   += $size + 3;
+            $line = array( "FECHA TERAPIA"    => " ",
+                           "DESCRIPCION"  => "TOTAL CON DESCUENTO",
+                           "P. UNITARIO"  =>" ",
+                           "SUB TOTAL" =>"$".number_format($subtotal-$descuento,2)."");
+            $size = $pdf->addLine( $y, $line );
+            $y   += $size + 3;
+            $line = array( "FECHA TERAPIA"    => " ",
+                           "DESCRIPCION"  => " ",
+                           "P. UNITARIO"      => " ",
+                           "SUB TOTAL" => "TOTAL: $".number_format($subtotal-$descuento,2)."");
+            $size = $pdf->addLine( $y, $line );
+            $fin = true;
+        }        
+        $pagina++;
     }
-    $descuento = ($resultado[0]["descuento_p"]/100)*$subtotal;
-    $max_altura = $pdf->GetPageHeight();
-    $y = $max_altura - 67;
-    $line = array( "FECHA TERAPIA"    => " ",
-                   "DESCRIPCION"  => "DESCUENTO APLICADO AL PAGO DE CONTADO",
-                   "P. UNITARIO"  =>number_format($resultado[0]["descuento_p"],2)."%",
-                   "SUB TOTAL" =>" - $".number_format(($descuento),2));
-    $size = $pdf->addLine( $y, $line );
-    $y   += $size + 3;
-    
-    
-    $line = array( "FECHA TERAPIA"    => " ",
-                   "DESCRIPCION"  => " ",
-                   "P. UNITARIO"      => " ",
-                   "SUB TOTAL" => "TOTAL: $".number_format($subtotal-$descuento,2)."");
-    $size = $pdf->addLine( $y, $line );
-        
+    else{
+        $fin = true;
+    }
 }
+
 
 $pdf->SetFont('Arial','',10);
 // Número de página
@@ -169,12 +242,6 @@ $pdf->Cell(0,10,'saludintegralcentro@gmail.com',0,0,'R');
 $y+=26;        
 $pdf->Line(10, $y, $pdf->GetPageWidth()-10, $y);
 $pdf->Line(10, $pdf->GetPageHeight()-10, $pdf->GetPageWidth()-10, $pdf->GetPageHeight()-10);
-$y+=4;
-$pdf->SetXY(15,$y);
-$pdf->SetFont('Arial','',9);
-$pdf->SetFillColor(150, 0, 20); 
-$pdf->SetTextColor(255, 255, 255); //Color del texto: Negro
-$pdf->MultiCell($pdf->GetPageWidth()-30,3,  utf8_decode("AVISO: Aquellas horas previamente agendadas y pagadas serán consideradas como realizadas en el caso de no asistir\n sin dar previo aviso, por lo cual recomendamos en el caso de no poder asistir, reagendar su hora al fono: 226328948 al menos con 12 horas de anticipación."),0,'L',true);
 
 
 
