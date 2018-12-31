@@ -280,13 +280,18 @@ $estilo_par = "";
             validar_inputs("#name", "#error_name");
             validar_inputs("#last_name", "#error_last_name");
             validar_inputs("#second_name", "#error_second_name");
-            validar_inputs("#email", "#error_email");
-            validar_inputs("#phone", "#error_phone"); 
-            validar_inputs("#fijo", "#error_fijo"); 
-            validar_inputs("#direccion", "#error_direccion");
+            //validar_inputs("#email", "#error_email");
+            //validar_inputs("#phone", "#error_phone"); 
+            //validar_inputs("#fijo", "#error_fijo"); 
+            //validar_inputs("#direccion", "#error_direccion");
 
             //identificacion  = $("#doc").val();
-                
+
+            email = "";
+            telefonos = "";
+            direccion = "";
+            phone = "";
+                            
             if(!error){
                 $("#loader-wrapper").fadeIn("fast");
                 accion = $("#accion").val();

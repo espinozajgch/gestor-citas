@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			//AGREGAR 
 //$id_hm = 1;
 			$email = $_POST["email"];
-			$mail = pacientes::validar_email($bd, $email);
+			//$mail = pacientes::validar_email($bd, $email);
 
-			if($email == $mail){
-				$estado= 0;
-				$res = "Email registrado";
-                                $id_hm=0;
-			}
-			else{
+			//if($email == $mail){
+			//	$estado= 0;
+			//	$res = "Email registrado";
+            //                    $id_hm=0;
+			//}
+			//else{
 				$nombre = $_POST["nombre"];
 				$apellidop = $_POST["apellidop"];
 				$apellidom = $_POST["apellidom"];
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				//$res =  Mailer::correo_registro_usuario($bd, $usuario, $email, $celular, $hash);
 				//$res = $accion;
 
-			}
+			//}
 		}
 		else
 		if($accion==2){

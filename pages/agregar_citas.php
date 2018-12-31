@@ -314,9 +314,9 @@ input:checked + .slider:before {
                                             
                                         </select>
                                             
-                                            <div id="error_iva" class="text-danger" style="display:none">
-                                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                                            </div>
+                                        <div id="error_medicos" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                        </div>
                                     </div>
                                     
                                     <div class="form-group col-3 col-sm-3 col-md-3">
@@ -327,7 +327,7 @@ input:checked + .slider:before {
                                     <div class="form-group col-3 col-sm-3 col-md-3">
                                         <small><strong><label for=name_>Hora Inicio</label></strong></small>
                                         <input id="hora_a" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
-                                        <div id="error_name" class="text-danger" style="display:none">
+                                        <div id="error_inicia" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Hora</small>
                                         </div>                                        
                                     </div>
@@ -335,7 +335,7 @@ input:checked + .slider:before {
                                     <div class="form-group col-3 col-sm-3 col-md-3">
                                         <small><strong><label for=name_>Hora Fin</label></strong></small>
                                         <input id="hora_b" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
-                                        <div id="error_name" class="text-danger" style="display:none">
+                                        <div id="error_fin" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Hora</small>
                                         </div>                                        
                                     </div>
@@ -385,21 +385,21 @@ input:checked + .slider:before {
                                         <small><strong><label for="name">Nombres</label></strong></small>
                                         <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  //echo Usuarios::obtener_nombre($bd,$hash) ?>" disabled>
                                         <div id="error_name" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-4 col-sm-4 col-md-4">
                                         <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
                                         <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_last_name" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-4 col-sm-4 col-md-4">
                                         <small><strong><label for="last_name">Apellido Materno</label></strong></small>
                                         <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php //echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" disabled>
                                         <div id="error_second_name" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
                                     <div id="notificacion_programa" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
@@ -412,14 +412,14 @@ input:checked + .slider:before {
                                         <small><strong><label for="inmobiliaria">Direccion</label></strong></small>
                                         <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" disabled><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
                                         <div id="error_inmobiliaria" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa el nombre de la inmobiliaria</small>
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="rs">Email</label></strong></small>
-                                        <input type="text" class="form-control" id="email" placeholder="Email" onchange="verificar_disponibilidad_mail()" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" disabled>
+                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php //echo Usuarios::obtener_rs($bd,$hash); ?>" autocomplete="off" disabled>
                                         <div id="error_mail" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> EMAIL NO DISPONIBLE</small>
+                                            <i class="fa fa-exclamation"></i><small>  Ingresa tu email</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
@@ -432,10 +432,10 @@ input:checked + .slider:before {
 
 
                                     <div class="form-group col-6 col-md-6">
-                                        <small><strong><label for="phone">Celular</label></strong></small>
+                                        <small><strong><label for="celular">Celular</label></strong></small>
                                         <input id="celular" type="text" class="form-control" placeholder="Celular" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1" disabled>
                                         <div id="error_email" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
+                                            <i class="fa fa-exclamation"></i><small> Ingresa tu Celular</small>
                                         </div>
                                     </div>
                                 </div>
@@ -506,7 +506,7 @@ input:checked + .slider:before {
                                         </div>
 
 
-                                            <div id="error_iva" class="text-danger" style="display:none">
+                                            <div id="error_terapias" class="text-danger" style="display:none">
                                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                             </div>
                                     </div> 
@@ -606,10 +606,15 @@ function validar_inputs(input, div_error){
             validar_inputs("#name", "#error_name");
             validar_inputs("#last_name", "#error_last_name");
             validar_inputs("#second_name", "#error_second_name");
-            validar_inputs("#email", "#error_email");
-            validar_inputs("#celular", "#error_phone"); 
-            validar_inputs("#fijo", "#error_fijo"); 
-            validar_inputs("#direccion", "#error_direccion");
+            //validar_inputs("#email", "#error_email");
+            //validar_inputs("#celular", "#error_phone"); 
+            //validar_inputs("#fijo", "#error_fijo"); 
+            //validar_inputs("#direccion", "#error_direccion");
+
+            email = "";
+            telefonos = "";
+            direccion = "";
+            phone = "";
 
             if(!error){
                 $("#loader-wrapper").fadeIn("fast");
@@ -742,7 +747,7 @@ function validar_inputs(input, div_error){
                             $("#fijo").attr('disabled', true);
                             $("#celular").attr('disabled', true);
                             bandera_email_disponible = true;
-                            $("#error_mail").hide();
+                            //$("#error_mail").hide();
                             msj="";
                             if (json[0].programa!=false){                                   
                                 clase = "alert alert-success alert-dismissable";
@@ -782,7 +787,7 @@ function validar_inputs(input, div_error){
                             $("#programa_notificacion").prop("class",clase);
                             $("#texto_notificacion_programa").html(msj);                    
                             $("#notificacion_programa").fadeIn(100);                           
-                            verificar_disponibilidad_mail();
+                            //verificar_disponibilidad_mail();
                         }
                     }
                 );
@@ -790,7 +795,7 @@ function validar_inputs(input, div_error){
             
         }
         
-        function verificar_disponibilidad_mail(){
+        /*function verificar_disponibilidad_mail(){
             $.post(
                     "citas/citas_controlador.php",
             {
@@ -808,7 +813,7 @@ function validar_inputs(input, div_error){
                     $("#error_mail").fadeIn();
                 }
             });
-        }
+        }*/
         
         function verificar_regex(campo, expresion){
             var regex   =   new RegExp(expresion);
@@ -848,22 +853,29 @@ function validar_inputs(input, div_error){
             //Verificar lista de medicos
             if (verificar_normal("medicos","")){
                 bandera = false;
+                console.log("no tiene medicos");
+                $("#error_medicos").show();
             }
-            if (bandera_email_disponible == false){                
+            /*if (bandera_email_disponible == false){                
                 bandera = false;
-            }
+            }*/
+           
             if (terapia_seteada == false && (<?php if (isset($_GET["nueva"])){echo "true";}else echo "false";?>)){
                 bandera = false;
+
+                 $("#error_terapias").show();
             }
+
+            
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
             if (validar_inputs("#name", "#error_name")) bandera = false;
             if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
-            //if (validar_inputs("#second_name", "#error_second_name")) bandera = false;
-            if (validar_inputs("#email", "#error_email")) bandera = false;            
-            if (validar_inputs("#celular", "#error_phone")) bandera = false;            
-            if (validar_inputs("#fijo", "#error_fijo")) bandera = false;            
-            if (validar_inputs("#direccion", "#error_direccion")) bandera = false;                        
-            
+            if (validar_inputs("#second_name", "#error_second_name")) bandera = false;
+            //if (validar_inputs("#email", "#error_email")) bandera = false;            
+            //if (validar_inputs("#celular", "#error_phone")) bandera = false;            
+            //if (validar_inputs("#fijo", "#error_fijo")) bandera = false;            
+            //if (validar_inputs("#direccion", "#error_direccion")) bandera = false;                        
+            //console.log(bandera);
             return bandera;
         }
         
@@ -882,7 +894,7 @@ function validar_inputs(input, div_error){
             bandera = verificar_campos_inputs();            
             var mensaje_final="Resultado:";
             var bandera_exito=true;
-            //alert (terapia_seteada);
+            //bandera = false;
             if (bandera){//Procedemos con la doble verificación
                 //Guardamos los campos de manera temporal en algunas variables                
                 var identificacion  = $("#rut_paciente").val();
@@ -939,7 +951,7 @@ function validar_inputs(input, div_error){
                             if (respuesta.estado == 0.1){
                                 mensaje_final+= "Paciente registrado<br>";                                                                
                             }
-                            else if (respuesta.estado == 0 && bandera_email_disponible == true){
+                            else if (respuesta.estado == 0){
                                 mensaje_final+= "Paciente registrado<br>";
                             }
                             else{
