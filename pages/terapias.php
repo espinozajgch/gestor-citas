@@ -318,6 +318,7 @@ $usuario  = "";
                 ],
                 "initComplete": function (settings, json){
                     $("#texto_programa").html(json.data[0].desc_prt);
+                    $("#botones_dinamicos").html(" ");
                     $("#botones_dinamicos").html(json.data[0].btn_validar_prg);
                     $("#botones_dinamicos").append(json.data[0].otros_botones);
                     

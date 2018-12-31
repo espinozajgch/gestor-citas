@@ -284,7 +284,7 @@ input:checked + .slider:before {
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                    <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button>                   
                 </div>
-                <div class="col-lg-2" id="chequeo">
+                <div class="col-lg-2" id="chequeo" style="display: none" disabled>
                     <label class="switch" title="Alternar chequeo">                        
                         <input type="checkbox" id="check_slider" onclick="ocultar_campos()">
                         <span class="slider round"></span>
@@ -759,7 +759,7 @@ function validar_inputs(input, div_error){
                             }
                             $("#programa_notificacion").prop("class",clase);
                             $("#texto_notificacion_programa").html(msj);                    
-                            $("#notificacion_programa").fadeIn(100);                           
+                            //$("#notificacion_programa").fadeIn(100);                           
                         }
                         else{
                             $("#name").attr('disabled', false);
@@ -788,6 +788,7 @@ function validar_inputs(input, div_error){
                             $("#texto_notificacion_programa").html(msj);                    
                             $("#notificacion_programa").fadeIn(100);                           
                             //verificar_disponibilidad_mail();
+
                         }
                     }
                 );
@@ -853,20 +854,30 @@ function validar_inputs(input, div_error){
             //Verificar lista de medicos
             if (verificar_normal("medicos","")){
                 bandera = false;
-                console.log("no tiene medicos");
-                $("#error_medicos").show();
+                //console.log("no tiene medicos");
+                //$("#error_medicos").show();
             }
+
             /*if (bandera_email_disponible == false){                
                 bandera = false;
             }*/
            
+            //Verificar si terapia esta seleccionada, solo aplica para citas nuevas por primera vez
             if (terapia_seteada == false && (<?php if (isset($_GET["nueva"])){echo "true";}else echo "false";?>)){
                 bandera = false;
 
                  $("#error_terapias").show();
             }
 
-            
+            //Verificar lista de medicos
+            if ($("#medicos").val()==""){
+                bandera = false;
+                $("#error_medicos").fadeIn();
+            }
+            else{
+                $("#error_medicos").fadeOut();
+            }
+
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
             if (validar_inputs("#name", "#error_name")) bandera = false;
             if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
@@ -1339,7 +1350,9 @@ function validar_inputs(input, div_error){
                     url: url,
                     method: 'GET'
                 },
-                locale : "es-us",
+                nowIndicator: true,
+                //defaultView: 'agendaDay',                
+                locale : "es",
                 responsive: true,
                 selectable: true,
                 weekends: false,

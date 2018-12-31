@@ -516,12 +516,10 @@ class terapias {
 ";
                 $json[0]["btn_validar_prg"]=$str_btn_validar;
             }
-            $otros_botones="
-                <a title=\"Establecer pago completo\" 
+            $otros_botones="<a title=\"Establecer pago completo\" 
                         class=\"btn btn-info\"
                         onclick=\"establecer_pago(".$resultado[0]["prt_id"].",2)\">
-                        <i class=\"fa fa-list-alt\"></i>
-                    </a>
+                        <i class=\"fa fa-list-alt\"></i></a>
                     <a title=\"Establecer pago parcial\" 
                         class=\"btn btn-warning\"
                         onclick=\"establecer_pago(".$resultado[0]["prt_id"].",3)\">
