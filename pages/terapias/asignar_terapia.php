@@ -33,11 +33,15 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     });
     </script>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12 ">
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
-            <button class="btn btn-sm btn-info shared" id="btn_invoice" style="display: none" title="Cancelar programa" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
-        </div>         
+            <button class="btn btn-sm btn-info shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+        </div>   
+        <div class="form-group col-4 col-sm-4 col-md-4">
+            <!--small><strong><label for="medico">Estatus Pago</label></strong></small-->
+            <div id="botones_dinamicos"></div>
+        </div>       
         <!--div class="col-lg-12">
            <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
         </div-->
@@ -45,17 +49,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     </div>
 
     <div class="row">
-        <div class="form-group col-8 col-sm-8 col-md-8 mt-5" style="display: none;" id="contenedor_nombre_programa">
-            <small><strong><label for=name_>Nombre del programa</label></strong></small>
-            <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">            
-            <div id="error_name_pt" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Ingresa un nombre válido</small>
-            </div>
-        </div>
-        <div class="form-group col-xs-2 col-sm-2 col-md-2 mt-5" id="contenedor_descuento" style="display: none;">
-            <small><strong><label for="medico">Descuento aplicado</label></strong></small>
-            <input type="number" class="form-control" id="descuento_aplicado" placeholder="%" >
-        </div>        
+             
         <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
             <small><strong><label for=name_>RUT</label></strong></small>
             <div class="input-group col-3 col-sm-3 col-md-3">
@@ -64,6 +58,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                   <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
               </span>
             </div><!-- /input-group -->
+
+
             
             <div id="error_rut" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Ingresa un RUT válido</small>
@@ -101,30 +97,40 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
             </div>
         </div>
 
-        <div class="form-group col-7 col-sm-7 col-md-7">                                        
+        <div class="form-group col-8 col-sm-8 col-md-8 mt-5" style="display: none;" id="contenedor_nombre_programa">
+            <small><strong><label for=name_>Nombre del programa</label></strong></small>
+            <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">            
+            <div id="error_name_pt" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Ingresa un nombre válido</small>
+            </div>
+        </div>
+        <div class="form-group col-xs-2 col-sm-2 col-md-2 mt-5" id="contenedor_descuento" style="display: none;">
+            <small><strong><label for="medico">Descuento aplicado</label></strong></small>
+            <input type="text" class="form-control" id="descuento_aplicado" placeholder="%" >
+        </div>   
+
+        <div class="form-group col-6 col-sm-6 col-md-6">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
             <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
             <div hidden="true">
                 <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
             </div>
-            
-
-                <div id="error_iva" class="text-danger" style="display:none">
+                <div id="error_terapias" class="text-danger" style="display:none">
                     <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                 </div>
         </div>        
-        <div class="form-group col-xs-1 col-sm-1 col-md-1">
+        <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <small><strong><label for="medico">Cantidad</label></strong></small>
-            <input type="number" class="form-control" id="cantidad" placeholder="#" >
+            <input type="text" class="form-control" id="cantidad" placeholder="#" >
         </div>
+
+        
         
         <div class="form-group col-xs-4 col-sm-4 col-md-4">
-            <br>
-            <button type="button" id="btnguardar" class="btn btn-success btn-sm" onclick="redirigir_terapia()" style="display: none;"><i class="fa fa-arrow-right"></i></button>
+             <small><strong><label for="medico">Asignar</label></strong></small>
+            <button type="button" id="btnguardar" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-plus"></i></button>
         </div>        
-        <div class="form-group col-4 col-sm-4 col-md-4">
-            <div id="botones_dinamicos"></div>
-        </div> 
+
      
 
 <!--        <div class="col-md-8 col-sm-8 col-xs-8 py-2 margin-bottom-20 text-right ">
@@ -165,12 +171,6 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     
 <script type="text/javascript">
 
-    /*$("#rut_paciente").keypress(function(e) {
-        if(e.which == 13) {
-            // Acciones a realizar, por ej: enviar formulario.
-            buscar_info_paciente();
-        }
-    });*/
 
     function buscar_info_paciente(notificaciones=true){        
             $("#terapias").val(null).trigger('change');
@@ -211,7 +211,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             $("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
                             $("#advertencia_general").fadeIn(100).fadeOut(5000);
                             $("#btnguardar").show();
-                            $("#btn_invoice").show();
+                            //$("#btn_invoice").show();
+                            //$("#btn_cancelar").show();
                         }
                         else{
                             $("#name").val("");
@@ -234,7 +235,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 );
             }
             
-        }        
+        }     
+
+ 
         
     function redirigir_terapia(){        
         
@@ -365,6 +368,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                                     
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
+                                    $("#btn_invoice").show();
                                     //alert (preseleccion);
                                 }
                                 else{

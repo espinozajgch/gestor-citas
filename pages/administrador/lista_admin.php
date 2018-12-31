@@ -26,7 +26,7 @@
                 $des = "";
                 $hab = "";
 
-                if($admin["estado"]==0){
+                if($admin["id_eu"]==0){
                     $hab = "display:none";
                 }
                 else{

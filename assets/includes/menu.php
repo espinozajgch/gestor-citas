@@ -85,17 +85,18 @@
 
                 <?php if(Admin::verificar_acciones_by_rol($bd, 4, $id_rol)){ ?>                 
                 <li>
-                    <a href="terapias.php"><i class="fa fa-group fa-fw"></i> Terapias<span class="fa arrow"></span></a>
+                    <a href="terapias.php"><i class="fa fa-group fa-fw"></i> Programas terapeuticos<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li>
-                            <a href="terapias.php?opcion=5">Terapias</a>
-                        </li>
+                        
                         <li>
                             <a href="terapias.php?opcion=1">Crear Programas terapeuticos</a>
                         </li>
                         
-                        <li>
+                        <!--li>
                             <a href="terapias.php?opcion=4">Reservar cita para terapia</a>
+                        </li-->
+                        <li>
+                            <a href="terapias.php?opcion=5">Terapias</a>
                         </li>
                     </ul>
                 </li>

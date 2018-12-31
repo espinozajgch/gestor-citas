@@ -56,6 +56,9 @@ $usuario  = "";
     <link href="../dist/css/estilos.css" rel="stylesheet"> 
 
     <style type="text/css">
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
 
     </style>
 </head>
@@ -149,8 +152,47 @@ $usuario  = "";
         var id = "";
         var codigo = "";
 
-        $(document).ready(function(){    
+        $(document).ready(function(){ 
 
+
+    $(".form-control").on("keydown",function(event){
+        var id=$(this).attr("id");
+
+        if(id != null)
+            if(id=="descuento_aplicado" || id=="cantidad"){
+                // Desactivamos cualquier combinación con shift
+                if(event.shiftKey)
+                    event.preventDefault();
+                 
+                /*  
+                    No permite ingresar pulsaciones a menos que sean los siguientes
+                    KeyCode Permitidos
+                    keycode 8 Retroceso
+                    keycode 37 Flecha Derecha
+                    keycode 39  Flecha Izquierda
+                    keycode 46 Suprimir
+                */
+                //No permite mas de 11 caracteres Numéricos
+                if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39) 
+                    if($(this).val().length >= 11)
+                        event.preventDefault();
+         
+                // Solo Numeros del 0 a 9 
+                if (event.keyCode < 48 || event.keyCode > 57)
+                    //Solo Teclado Numerico 0 a 9
+                    if (event.keyCode < 96 || event.keyCode > 105)
+                        /*  
+                            No permite ingresar pulsaciones a menos que sean los siguietes
+                            KeyCode Permitidos
+                            keycode 8 Retroceso
+                            keycode 37 Flecha Derecha
+                            keycode 39  Flecha Izquierda
+                            keycode 46 Suprimir
+                        */
+                        if(event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
+                            event.preventDefault(); 
+                    }
+    });
 
 
             $("#rut_paciente").keypress(function(e) {
