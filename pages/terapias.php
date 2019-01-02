@@ -153,9 +153,10 @@ $usuario  = "";
         var codigo = "";
 
         $(document).ready(function(){ 
+            buscar_info_paciente();
 
 
-    $(".form-control").on("keydown",function(event){
+        $(".form-control").on("keydown",function(event){
         var id=$(this).attr("id");
 
         if(id != null)

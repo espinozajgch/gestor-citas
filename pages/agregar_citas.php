@@ -20,13 +20,17 @@ $rut_paciente = "";
         header("Location:../index.php");
     }
 
+     if(isset($_GET["rut_paciente"])){
+        $rut_paciente = $_GET["rut_paciente"];
+     }
+
     if(isset($_GET["id"]))
         $hash_usuario = $_GET["id"];
 
         $tipo_usuario = "Particular";
         $link = "citas.php?opcion=1";
     
-        $etiqueta = "Agregar Cita";
+        $etiqueta = "Reservar Cita";
         if (isset($_GET["cita"])){//Si existe la variable cita, es porque vamos a modificar
             if (isset($_GET["ref"])){//Viene para reservar una cita nueva
                 $etiqueta = "Asignar cita para terapia";
@@ -282,7 +286,7 @@ input:checked + .slider:before {
                 
                 <div class="col-lg-10">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
-                   <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button>                   
+                   <!--button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button-->                   
                 </div>
                 <div class="col-lg-2" id="chequeo" style="display: none" disabled>
                     <label class="switch" title="Alternar chequeo">                        
@@ -583,6 +587,12 @@ input:checked + .slider:before {
     <!--<script src="../../vendor/plugin/html5imageupload/html5imageupload.js"></script>-->
  
     <script type="text/javascript">
+
+        $(document).ready(function() {
+            buscar_info_paciente();
+        });
+
+
 function validar_inputs(input, div_error){
     //alert (input +":"+$(input).val()+" - "+div_error);
             if($(input).val() == ""){
@@ -718,6 +728,7 @@ function validar_inputs(input, div_error){
                     parte2 = rut.substr((rut.length)-1,rut.length);
                     rut = parte1 + "-" + parte2;
                     //console.log(rut); 
+                    $("#rut_paciente").val(rut);
                 }
 
                 $.post("citas/citas_controlador.php",{

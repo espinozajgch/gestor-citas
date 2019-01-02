@@ -115,8 +115,8 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
     
     function buscar_info_paciente(){
             if ($("#rut_paciente").val()==""){
-                $("#error_rut").show(1500);
-                $("#error_rut").hide(5000);
+                //$("#error_rut").show(1500);
+                //$("#error_rut").hide(5000);
             }
             else{
                 $.post("citas/citas_controlador.php",{

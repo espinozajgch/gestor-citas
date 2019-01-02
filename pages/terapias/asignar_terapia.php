@@ -5,6 +5,10 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
     $etiqueta = "Programas terapéutico";
     $id_terapia = $_GET["terapia"];
 }
+
+if(isset($_GET["rut_paciente"])){
+    $rut_paciente = $_GET["rut_paciente"];
+}
 ?>
 <link href="../vendor/select2/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript">
@@ -172,11 +176,12 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
 <script type="text/javascript">
 
 
+
     function buscar_info_paciente(notificaciones=true){        
             $("#terapias").val(null).trigger('change');
             if ($("#rut_paciente").val()==""){
-                $("#error_rut").show(1500);
-                $("#error_rut").hide(5000);
+                //$("#error_rut").show(1500);
+                //$("#error_rut").hide(5000);
             }
             else{     
                 rut =  $("#rut_paciente").val();           
@@ -185,6 +190,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     parte2 = rut.substr((rut.length)-1,rut.length);
                     rut = parte1 + "-" + parte2;
                     //console.log(rut); 
+                    $("#rut_paciente").val(rut);
                 }
                 $.post("citas/citas_controlador.php",{
                     id_operacion: 1,
@@ -207,9 +213,9 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             //operacion = 11;
                             $("#contenedor_nombre_programa").show();
                             $("#contenedor_descuento").show();
-                            $("#alerta").prop("class","alert-success alert-dismissable");
-                            $("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
-                            $("#advertencia_general").fadeIn(100).fadeOut(5000);
+                            //$("#alerta").prop("class","alert-success alert-dismissable");
+                            //$("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
+                            //$("#advertencia_general").fadeIn(100).fadeOut(5000);
                             $("#btnguardar").show();
                             //$("#btn_invoice").show();
                             //$("#btn_cancelar").show();
@@ -255,7 +261,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
         if ($("#cantidad").val()==""){
             if ($("#descuento_aplicado").val()==""){
                 bandera = false;            
-                alert ("Verifique los campos");
+                //alert ("Verifique los campos");
             }
         }        
         
@@ -355,7 +361,8 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                             operacion = 11;                            
                             if(json[0].estado == 1){                            
                                 if (notificaciones){
-                                     bandera_confirm=(confirm("El paciente ya tiene un programa terapeutico activo ¿Desea modificarlo?"))
+                                     bandera_confirm=true;
+                                     //(confirm("El paciente ya tiene un programa terapeutico activo ¿Desea modificarlo?"))
                                 }
                                 if (bandera_confirm){
                                     for (i=0; i<json[0].cantidad; i++){                                
@@ -376,7 +383,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                                         window.location = "terapias.php?opcion=4&id_paciente="+id_paciente;
                                     }
                                     else{
-                                        alert ("Los campos serán reiniciados");
+                                        //alert ("Los campos serán reiniciados");
                                         window.location = "terapias.php?opcion=1";
                                     }
                                 }
@@ -400,7 +407,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
             }
             else{
-                alert ("Procedimiento inválido");
+                //alert ("Procedimiento inválido");
             }
         }
         
@@ -415,7 +422,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 if (json!=null){
                     operacion = 11;                            
                     if(json[0].estado == 1){   
-                        alert ("Procesado con exito");
+                        //alert ("Procesado con exito");
                         window.location = "terapias.php?opcion=1";
                     }
                     else{
@@ -439,7 +446,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     if (json!=null){
                         operacion = 11;                            
                         if(json[0].estado == 1){   
-                            alert ("Procesado con exito");
+                            //alert ("Procesado con exito");
                         }
                         else{
                             alert ("Ocurrió un error");

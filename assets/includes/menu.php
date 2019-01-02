@@ -67,21 +67,7 @@
                 </li>
                 <?php } ?>
 
-                
 
-                <?php if(Admin::verificar_acciones_by_rol($bd, 3, $id_rol)){ ?>                
-                <li>
-                    <a href="terapias.php"><i class="fa fa-bar-chart-o fa-fw"></i> Reportes<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="terapias.php?opcion=3">Programas terapeuticos</a>
-                        </li>
-                        <li>
-                            <a href="historia_medica.php">Historia Medica</a>
-                        </li>
-                    </ul>
-                </li>
-                <?php } ?>
 
                 <?php if(Admin::verificar_acciones_by_rol($bd, 4, $id_rol)){ ?>                 
                 <li>
@@ -97,6 +83,23 @@
                         </li-->
                         <li>
                             <a href="terapias.php?opcion=5">Terapias</a>
+                        </li>
+                    </ul>
+                </li>
+                <?php } ?>
+
+
+                                
+
+                <?php if(Admin::verificar_acciones_by_rol($bd, 3, $id_rol)){ ?>                
+                <li>
+                    <a href="terapias.php"><i class="fa fa-bar-chart-o fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="terapias.php?opcion=3">Programas terapeuticos</a>
+                        </li>
+                        <li>
+                            <a href="historia_medica.php">Historia Medica</a>
                         </li>
                     </ul>
                 </li>
