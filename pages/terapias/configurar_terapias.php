@@ -163,6 +163,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                     var respuesta = JSON.parse(result);
                     if (respuesta[0].estado==1){//Error general con la insercion
                         $("#msg_ok").show(100);
+                        window.location.href="terapias.php?opcion=5";
                     }
                     else if (respuesta[0].estado==2){//Ya existe esa consulta
                         $("#msgerror_repetido").show(1000);                                                   

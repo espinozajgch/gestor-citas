@@ -32,7 +32,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard </title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -93,7 +93,7 @@ $usuario  = "";
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12 mx-4">
-                <br>
+                
                     <?php
                     if (isset($_GET["opcion"])){
                         if ($_GET["opcion"]==1){
@@ -105,7 +105,7 @@ $usuario  = "";
                             }                            
                         }
                         else if ($_GET["opcion"]==2){
-                            include_once("agreagar_citas.php");                            
+                            include_once("agregar_citas.php");                            
                         }
                     }                    
                     
@@ -115,7 +115,28 @@ $usuario  = "";
             </div>           
            
  
-    
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>    
 
 
     <script>//        
@@ -229,12 +250,107 @@ $usuario  = "";
                 "ajax":"../assets/class/calendario_controlador.php?id_operacion=6",
                 "columns": [
                     {"data": "N"},
+                    /*{"data": "Creacion"},*/
                     {"data": "Fecha"},
                     {"data": "Hora"},
+                    {"data": "Hora2"},
                     {"data": "Paciente"},
-                    {"data": "Medico"}
+                    {"data": "Medico"},    
+                    {"data": "Cita"},                    
+                    {"data": "Estado"},                    
+                    {"data": "Acciones"}
                 ]
             });
     });
+    
+    function validar_cita(id_cita, id_programa, id_terapia){
+        $.post("citas/citas_controlador.php",
+        {
+            id_operacion: 11,
+            id_cita: id_cita,
+            id_programa: id_programa,
+            id_terapia: id_terapia
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                //Validado con exito
+                alert ("Validado con exito");
+                window.location = "citas.php?opcion=1";
+            }
+            else{
+                alert ("Ocurrio un error");
+            }
+        });
+    }
+
+    $("a.eliminar").on('click',function(e){
+
+            id = $(this).attr("cod");
+            //console.log(id);
+
+            //titulo = $("tr[id="+id+"]").find(".titulo_prop").html();
+            //codigo = $("tr[id="+id+"]").find(".codigo_prop").html();
+
+            //console.log(titulo);
+            $('#modal_trash').find(".modal-body").html("<strong>Rol N# "+ id+"</strong>");
+
+            $('#modal_trash').modal({
+                backdrop: 'static',
+                keyboard: false
+            })/**/
+        });
+
+        $('#erase').click(function(e){
+            eliminar(id);
+            //console.log(id);
+    });
+
+        function eliminar(id){
+            $.ajax({
+                data:  {accion: 7,id : id},
+                url:   '../assets/class/admin/admin_acciones.php',
+                type:  'post',
+                dataType: "json",
+                success:  function (data) {
+                    //respuesta = JSON.stringify(data);
+                    //console.log(data);
+                    $('#modal_trash').modal('hide');
+                    if(data.estado == 0){
+                        //$("#alert_wrong").show();
+                    }
+                    else{
+                        window.location.href="roles.php";
+                    }
+                },
+                error: function(data){
+                    console.log(data);
+                   // window.location.href="cuenta.php?success=no";
+                }
+            });/**/
+        }
+    
+    function cancelar_cita(id_cita, id_programa, id_terapia){
+        $.post("citas/citas_controlador.php",
+        {
+            id_operacion: 12,
+            id_cita: id_cita,
+            id_programa: id_programa,
+            id_terapia: id_terapia
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                //Validado con exito
+                //alert ("La cita fue cancelada");
+                window.location = "citas.php?opcion=1";
+            }
+            else{
+                alert ("Ocurrio un error");
+            }
+        });
+    }
+    
+    function generar_invoice_individual(id_reserva){
+        window.open("terapias/terapias_controlador.php?id_operacion=15&individual=true&reserva="+id_reserva, "_newtab");
+    }
 </script>
 </html>

@@ -6,9 +6,7 @@ require_once("../assets/class/utilidades.php");
 /* RECUERDAME DE INDEX */
 
 $usuario  = "";
-$diagnostico_general = "";
-$diagnostico = "";
-$indicaciones = "";
+$historia = "";
 $id_paciente = "";
 $id_hm = "";
 
@@ -27,10 +25,8 @@ $id_hm = "";
 
     if(isset($_GET["id_hm"])){
         $id_hm = $_GET["id_hm"];
-        $diagnostico_general = pacientes::obtener_historia($bd,$id_hm);
-        $diagnostico = pacientes::obtener_diagnostico($bd,$id_hm);
-        $indicaciones = pacientes::obtener_indicaciones($bd, $id_hm);
-        $accion = 9;
+        $historia = pacientes::obtener_diagnostico($bd,$id_hm);
+        $accion = 12;
 
         if(isset($_GET["id_paciente"]))
             $id_paciente = $_GET["id_paciente"];
@@ -39,7 +35,7 @@ $id_hm = "";
     else{
     if(isset($_GET["id_paciente"]))
         $id_paciente = $_GET["id_paciente"];
-        $accion = 8;
+        $accion = 11;
 
     }
 
@@ -92,7 +88,8 @@ $id_hm = "";
                 <div class="col-lg-12">
                     <br>
                     <a class="btn btn-sm btn-success shared" href="historia_medica_de_paciente.php?id=<?php echo $id_paciente ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
-                    <h1 class="page-header">Historia Medica</h1>
+                    
+                    <h1 class="page-header">Indicaciones</h1>
 
                 </div>
 
@@ -107,31 +104,11 @@ $id_hm = "";
                 <form id="form_historia">
                     <div class="form-group">
                     <!--label> historia y Condiciones</label-->
-                        <div class="form-group col-12 col-sm-12 col-md-12">
-                            <small><strong><label for="diagnostico_general">Historial</label></strong></small>
-                            <textarea row="5" col="10" class="form-control" id="diagnostico_general"><?php echo $diagnostico_general ?></textarea>
-                            <div id="error_direccion" class="text-danger" style="display:none">
-                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                            </div>
-                        </div>
 
-                        <div class="form-group col-12 col-sm-12 col-md-12">
-                            <small><strong><label for="diagnostico">Indicaciones Generales</label></strong></small>
-                            <textarea row="5" col="10" class="form-control" id="diagnostico"><?php echo $diagnostico ?></textarea>
-                            <div id="error_direccion" class="text-danger" style="display:none">
-                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                            </div>
+                        <textarea id='summernote'">
+                            <?php echo $historia ?>
+                        </textarea>
                         </div>
-
-                        <div class="form-group col-12 col-sm-12 col-md-12">
-                            <small><strong><label for="indicaciones">Indicaciones</label></strong></small>
-                            <textarea row="5" col="10" class="form-control" id="indicaciones"><?php echo $indicaciones ?></textarea>
-                            <div id="error_direccion" class="text-danger" style="display:none">
-                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                            </div>  
-                        </div>
-
-                    </div>
 
                         <div class="col-md-8 col-sm-8 col-xs-8">
                             <div id="msg_ok" class="alert alert-success alert-dismissable"  style="display:none">
@@ -184,7 +161,7 @@ $id_hm = "";
 
             accion = $("#accion").val();
 
-            if(accion == 8){
+            if(accion == 11){
                 id = $("#id_paciente").val();
                 id_paciente = id;
             }
@@ -193,12 +170,10 @@ $id_hm = "";
                 id_paciente = $("#id_paciente").val();
             }
 
-            historia = $('#diagnostico_general').val();
-            diagnostico = $('#diagnostico').val();
-            indicaciones = $('#indicaciones').val();
+            historia = $('#summernote').val();
 
             $.ajax({
-                data:  {accion:accion, historia : historia, diagnostico : diagnostico, indicaciones : indicaciones ,id : id},
+                data:  {accion:accion, diagnostico : historia, id : id},
                 url:   '../assets/class/usuario/usuario_acciones.php',
                 type:  'post',
                 dataType: "json",

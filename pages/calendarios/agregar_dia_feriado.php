@@ -111,10 +111,23 @@ function mostrar_calendario(){
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         dateClick : function(info){
-            //alert (info.dateStr);
-            $("#fecha_feriado").val(info.dateStr);
+            //alert (info.dateStr);            
+            var fecha_seleccionada      =   (info.date.getDate()+"-"+(info.date.getMonth()+1)+"-"+info.date.getFullYear());                  
+            $("#fecha_feriado").val(fecha_seleccionada);
             //$("#calendario").hide();
         },
+        header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek'
+                },
+        navLinks: true,
+        navLinkDayClick: function (date, jsEvent){
+                    
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
+                    //alert (fecha_seleccionada);
+                    calendar.changeView('agendaWeek', fecha_seleccionada);
+                },
         locale: 'es-us'
         
     });
@@ -127,10 +140,10 @@ function guardar_dia(){
     var regex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
     var bandera=true;
     //VERIFICAR SI LA FECHA TIENE EL FORMATO ESTABLECIDO
-    if (!(regex.test($("#fecha_feriado").val()))){
+    /*if (!(regex.test($("#fecha_feriado").val()))){
         bandera=false;
         mostrar_error($("#fecha_feriado"));
-    }
+    }//*/
     //VERIFICAR QUE LA DESCRIPCION NO ESTE VACIA
     if (!(($("#descripcion_feriado").val().trim()))!=""){
         bandera=false;

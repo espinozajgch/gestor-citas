@@ -184,7 +184,7 @@ $accion = 6;
                     console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
-                    window.location.href="preguntas_global.php";
+                    window.location.href="terapias.php";
                 },
                 error: function(data){
                     $("#msgerror_danger").show();

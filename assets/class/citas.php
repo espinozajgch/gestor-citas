@@ -54,7 +54,7 @@ class citas {
     public static function consultar_disponibilidad_medicos($fecha_inicio, $hora_inicio, $hora_fin, $id_medico, $permitir_misma_fecha=false, $id_cita = false){
         
         $bd = connection::getInstance()->getDb();
-        $sql ='SELECT  id_admin, id_rm, admin.nombre, paciente.nombre, paciente.apellido, paciente. rut, reserva_medica.fecha_inicio,
+        $sql ='SELECT  id_admin, id_rm, admin.nombre, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,
         reserva_medica.hora_inicio, reserva_medica.hora_fin
         FROM `admin` 
         INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
@@ -161,25 +161,66 @@ class citas {
         return $pdo->execute(array($paciente, $id_cita));        
     }
     
-    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, $id_cita){
+    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE reserva_medica
-        SET fecha_inicio=?, medio_contacto_id_mc=?,
+        SET fecha_inicio=?, medio_contacto_id_mc=?, metodos_pago_id_mp=?,
             observaciones=? , hora_inicio = ?, hora_fin = ?
             WHERE id_rm = ".$id_cita;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array($fecha_inicio,$medio_contac,$observaciones,$hora_inicio,$hora_fin));
+        return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones,$hora_inicio,$hora_fin));
     }
     
-    public static function asignar_reserva_terapia($id_programa, $id_terapia, $id_reserva){
+    public static function asignar_reserva_terapia($id_programa_t_t, $id_reserva){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_tiene_terapia
         SET reserva_medica_id_rm=?, estado=? 
-            WHERE programa_terapeutico_id_programa_terapeutico =$id_programa
-                AND terapia_id_terapia = $id_terapia";
+            WHERE id_programa_tiene_terapia =$id_programa_t_t";
         $pdo = $bd->prepare($sql);        
-        //echo $sql." - $id_programa - $id_terapia";
-        return $pdo->execute(array($id_reserva, "asignado"));
+        //echo $sql." - $id_programa - $id_terapia - $id_reserva";
+        return $pdo->execute(array($id_reserva, "pagado"));
+    }
+    
+    public static function validar_cita($id_cita){
+        $estado_actual =citas::obtener_estado_cita($id_cita);
+        $estado_nuevo = "pendiente";
+        if ($estado_actual=="pendiente"){
+            $estado_nuevo = "pagado";
+        }
+        else if ($estado_actual == "pagado"){
+            $estado_nuevo = "atendida";
+        }
+        else if ($estado_actual == "atendida"){
+            $estado_nuevo = "atendida";
+        }
+        else if ($estado_actual == "cancelado"){
+            $estado_nuevo = "cancelado";
+        }
+        
+        
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE reserva_medica
+        SET estado=?
+            WHERE id_rm = ".$id_cita;
+        $pdo = $bd->prepare($sql);        
+        //echo "<br>".$sql;
+        return $pdo->execute(array($estado_nuevo));
+    }    
+    
+    public static function obtener_estado_cita($id_cita){
+        $sql = "SELECT DISTINCT * 
+            FROM `reserva_medica` 
+            WHERE `id_rm`=$id_cita";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["estado"];
+        }
+        else{            
+            return false;
+        }
     }
     
     public static function obtener_nombre_medicos ($id_cita){

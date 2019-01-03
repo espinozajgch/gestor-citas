@@ -193,7 +193,7 @@ $usuario  = "";
                     //respuesta = JSON.stringify(data);
                     console.log(data);
                     //$("#modal_trash").modal('hide');
-                    window.location.href="particular.php";
+                    window.location.href="pacientes.php";
 
                     /*if(data.estado == 0){
                     }

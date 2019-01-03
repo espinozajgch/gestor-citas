@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-12-2018 a las 04:20:52
--- Versión del servidor: 10.1.21-MariaDB
--- Versión de PHP: 5.6.30
+-- Tiempo de generación: 30-12-2018 a las 17:57:35
+-- Versión del servidor: 10.1.19-MariaDB
+-- Versión de PHP: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -21,6 +21,7 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `saludin3_citas` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `saludin3_citas`;
+
 -- --------------------------------------------------------
 
 --
@@ -67,7 +68,9 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `nombre`, `password`, `email`, `telefono`, `hash`, `id_eu`, `id_rol`, `estado`) VALUES
-(1, 'admin', 'admin', 'admin@admin.com', NULL, 'admin', 1, 1, 'activo');
+(1, 'admin', 'admin', 'admin@admin.com', NULL, 'admin', 1, 1, 'activo'),
+(3, 'medico 1', '1234', 'a@a.com', NULL, '1', 1, 3, 'activo'),
+(4, 'Medico 2', '1234', 'medico2@medicos.com', NULL, '$2y$10$9KibWE.cGUoNB8/Qgh61IukPQ1xMjyDVgcpCATPpVB/H5VTZbk34y3570c3', 1, 3, 'activo');
 
 -- --------------------------------------------------------
 
@@ -85,6 +88,79 @@ CREATE TABLE `entrada_historico` (
   `indice_tabla` varchar(45) DEFAULT NULL,
   `historico_id_historico` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `entrada_historico`
+--
+
+INSERT INTO `entrada_historico` (`id_entrada_historico`, `tipo_entrada`, `fecha_entrada`, `nivel_entrada`, `descripcion_entrada`, `tabla_relacionada`, `indice_tabla`, `historico_id_historico`) VALUES
+(57, 'CREAR', '2018-12-25 23:43:34', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 11),
+(58, 'CREAR', '2018-12-25 23:44:51', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 11),
+(59, 'MODIFICAR', '2018-12-25 23:45:00', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(60, 'RESERVAR', '2018-12-26 01:33:29', 2, 'Se reservó cita para el dia 2018-12-26 para una terapia de , con los médicos:  medico 1,', NULL, NULL, 11),
+(61, 'RESERVAR', '2018-12-26 01:33:50', 2, 'Se reservó cita para el dia 2018-12-27 para una terapia de , con los médicos:  medico 1,', NULL, NULL, 11),
+(62, 'CREAR', '2018-12-26 02:44:35', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 12),
+(63, 'CREAR', '2018-12-26 04:07:12', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 13),
+(64, 'MODIFICAR', '2018-12-26 13:23:08', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(65, 'MODIFICAR', '2018-12-26 13:23:39', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(66, 'MODIFICAR', '2018-12-26 13:27:13', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(67, 'MODIFICAR', '2018-12-26 13:27:44', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(68, 'MODIFICAR', '2018-12-26 13:29:02', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(69, 'MODIFICAR', '2018-12-26 13:29:09', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(70, 'MODIFICAR', '2018-12-26 13:29:24', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(71, 'MODIFICAR', '2018-12-26 13:43:06', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(72, 'MODIFICAR', '2018-12-26 19:27:05', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(73, 'MODIFICAR', '2018-12-26 19:27:55', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(74, 'MODIFICAR', '2018-12-26 19:28:21', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 11),
+(75, 'CREAR', '2018-12-26 19:48:03', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 14),
+(76, 'CREAR', '2018-12-28 06:46:24', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 12),
+(77, 'MODIFICAR', '2018-12-28 06:58:48', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 12),
+(78, 'MODIFICAR', '2018-12-28 07:29:57', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 12),
+(79, 'MODIFICAR', '2018-12-28 07:30:14', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 12),
+(80, 'CREAR', '2018-12-28 07:30:29', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 13),
+(81, 'RESERVAR', '2018-12-28 07:31:29', 2, 'Se reservó cita para el dia 2018-12-25 para una terapia de , con los médicos:  Medico 2,', NULL, NULL, 13),
+(82, 'CREAR', '2018-12-28 07:32:26', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 14),
+(83, 'CREAR', '2018-12-28 07:36:57', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 14),
+(84, 'CREAR', '2018-12-28 07:45:34', 2, 'Se creó programa terapéutico para el paciente, compuesto de 3 terapias.', NULL, NULL, 14),
+(85, 'MODIFICAR', '2018-12-28 07:47:14', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 14),
+(86, 'MODIFICAR', '2018-12-28 07:53:32', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 14),
+(87, 'MODIFICAR', '2018-12-28 07:53:39', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 14),
+(88, 'RESERVAR', '2018-12-28 18:31:14', 2, 'Se reservó cita para el dia 25-12-2018 para una terapia de , con los médicos:  medico 1,', NULL, NULL, 14),
+(89, 'MODIFICAR', '2018-12-28 19:02:33', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 13),
+(90, 'CREAR', '2018-12-28 19:05:15', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 15),
+(91, 'CREAR', '2018-12-28 19:09:24', 2, 'Se creó programa terapéutico para el paciente, compuesto de 2 terapias.', NULL, NULL, 15),
+(92, 'RESERVAR', '2018-12-28 19:49:25', 2, 'Se reservó cita para el dia 2018-12-26 para una terapia de , con los médicos:  Medico 2,', NULL, NULL, 13),
+(93, 'CREAR', '2018-12-28 21:07:12', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 16),
+(94, 'CREAR', '2018-12-29 00:19:43', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 17),
+(95, 'CREAR', '2018-12-29 00:20:43', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 18),
+(96, 'CREAR', '2018-12-29 10:01:14', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 19),
+(97, 'CREAR', '2018-12-29 10:07:19', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 20),
+(98, 'CREAR', '2018-12-29 10:08:17', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 21),
+(99, 'CREAR', '2018-12-29 10:08:19', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 21),
+(100, 'CREAR', '2018-12-29 10:24:54', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 22),
+(101, 'CREAR', '2018-12-29 10:24:55', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 22),
+(102, 'CREAR', '2018-12-29 10:30:18', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 23),
+(103, 'CREAR', '2018-12-29 10:30:18', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 23),
+(104, 'CREAR', '2018-12-29 10:35:22', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 24),
+(105, 'CREAR', '2018-12-29 10:35:23', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 24),
+(106, 'RESERVAR', '2018-12-29 10:35:26', 2, 'Se reservó cita para el dia 2018-12-27 para una terapia de , con los médicos:  Medico 2,', NULL, NULL, 24),
+(107, 'CREAR', '2018-12-30 08:58:03', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 25),
+(108, 'CREAR', '2018-12-30 08:58:54', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 26),
+(109, 'CREAR', '2018-12-30 08:58:55', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 26),
+(110, 'RESERVAR', '2018-12-30 08:58:58', 2, 'Se reservó cita para el dia 2018-12-27 para una terapia de , con los médicos:  medico 1,', NULL, NULL, 26),
+(111, 'MODIFICAR', '2018-12-30 09:02:47', 2, 'Se agregó un chequeo al programa terapeutico del paciente', NULL, NULL, 17),
+(112, 'CREAR', '2018-12-30 09:04:01', 2, 'Se creó programa terapéutico para el paciente, compuesto de 2 terapias.', NULL, NULL, 13),
+(113, 'CREAR', '2018-12-30 09:05:12', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 27),
+(114, 'CREAR', '2018-12-30 09:05:26', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 27),
+(115, 'CREAR', '2018-12-30 09:08:19', 2, 'Se creó programa terapéutico para el paciente, compuesto de 2 terapias.', NULL, NULL, 27),
+(116, 'CREAR', '2018-12-30 09:10:01', 2, 'Se creó programa terapéutico para el paciente, compuesto de 3 terapias.', NULL, NULL, 27),
+(117, 'CREAR', '2018-12-30 09:15:10', 2, 'Se creó la historia clinica del paciente', NULL, NULL, 28),
+(118, 'CREAR', '2018-12-30 09:15:31', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 28),
+(119, 'RESERVAR', '2018-12-30 09:15:31', 2, 'Se reservó cita para el dia 2018-12-28 para una terapia de , con los médicos:  medico 1,', NULL, NULL, 28),
+(120, 'CREAR', '2018-12-30 09:47:35', 2, 'Se creó programa terapéutico para el paciente, compuesto de 1 terapias.', NULL, NULL, 28),
+(121, 'MODIFICAR', '2018-12-30 09:49:01', 2, 'Se modificarón las terapias activas del paciente.', NULL, NULL, 28),
+(122, 'MODIFICAR', '2018-12-30 10:39:29', 2, 'Se agregó un chequeo al programa terapeutico del paciente', NULL, NULL, 12),
+(123, 'RESERVAR', '2018-12-30 10:39:58', 2, 'Se reservó cita para el dia 2018-12-26 para una terapia de , con los médicos:  Medico 2,', NULL, NULL, 28);
 
 -- --------------------------------------------------------
 
@@ -114,7 +190,8 @@ CREATE TABLE `estatus_pago` (
 
 INSERT INTO `estatus_pago` (`id_ep`, `nombre`) VALUES
 (1, 'PENDIENTE'),
-(2, 'PAGADO');
+(2, 'COMPLETO'),
+(3, 'PARCIAL');
 
 -- --------------------------------------------------------
 
@@ -163,6 +240,13 @@ CREATE TABLE `feriados` (
   `descripcion_feriados` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `feriados`
+--
+
+INSERT INTO `feriados` (`id_feriados`, `fecha_feriados`, `descripcion_feriados`) VALUES
+(1, '2018-12-09', 'aaa');
+
 -- --------------------------------------------------------
 
 --
@@ -178,6 +262,13 @@ CREATE TABLE `historias_medicas` (
   `id_paciente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `historias_medicas`
+--
+
+INSERT INTO `historias_medicas` (`id_hm`, `fecha`, `descripcion`, `indicaciones`, `diagnostico`, `id_paciente`) VALUES
+(3, '2018-12-26 03:54:51', 'aaaaaaaaaaa', 'aaaaaaaaaaaaaaaaa', 'aaaaaaa', 12);
+
 -- --------------------------------------------------------
 
 --
@@ -190,6 +281,30 @@ CREATE TABLE `historico` (
   `tipo_historico` varchar(45) DEFAULT 'paciente',
   `codigo_historico` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `historico`
+--
+
+INSERT INTO `historico` (`id_historico`, `fecha_creacion`, `tipo_historico`, `codigo_historico`) VALUES
+(11, '2018-12-25 23:43:34', 'paciente', '1812-2065804-1'),
+(12, '2018-12-26 02:44:35', 'paciente', '1812-1'),
+(13, '2018-12-26 04:07:12', 'paciente', '1812-2'),
+(14, '2018-12-26 19:48:03', 'paciente', '1812-465'),
+(15, '2018-12-28 19:05:15', 'paciente', '1812-27610730'),
+(16, '2018-12-28 21:07:12', 'paciente', '1812-987-8'),
+(17, '2018-12-29 00:19:43', 'paciente', '1812-a685'),
+(18, '2018-12-29 00:20:43', 'paciente', '1812-aasd8'),
+(19, '2018-12-29 10:01:14', 'paciente', '1812-999-9'),
+(20, '2018-12-29 10:07:19', 'paciente', '1812-1111-1'),
+(21, '2018-12-29 10:08:17', 'paciente', '1812-12345-6'),
+(22, '2018-12-29 10:24:54', 'paciente', '1812-vre-1'),
+(23, '2018-12-29 10:30:17', 'paciente', '1812-98765432-1'),
+(24, '2018-12-29 10:35:22', 'paciente', '1812-tbu-1'),
+(25, '2018-12-30 08:58:03', 'paciente', '1812-axx-a'),
+(26, '2018-12-30 08:58:54', 'paciente', '1812-1010-1'),
+(27, '2018-12-30 09:05:12', 'paciente', '1812-434-4'),
+(28, '2018-12-30 09:15:10', 'paciente', '1812-000-0');
 
 -- --------------------------------------------------------
 
@@ -295,6 +410,14 @@ CREATE TABLE `paciente` (
   `historico_id_historico` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `paciente`
+--
+
+INSERT INTO `paciente` (`id_paciente`, `RUT`, `nombre`, `fijo`, `celular`, `email`, `direccion`, `clave`, `imagen_id_imagen`, `apellidop`, `apellidom`, `ficha_paciente_id_fp`, `estado_paciente`, `historico_id_historico`) VALUES
+(12, '2065804-1', 'Jonny', '02629593105', '04261693370', 'jonnyrios33@gmail.com', 'ora ora ora', '', NULL, 'Rios', 'Morales', 0, '1', 11),
+(29, '000-0', 'Prueba PROGRAMA ESPECIAL', 'd', 'f', 'c', 'g', '', NULL, 'a', 'b', 0, '1', 28);
+
 -- --------------------------------------------------------
 
 --
@@ -329,7 +452,10 @@ CREATE TABLE `programa_terapeutico` (
   `id_programa_terapeutico` int(10) UNSIGNED NOT NULL,
   `paciente_id_paciente` int(11) NOT NULL,
   `descripcion_programa_terapeutico` varchar(150) NOT NULL,
-  `estado` varchar(45) DEFAULT 'activo'
+  `descuento` decimal(6,2) NOT NULL DEFAULT '0.00',
+  `estado` varchar(45) DEFAULT 'activo',
+  `estatus_pago_id_ep` int(11) DEFAULT '1',
+  `especial` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -583,7 +709,8 @@ ALTER TABLE `paciente_tiene_tratamiento`
 --
 ALTER TABLE `programa_terapeutico`
   ADD PRIMARY KEY (`id_programa_terapeutico`),
-  ADD KEY `fk_programa_terapeutico_paciente1_idx` (`paciente_id_paciente`);
+  ADD KEY `fk_programa_terapeutico_paciente1_idx` (`paciente_id_paciente`),
+  ADD KEY `fk_programa_terapeutico_estatus_pago1_idx` (`estatus_pago_id_ep`);
 
 --
 -- Indices de la tabla `programa_tiene_terapia`
@@ -639,12 +766,12 @@ ALTER TABLE `acciones`
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `entrada_historico`
 --
 ALTER TABLE `entrada_historico`
-  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
@@ -654,7 +781,7 @@ ALTER TABLE `especialidad`
 -- AUTO_INCREMENT de la tabla `estatus_pago`
 --
 ALTER TABLE `estatus_pago`
-  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `estatus_usuario`
 --
@@ -669,17 +796,17 @@ ALTER TABLE `facturacion`
 -- AUTO_INCREMENT de la tabla `feriados`
 --
 ALTER TABLE `feriados`
-  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `historias_medicas`
 --
 ALTER TABLE `historias_medicas`
-  MODIFY `id_hm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_hm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `historico`
 --
 ALTER TABLE `historico`
-  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_especialidad`
 --
@@ -689,7 +816,7 @@ ALTER TABLE `medico_tiene_especialidad`
 -- AUTO_INCREMENT de la tabla `medico_tiene_reserva`
 --
 ALTER TABLE `medico_tiene_reserva`
-  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 --
 -- AUTO_INCREMENT de la tabla `medio_contacto`
 --
@@ -709,12 +836,12 @@ ALTER TABLE `notificaciones`
 -- AUTO_INCREMENT de la tabla `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_reserva`
 --
 ALTER TABLE `paciente_tiene_reserva`
-  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_tratamiento`
 --
@@ -724,17 +851,17 @@ ALTER TABLE `paciente_tiene_tratamiento`
 -- AUTO_INCREMENT de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
-  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 --
 -- AUTO_INCREMENT de la tabla `programa_tiene_terapia`
 --
 ALTER TABLE `programa_tiene_terapia`
-  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 --
 -- AUTO_INCREMENT de la tabla `reserva_medica`
 --
 ALTER TABLE `reserva_medica`
-  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
@@ -765,6 +892,12 @@ ALTER TABLE `tratamientos`
 ALTER TABLE `medico_tiene_especialidad`
   ADD CONSTRAINT `fk_medico_tiene_especialidad_admin1` FOREIGN KEY (`admin_id_admin`) REFERENCES `admin` (`id_admin`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_medico_tiene_especialidad_especialidad1` FOREIGN KEY (`especialidad_id_especialidad`) REFERENCES `especialidad` (`id_especialidad`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `programa_terapeutico`
+--
+ALTER TABLE `programa_terapeutico`
+  ADD CONSTRAINT `fk_programa_terapeutico_estatus_pago1` FOREIGN KEY (`estatus_pago_id_ep`) REFERENCES `estatus_pago` (`id_ep`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

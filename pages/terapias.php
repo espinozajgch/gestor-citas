@@ -31,7 +31,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -56,6 +56,9 @@ $usuario  = "";
     <link href="../dist/css/estilos.css" rel="stylesheet"> 
 
     <style type="text/css">
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
 
     </style>
 </head>
@@ -90,6 +93,9 @@ $usuario  = "";
                         }
                         else if ($_GET["opcion"]==5){
                             include_once("terapias/lista_terapias.php");
+                        }
+                        else if ($_GET["opcion"]==6){
+                            include_once './terapias/detalle_programa.php';
                         }
                     }                    
                     
@@ -146,7 +152,58 @@ $usuario  = "";
         var id = "";
         var codigo = "";
 
-        $(document).ready(function(){
+        $(document).ready(function(){ 
+            buscar_info_paciente();
+
+
+        $(".form-control").on("keydown",function(event){
+        var id=$(this).attr("id");
+
+        if(id != null)
+            if(id=="descuento_aplicado" || id=="cantidad"){
+                // Desactivamos cualquier combinación con shift
+                if(event.shiftKey)
+                    event.preventDefault();
+                 
+                /*  
+                    No permite ingresar pulsaciones a menos que sean los siguientes
+                    KeyCode Permitidos
+                    keycode 8 Retroceso
+                    keycode 37 Flecha Derecha
+                    keycode 39  Flecha Izquierda
+                    keycode 46 Suprimir
+                */
+                //No permite mas de 11 caracteres Numéricos
+                if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39) 
+                    if($(this).val().length >= 11)
+                        event.preventDefault();
+         
+                // Solo Numeros del 0 a 9 
+                if (event.keyCode < 48 || event.keyCode > 57)
+                    //Solo Teclado Numerico 0 a 9
+                    if (event.keyCode < 96 || event.keyCode > 105)
+                        /*  
+                            No permite ingresar pulsaciones a menos que sean los siguietes
+                            KeyCode Permitidos
+                            keycode 8 Retroceso
+                            keycode 37 Flecha Derecha
+                            keycode 39  Flecha Izquierda
+                            keycode 46 Suprimir
+                        */
+                        if(event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
+                            event.preventDefault(); 
+                    }
+    });
+
+
+            $("#rut_paciente").keypress(function(e) {
+                if(e.which == 13) {
+                    // Acciones a realizar, por ej: enviar formulario.
+                    buscar_info_paciente();
+                }
+            });
+
+
             $("#loader-wrapper").fadeOut("slow");
 
             $('#dataTables-example').DataTable({
@@ -172,7 +229,7 @@ $usuario  = "";
                 $rut_get=0;
             }
             ?>){
-                    $("#rut_paciente").val(<?php echo $rut_get; ?>);
+                    $("#rut_paciente").val("<?php echo $rut_get; ?>");
                     $("#btn_buscar").trigger('click');
                 }
         });
@@ -231,63 +288,7 @@ $usuario  = "";
             cargar_chat(id);
         });
 
-        function cargar_chat(id){
-            $("#enviar").prop('disabled', false);
-            $("#mensaje").prop('disabled', false);
-            $.ajax({
-                data:  {id : id},
-                url:   '../assets/class/admin/lista_mensajes_chat_admin.php',
-                type:  'post',
-                //dataType: "json",
-                success:  function (data) {
-                    //respuesta = JSON.stringify(data);
-                    //console.log(data);
-                        $("#chating").html(data);
-                        $(".panel-body").scrollTop($(".panel-body")[0].scrollHeight);
-                        //window.location.href="mensajes.php";
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
-
-
-        $("#enviar").click(function(e){
-          
-            hash = $("#hash").val();
-            mensaje = $("#mensaje").val();
-
-            if(mensaje.trim() != ""){
-                //console.log(id);
-                ///console.log("mensaje: "+mensaje);
-                //console.log("hash: "+hash);
-                enviar_mensaje(id, mensaje, hash);
-            }
-
-        });
-
-        function enviar_mensaje(id, mensaje, hash){
-
-            $.ajax({
-                data:  {accion: 9, id : id, mensaje : mensaje, hash : hash},
-                url:   '../../vendor/class/soporte/soporte_acciones.php',
-                type:  'post',
-                dataType: "json",
-                success:  function (data) {
-                    //console.log(data);
-                    if(data.estado == 1){
-                       cargar_chat(id);
-                       $("#mensaje").val("");
-                    }
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
+    
         
         function modificar_terapia(terapia, modo){
             if (confirm("¿Está seguro de querer hacer esto?")){
@@ -330,7 +331,7 @@ $usuario  = "";
                 ]
             });
             
-             $('#tabla_terapias').DataTable({  
+            $('#tabla_terapias').DataTable({  
                 responsive: true,
                 "ajax":"terapias/terapias_controlador.php?id_operacion=10",
                 "columns": [
@@ -338,46 +339,68 @@ $usuario  = "";
                     {"data": "Nombre"},                    
                     {"data": "Descripcion"},                    
                     {"data": "Precio"},
-                    {"data": "Estado"},
+                    ///{"data": "Estado"},
                     {"data": "Acciones"}
                 ]
-            });
+            });/**/
             
             
     });
     
-    function cargar_tabla_terapias(){
+    function cargar_tabla_terapias(referer){
+        
         $('#tabla_paciente').DataTable({  
                 responsive: true,
-                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val(),
+                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer,
                 "columns": [
                     {"data": "N"},
                     {"data": "Terapias"},                    
                     {"data": "Precio"},                    
                     {"data": "Estado"},
                     {"data": "Acciones"}
-                ]
+                ],
+                "initComplete": function (settings, json){
+                    $("#texto_programa").html(json.data[0].desc_prt);
+                    $("#botones_dinamicos").html(" ");
+                    $("#botones_dinamicos").html(json.data[0].btn_validar_prg);
+                    $("#botones_dinamicos").append(json.data[0].otros_botones);
+                    
+                }
             });
     }
     
-    function seleccionar_terapia(id_terapia, estado){
-        terapia_seleccionada = id_terapia;
-        //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"
-        var mensaje_confirm;
-        if (estado == 1){//Se reserva por primera vez
-            mensaje_confirm = "Se reservará cita para la terapia seleccionada, por favor confirme";
-        }
-        else if (estado == 2){//Se modificará la reservación de la cita
-            mensaje_confirm = "Está a punto de modificar la reservación de una cita pagada, confirmar";
-        }
-        if (confirm(mensaje_confirm)){
-            if (estado == 1){
-                redirigir_terapia();
+    function establecer_pago(id_programa, tipo_pago){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion    : 19,
+            tipo_pago       : tipo_pago,
+            id_programa     : id_programa
+        }, function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){//Exito
+                alert ("Metodo de pago establecido");
             }
             else{
-                window.location = "agregar_citas.php?cita="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
+                alert ("Ocurrió un error, contacte al admin");
             }
+        });
+    }
+    
+    function seleccionar_terapia(id_terapia, estado, modificar = false){
+        terapia_seleccionada = id_terapia;        
+        //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"        
+        if (estado == 1){
+            redirigir_terapia();
         }
+        else{
+            if (modificar==true){
+                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
+            }
+            else{
+                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
+            }
+                
+        }        
     }
     
     function generar_invoice(id_paciente){
@@ -386,6 +409,41 @@ $usuario  = "";
     
     function generar_invoice_individual(id_reserva){
         window.open("terapias/terapias_controlador.php?id_operacion=15&reserva="+id_reserva, "_newtab");
+    }
+    
+    function validar_terapia(programa, terapia, cita){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion: 16,
+            programa    : programa,
+            terapia     : terapia,
+            cita        : cita
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){//Exito
+                alert ("La cita ha sido validada");
+                console.log (respuesta[0].str_debug);
+                $("#btn_buscar").trigger("click");
+            }
+            else{
+                alert ("Ocurrió un error al validar la terapia");
+                console.log (respuesta[0].str_debug);
+                
+            }
+        });
+    }
+    
+    function validar_programa(programa){
+        $.post("terapias/terapias_controlador.php",
+        {
+            id_operacion: 17,
+            programa: programa
+        }, function(result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                alert ("Programa validado con exito");
+            }
+        });
     }
 </script>
 

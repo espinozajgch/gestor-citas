@@ -135,6 +135,15 @@ function sizeOfText( $texte, $largeur )
 	return $nb_lines;
 }
 
+function agregarImagen($x, $y, $ancho, $alto, $url_img, $alineacion = 'L'){
+    $this->SetXY($x, $y);
+    $imagen = $url_img;
+    $this->SetFont('Arial','',11);
+    $this->Cell($ancho, $alto, $this->Image($imagen, $this->GetX(), $this->GetY(),$ancho), 0, 0, $alineacion, false);
+    
+    
+}
+
 // Company
 function addSociete( $nom, $adresse )
 {
@@ -146,13 +155,50 @@ function addSociete( $nom, $adresse )
 	$length = $this->GetStringWidth( $nom );
 	//$this->Cell( $length, 2, $nom);
 	$this->SetXY( $x1, $y1 + 4 );
-	$this->SetFont('Arial','',10);
+	$this->SetFont('Arial','',11);
 	$length = $this->GetStringWidth( $adresse );
 	//Coordonn�es de la soci�t�
         $image1 = "../../dist/img/logo.jpg";
 	$lignes = $this->sizeOfText( $adresse, $length) ;
         $this->Cell( 40, 40, $this->Image($image1, $this->GetX(), $this->GetY(), 100), 0, 0, 'L', false );
 	//$this->MultiCell($length, 4, $adresse);
+}
+function agregar_rectangulo_circular_texto ($x, $y, $ancho, $alto, $r, $g, $b, $texto, $txt_r = 0, $txt_g = 0, $txt_b = 0, $multilinea = false){
+    $this->SetLineWidth(0.1);
+    $this->SetFillColor($r,$g,$b);
+    $this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');    
+    
+    $this->SetXY(($x), ($y));
+    $this->SetFont( "Arial", "", 10);
+    $this->SetTextColor($txt_r, $txt_g, $txt_b);
+    if ($multilinea){
+        $this->MultiCell($ancho, $alto/3, utf8_decode($texto), 0, "J");
+    }
+    else{
+        $this->Cell($ancho,$alto,  utf8_decode($texto), 0,0, "C");
+    }
+    $this->SetTextColor(0, 0, 0);
+}
+
+function agregar_texto ($texto, $fuente, $tamaño, $x, $y, $alineacion, $familia, $ancho, $alto){
+    $this->SetXY(($x), ($y));
+    $this->SetFont( $fuente, $familia, $tamaño);
+    $this->Cell($ancho,$alto, utf8_decode($texto), 0, 0, $alineacion);
+}
+
+function agregar_rectangulo_circular_texto_etiqueta ($x, $y, $ancho, $alto, $r, $g, $b, $texto, $etiqueta){
+    $this->SetLineWidth(0.1);
+    $this->SetFillColor($r,$g,$b);
+    $this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');
+    $this->Line(($x), $y+($alto/2), $x+$ancho, $y+($alto/2));
+    
+    $this->SetXY(($x), ($y+($alto/4)));
+    $this->SetFont( "Arial", "B", 11);
+    $this->Cell($ancho,$y/2, utf8_decode($etiqueta), 0, 0, "C");
+    
+    $this->SetXY(($x), ($y+($alto/1.5)));
+    $this->SetFont( "Arial", "", 10);
+    $this->Cell($ancho,$y/2,  utf8_decode($texto), 0,0, "C");
 }
 
 // Label and number of invoice/estimate

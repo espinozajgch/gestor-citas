@@ -69,28 +69,86 @@ else if ($id_operacion == 4){//Obtener las terapias para el pillbox
     echo json_encode($json);
 }
 else if ($id_operacion == 5){//Crear un programa terapeutico
-    $json;
+    $json;    
     $id_paciente = $_POST["id_paciente"];
     $nombre_programa = $_POST["nombre_programa"];
     //Obtener el ID del historial del paciente
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
-    $lista_terapias = $_POST["terapias"];
+    $lista_terapias;         
+    $json[0]["estado"]      =   1;
+    $str_debug              =   "Inicio ";
+    $terapia = $_POST["terapias_individual"];
+    $cantidad = $_POST["cantidad"];
+    $descuento;
+    $especial;
+    if (isset($_POST["descuento"])){
+        $descuento = $_POST["descuento"];    
+        if ($descuento == ""){
+            $descuento = 0;
+        }    
+    }
+    else{
+        $descuento = 0;
+    }
+    if (isset($_POST["especial"])){
+        if ($_POST["especial"]=="true") $especial = true;
+        else $especial = false;
+    }
+    else $especial = false;
+    //$especial = $_POST["especial"];
+    
+    $str_debug.="-Se agregaran $cantidad terapias-";    
+    for ($i=0; $i<$cantidad; $i++){
+        $lista_terapias[$i]=$terapia;
+    }    
     $json[0]["estado"]=1;
-    $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa,true);    
-    if ($id_insert!=0){
-        if (!terapias::asignar_terapias_programa($lista_terapias, $id_insert)){
-            $cantida_terapias = count($lista_terapias);
-            historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
-            $json[0]["estado"]=0;
+    //Verificamos que el paciente no tenga un programa terapeutico actaivo y que la peticion
+    //actual no tenga caracter especial
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    if ($id_programa && !$especial){//Debemos actualizar
+        $str_debug.="-El paciente tiene un programa activo, actualizar lista de terapias-";
+        if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){            
+            $str_debug.="-Terapia agregada-";
+            $id_historico = historico::obtener_id_historico_paciente($id_paciente);            
+            historico::agregar_entrada($id_historico, "MODIFICAR", "Se agregó un chequeo al programa terapeutico del paciente", 2);
+        }
+        else{
+            $str_debug.="-Error al agregar terapia-";
+            $json[0]["estado"]      =   0;
         }
     }
     else{
-        $json[0]["estado"]=0;
-    }
+        if ($especial){
+            $str_debug.="-La presente consulta es especial, programa ficticio-";
+        }
+        else{
+            $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
+        }
+        
+        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true,$especial);
+        if ($id_insert!=0){
+            $str_debug.="-Programa creado con el indice $id_insert-";
+            $json[0]["id_programa"] = $id_insert;
+            $id_terapia_programa = terapias::asignar_terapias_programa($lista_terapias, $id_insert);
+            if ($id_terapia_programa != 0){
+                $cantida_terapias = count($lista_terapias);
+                historico::agregar_entrada($id_historico, "CREAR", "Se creó programa terapéutico para el paciente, compuesto de ".$cantida_terapias." terapias.", 2);
+                $str_debug.="-Terapias agregadas, historico actualizado-";
+                $json[0]["estado"]=1;
+                $json[0]["id_pr_t_t"] = $id_terapia_programa;
+            }//*/
+        }
+        else{
+            $str_debug.="-Error al agregar terapias-";
+            $json[0]["estado"]=0;
+        }
+    }    
+    $json[0]["str_debug"] = $str_debug;
     echo json_encode($json);
 }
-else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
-     //Devolver eventos para medicos para formato de tabla
+else if ($id_operacion == 6){
+    //Obtener la tabla de programas terapeuticos
+    //Devolver eventos para medicos para formato de tabla
     $json_temp = json_decode(terapias::tabla_programas());
     //print_r($json_temp);
     $json_final["data"]=$json_temp;
@@ -101,7 +159,7 @@ else if ($id_operacion == 6){//Obtener la tabla de programas terapeuticos
 else if ($id_operacion == 7){//Cargar opciones previas
     $id_paciente = $_POST["paciente"];    
     //echo "a";
-    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',true));
+    echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false,false));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     $id_paciente = $_POST["id_paciente"];
@@ -132,17 +190,26 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $json;  
     $id_paciente            =   $_POST["id_paciente"];
     $nombre_programa        =   $_POST["nombre_programa"];
-    $lista_terapias         =   $_POST["terapias_previas"];        
+    //$lista_terapias         =   $_POST["terapias_previas"];        
+    $lista_terapias;         
     $json[0]["estado"]      =   1;
     $str_debug              =   "Inicio ";
-    
+    $terapia = $_POST["terapias_individual"];
+    $cantidad = $_POST["cantidad"];
+    $descuento = $_POST["descuento"];
+    if ($descuento == ""){
+        $descuento = 0;
+    }
+    //print_r($lista_terapias);
+    $count_array =count($terapia);
+    for ($i=0; $i<$cantidad; $i++){
+        $lista_terapias[$i]=$terapia;
+    }
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
-    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa)){
-        //Eliminar citas existentes
-        if (terapias::eliminar_terapias_programa($id_programa, true)){
-            //Ingresar las que se quedaron
+    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa, $descuento)){        
+        if(count($lista_terapias>0)){
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";
@@ -154,11 +221,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
                 $str_debug.="Error en asignacion de terapia";
                 $json[0]["estado"]      =   0;
             }
-        }
-        else{
-            $str_debug.="Error en eliminacion de terapias";
-            $json[0]["estado"]      =   0;
-        }        
+        }            
     }
     else{
         $str_debug.="Error en actualizacion de informacion basica";
@@ -172,13 +235,20 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
 else if ($id_operacion == 12){
      //Devolver eventos para medicos para formato de tabla
     $id_paciente = $_GET["id_paciente"];
+    $id_referer;
+    if (isset($_GET["referer"])){
+        $id_referer =$_GET["referer"];        
+    }
+    else{
+        $id_referer = false;
+    }
     //echo $id_paciente;
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     if ($id_programa){
-        $json_temp = (terapias::lista_terapias_programa($id_programa));
+        $json_temp = (terapias::lista_terapias_programa($id_programa, $id_referer));
     }
     else{
-        $json_temp[0]['N'] = "No hay información que mostrar";
+        $json_temp[0]['N'] = "No hay información que mostrar.";
         $json_temp[0]['Terapias'] = "";
         $json_temp[0]['Precio'] = "";
         $json_temp[0]['Estado'] = "";
@@ -244,4 +314,62 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
 }
 else if ($id_operacion == 15){//Generar invoice de terapias por paciente
     include './reporte_programa.php';
+}
+else if ($id_operacion == 16){//Validar una terapia como culminada
+    $id_programa    = $_POST["programa"];
+    $id_terapia     = $_POST["terapia"];
+    $id_cita        = $_POST["cita"];
+    //Primero validamos en la tabla de programa tiene terapia
+    $json;
+    $str_debug=" ";
+    $json[0]["estado"] = 1;
+    //Luego validamos en la reserva
+    if (terapias::validar_terapia($id_programa, $id_terapia)){
+        $str_debug.="TERAPIA_VALIDADA $id_programa - $id_terapia ";
+        if (citas::validar_cita($id_cita)){
+            $str_debug.="CITA_VALIDADA: $id_cita";
+        }
+    }
+    else{
+        $str_debug .= "ERROR PARA LOS PARAMETROS programa=$id_programa, terapia=$id_terapia y cita=$id_cita";
+        $json[0]["str_debug"]=$str_debug;
+        $json[0]["estado"] = 0;
+    }
+    $json[0]["str_debug"]=$str_debug;
+    echo json_encode($json);    
+}
+else if ($id_operacion == 17){//VALIDAR PROGRAMA COMPLETO COMO CULMINADO
+    $id_programa=$_POST["programa"];
+    $json;
+    $str_debug=" ";
+    $json[0]["estado"] = 1;
+    //Validar el programa
+    if (!terapias::validar_programa($id_programa)){
+        $json[0]["estado"] = 0;
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 18){//ELIMINAR TERAPIA
+    $id_programa    = $_POST["programa"];
+    $id_terapia     = $_POST["terapia"];
+    $json;
+    if (terapias::eliminar_terapia_individual($id_programa, $id_terapia)){
+        $json[0]["estado"]=1;
+    }
+    else{
+        $json[0]["estado"]=0;
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 19){//Establecer modo de pago
+    $id_programa    = $_POST["id_programa"];
+    $tipo_pago      = $_POST["tipo_pago"];
+    $json;
+    if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
+        $json[0]["estado"]=1;
+    }
+    else{
+        $json[0]["estado"]=0;
+    }
+    echo json_encode($json);
 }

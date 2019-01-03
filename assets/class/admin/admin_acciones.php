@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$bd = connection::getInstance()->getDb();
 
 		$accion = $_POST["accion"];
+		$res ="accion invalida";
 
 		if($accion==1){
 			//AGREGAR ADMINISTRADOR
@@ -25,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$password = $_POST["password"];
 				$id_rol = $_POST["id_rol"];
 
-				$hash = password_hash($password,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
+				//$hash = password_hash($password,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
 				$estado= 1;
-				$res=Admin::agregar($bd, $name, $email, $password, $hash, 1, $id_rol);
+				$res=Admin::agregar($bd, $name, $email, $password, $password, 1, $id_rol);
 			}
 
 		}

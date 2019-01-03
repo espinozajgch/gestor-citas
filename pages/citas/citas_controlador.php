@@ -21,7 +21,7 @@ else if (isset($_GET["id_operacion"])){
 
 if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $rut = $_POST["rut"];
-    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellido`, `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
+    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellidop`, apellidom , `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
     
     $bd = connection::getInstance()->getDb();
     
@@ -31,13 +31,24 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $longitud = count ($resultado);
     if ($resultado){
         $resultado[0]['estado'] = true;
+        $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
+        if ($resultado[0]["programa"]!=false){
+            $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+        }
+        else{
+            $resultado[0]["descuento"] = 0;
+        }
+        
         
     }
     else{
         $resultado[0]['estado'] = false;
+        $resultado[0]["programa"] = false;
+        $resultado[0]["descuento"] = false;
     }
+    
     $json = json_encode($resultado);
-        echo $json;
+    echo $json;
     
     /*for ($i=0; $i<$longitud; $i++){
         
@@ -54,13 +65,24 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
      * precio
      * observaciones
      */
-    $fecha_inicio   =   $_POST["fecha_inicio"];
+    $fecha_inicio   = calendario::formatear_fecha(3,$_POST["fecha_inicio"]);
     $hora_inicio    =   $_POST["hora_inicio"];
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
     $medio_contac   =   $_POST["medio_contacto"];
+    $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
+    if (isset($_POST["pagado"])){        
+        $pagado         =   $_POST["pagado"];
+        if ($pagado == "true") $pagado = "pagado";
+        else $pagado = "pendiente";
+    }
+    else{
+        $pagado         =   "pagado";
+    }
+    
+    //$chequeo        =   $_POST["chequeo"];
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
     $tipo_insercion =   1;
     $json_retorno[0]['estado'] = 1;
@@ -68,10 +90,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $bd = connection::getInstance()->getDb();
     
     $sql = "INSERT INTO reserva_medica 
-        (fecha_inicio, medio_contacto_id_mc,  observaciones, hora_inicio, hora_fin, estado) 
-        VALUES (?, ?, ?, ?, ?, ?)";
+        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, "pagado"));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -79,26 +101,31 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
         if(citas::asignar_paciente_cita($id_paciente, $id_insercion)&&citas::asignar_medicos_cita($medicos, $id_insercion)){
             //echo "asignado";
             if (isset($_POST["id_terapia"])){//Si esta puesto, estamos reservando terapia
-                //echo "reservar";
-                $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
-                if (!citas::asignar_reserva_terapia($id_programa, $_POST["id_terapia"], $id_insercion)){
-                    $json_retorno[0]['estado'] = 0;                    
-                }else{
-                    $nom_terapia = terapias::obtener_nombre_terapia($_POST["id_terapia"]);
-                    $nombre_medicos = citas::obtener_nombre_medicos($id_insercion);
-                    historico::agregar_entrada($id_historico,
-                            "RESERVAR",
-                            "Se reservó cita para el dia $fecha_inicio para una terapia de $nom_terapia, con los médicos: ".$nombre_medicos,
-                            2);
+                //echo "terapia: ".$_POST["id_terapia"];
+                if ($_POST["id_terapia"]!="false"){
+                    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+                    //echo "$id_programa,".$_POST["id_terapia"].", $id_insercion";
+                    if (!citas::asignar_reserva_terapia($_POST["id_terapia"], $id_insercion)){
+                        $json_retorno[0]['estado'] = 0;                    
+                    }else{
+                        $nom_terapia = terapias::obtener_nombre_terapia($_POST["id_terapia"]);
+                        $nombre_medicos = citas::obtener_nombre_medicos($id_insercion);
+                        historico::agregar_entrada($id_historico,
+                                "RESERVAR",
+                                "Se reservó cita para el dia $fecha_inicio para una terapia de $nom_terapia, con los médicos: ".$nombre_medicos,
+                                2);//*/
+                    }
                 }
+                
             }
             else{
                 $nombre_medicos = citas::obtener_nombre_medicos($id_insercion);
                 historico::agregar_entrada($id_historico,
                         "RESERVAR",
                         "Se reservó la primera cita del paciente para el día $fecha_inicio con los medicos: ".$nombre_medicos,
-                        2);
+                        2);//*/
             }
+            //Verificamos si se está haciendo un chequeo, y entonces creamos un programa terapeutico con esa terapia
         }
         else{
             $json_retorno[0]['estado'] = 0;
@@ -109,15 +136,24 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     }
     echo json_encode($json_retorno);
 }
+else if ($id_operacion == 2.5){//Agregar historico nuevo
+    $primera_vez;
+    if ($primera_vez){
+        
+    }
+    else{
+        
+    }
+}
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
-    $sql = "SELECT id_admin, nombre FROM `admin` WHERE estado LIKE \"activo\"";
+    $sql = "SELECT id_admin, nombre FROM `admin` WHERE id_rol = 3 AND id_eu > 0";
     $bd = connection::getInstance()->getDb();
     
     $pdo = $bd->prepare($sql);
     $pdo->execute();
     $resultado = $pdo->fetchall(PDO::FETCH_ASSOC);
     $longitud = count ($resultado);
-    
+    //echo $sql;
     $json;
     for($i=0; $i<$longitud;$i++){
         $json[$i]["id"] = $resultado[$i]["id_admin"];
@@ -165,13 +201,14 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
     
     $id_cita = $_POST["cita"];
     $bd = connection::getInstance()->getDb();
-    $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, 
+    $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, reserva_medica.metodos_pago_id_mp as id_mp,
         reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.observaciones, reserva_medica.medio_contacto_id_mc
         FROM `paciente`         
         INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
-        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm
+        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm        
 		WHERE id_rm = '.$id_cita;
     $pdo = $bd->prepare($sql);        
+    //echo $sql;
     $pdo->execute();   
     $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
     $json;
@@ -182,11 +219,12 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[0]['estado']=1;
         
         $json[$i+1]['rut']            =   $resultados[$i]["rut"];
-        $json[$i+1]['fecha_inicio']   =   $resultados[$i]["fecha_inicio"];
+        $json[$i+1]['fecha_inicio']   =   calendario::formatear_fecha(1,$resultados[$i]["fecha_inicio"]);
         $json[$i+1]['hora_inicio']    =   $resultados[$i]["hora_inicio"];
         $json[$i+1]['hora_fin']       =   $resultados[$i]["hora_fin"];
         $json[$i+1]['medio_contacto'] =   $resultados[$i]["medio_contacto_id_mc"];
         $json[$i+1]['observaciones']  =   $resultados[$i]["observaciones"];
+        $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
     }
     //FORMATO de json
     //descripcion, fecha inicio, fecha fin
@@ -201,16 +239,19 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     $json_retorno[0]['estado'] = 1;
     
     $id_cita        =   $_POST["cita"];
-    $fecha_inicio   =   $_POST["fecha_inicio"];
+    $fecha_inicio   = calendario::formatear_fecha(3,$_POST["fecha_inicio"]);
     $hora_inicio    =   $_POST["hora_inicio"];
     $hora_fin       =   $_POST["hora_fin"];
     $id_paciente    =   $_POST["id"];
     $medio_contac   =   $_POST["medio_contacto"];
+    $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
     $medicos_previos=   $_POST["medicos_previos"];    
+
+    //echo $medio_pago;
             
-    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
+    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
         //Eliminamos las relaciones existentes y luego ingresamos nuevas relaciones        
         if (!citas::remover_medicos_cita($id_cita)){
             //echo "ERROR remover medicos";
@@ -230,7 +271,7 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     else{
         //echo "ERROR ACTUALIZAR";
         $json_retorno[0]['estado'] = 0;
-    }
+    }/**/
     echo json_encode($json_retorno);
 }
 else if ($id_operacion == 8){//CANCELAR UNA CITA
@@ -251,7 +292,7 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     }
     echo json_encode($json_retorno);
 }
-else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA
+else if ($id_operacion == 9){ //TODO, LISTA DE EVENTOS EN BITACORA, mover a un controlador de bitacora
     $id_paciente = $_GET["id_paciente"];
     $sql = "SELECT entrada_historico.fecha_entrada as fecha_ent, entrada_historico.tipo_entrada as tipo_ent, entrada_historico.descripcion_entrada as descp_ent \n"
     . "FROM entrada_historico \n"
@@ -293,4 +334,77 @@ else if ($id_operacion == 9){ //MIENTRAS TANTO, LISTA DE EVENTOS EN BITACORA
         $json_final["data"]=$json;
         echo json_encode($json_final);
 }
-    
+else if ($id_operacion == 10){//TODO: MOVER A UN CONTROLADOR DE USUARIOS
+    $email = $_POST["mail"];
+    $sql = "SELECT email FROM `paciente` WHERE email LIKE \"$email\"";
+    $bd = connection::getInstance()->getDb();    
+    $pdo = $bd->prepare($sql);
+    $pdo->execute();    
+    $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+    $longitud = count($resultados);
+    $json;
+    //$json[0]["sql"] = $sql;
+    if ($longitud>0){//Hay un email con esa direccion, no se puede guardar
+        $json[0]["estado"] = 0;
+    }
+    else{//Se puede usar ese email
+        $json[0]["estado"] = 1;
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 11){//VALIDAR UNA CITA INDIVIDUAL, SIN PROGRAMA
+    $id_cita = $_POST["id_cita"];
+    $id_programa = $_POST["id_programa"];
+    $id_terapia = $_POST["id_terapia"];
+    $json;
+    if (citas::validar_cita($id_cita)){        
+        if ($id_programa!=false){
+            if (terapias::validar_terapia($id_programa, $id_terapia)){
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita validad con exito";
+            }
+            else{
+                $json[0]["estado"]=0;
+                $json[0]["str_debug"]="Ocurrió un error inesperado";
+            }
+            
+        }
+        else{
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita validad con exito";
+            }
+    }
+    else{
+        $json[0]["estado"]=0;
+        $json[0]["str_debug"]="Ocurrió un error inesperado";
+    }
+    echo json_encode($json);
+}
+else if ($id_operacion == 12){
+    $id_cita = $_POST["id_cita"];
+    $id_programa = $_POST["id_programa"];
+    $id_terapia = $_POST["id_terapia"];
+    $json;
+    if (citas::cancelar_cita($id_cita)){        
+        if ($id_programa!=false){
+            if (terapias::cancelar_cita($id_programa, $id_cita)){
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita cancelada";
+            }
+            else{
+                $json[0]["estado"]=0;
+                $json[0]["str_debug"]="Ocurrió un error inesperado";
+            }
+            
+        }
+        else{
+                $json[0]["estado"]=1;
+                $json[0]["str_debug"]="Cita cancelada";
+            }
+    }
+    else{
+        $json[0]["estado"]=0;
+        $json[0]["str_debug"]="Ocurrió un error inesperado";
+    }
+    echo json_encode($json);
+}

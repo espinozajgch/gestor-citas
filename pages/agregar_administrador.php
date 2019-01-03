@@ -41,7 +41,7 @@ $id_rol = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -110,7 +110,7 @@ $id_rol = "";
 
                                 <div class="form-group col-6 col-md-6">
                                     <small><strong><label for="password">Password</label></strong></small>
-                                    <input type="text" class="form-control" id="password" placeholder="Password" value="<?php echo Admin::obtener_email($bd,$hash_usuario); ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="password" placeholder="Password" value="<?php echo Admin::obtener_password($bd,$hash_usuario); ?>" autocomplete="off">
                                     <div id="error_password" class="text-danger" style="display:none">
                                         <i class="fa fa-exclamation"></i><small> Ingresa tu Password</small>
                                     </div>
@@ -230,9 +230,9 @@ $id_rol = "";
                         type:  'post',
                         dataType: "json",
                         success:  function (data) {
-                            //respuesta = JSON.stringify(data);
+                            respuesta = JSON.stringify(data);
                             console.log(data);
-                            console.log(data.estado);
+                            //console.log(data.estado);
 
                             if(data.estado == 0){
                                 $("#msgerror_danger").show();

@@ -26,7 +26,7 @@
                 $des = "";
                 $hab = "";
 
-                if($admin["estatus"]==0){
+                if($admin["id_eu"]==0){
                     $hab = "display:none";
                 }
                 else{
@@ -41,6 +41,7 @@
                                 <btn class="btn btn-sm btn-success button_on" cod="'.  $admin['id_admin'] .'" title="Deshabilitar" style="'. $hab .'"><i class="fa fa-eye"></i></btn>
                                 <btn class="btn btn-sm btn-danger button_off" cod="'.  $admin['id_admin'] .'" title="Habilitar" style="'. $des .'"><i class="fa fa-eye-slash"></i></btn>
                                 <a class="btn btn-sm btn-info shared" href="agregar_administrador.php?id='.  $admin['hash'] .'" title="Editar"><i class="fa fa-edit"></i></a>
+                                <a class="btn btn-sm btn-danger eliminar" cod="'.  $admin['id_admin'] .'" title="Eliimnar" ><i class="fa fa-trash"></i></a>
                         </tr>';
 
 			}
