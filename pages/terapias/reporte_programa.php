@@ -1,11 +1,7 @@
 <?php
-
-
-
 require('../../vendor/fpdf/invoice.php');
 require_once '../../assets/class/terapias.php';
 require_once '../../assets/class/calendario.php';
-
 
 $numero_invoice             =   1;
 $fecha                      =   date("d/m/Y");
@@ -44,8 +40,10 @@ $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p,
     INNER JOIN programa_terapeutico ON programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico = programa_terapeutico.id_programa_terapeutico 
     INNER JOIN paciente ON programa_terapeutico.paciente_id_paciente = paciente.id_paciente 
     INNER JOIN estatus_pago ep ON ep.id_ep=programa_terapeutico.estatus_pago_id_ep
-    LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm\n"
+    LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm "
     .$condicion ;
+
+echo $sql;
 $bd = connection::getInstance()->getDb();
 //echo $sql;
 $pdo = $bd->prepare($sql);
@@ -61,6 +59,8 @@ $pdf = new PDF_Invoice( 'P', 'mm', 'A4' );
 $fin = false;
 $pagina = 1;
 $i = 0;
+
+if($resultado){
 while (!$fin){
     $margen_der = 20;
     $margen_izq = 10;
@@ -246,6 +246,5 @@ $pdf->Line(10, $pdf->GetPageHeight()-10, $pdf->GetPageWidth()-10, $pdf->GetPageH
 
 
 $pdf->Output();
-?>
 
-?>
+}
