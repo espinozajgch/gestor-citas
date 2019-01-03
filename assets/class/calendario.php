@@ -295,6 +295,7 @@ class calendario {
         //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria        
         $longitud = count($resultados);        
         if ($longitud<1){
+
             $json[0]['N'] = "";
             //$json[0]['Creacion'] = "";            
             $json[0]['Medico'] = "";
@@ -354,7 +355,7 @@ class calendario {
                     <i class=\"fa fa-eye\"></i>
                 </a>
                 <button title='Cancelar' class='btn btn-danger eliminar' onclick ='/*cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)*/'";
-                
+
             if ($resultados[$i]["estado_rm"]=="atendida"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";

@@ -328,6 +328,7 @@ $usuario  = "";
                 }
             });/**/
         }
+
     
     function cancelar_cita(id_cita, id_programa, id_terapia){
         $.post("citas/citas_controlador.php",

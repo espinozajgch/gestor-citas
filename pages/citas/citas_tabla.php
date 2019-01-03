@@ -39,7 +39,6 @@ include_once("../assets/includes/menu.php") ?>
                                 <th>Medico</th>   
                                 <th>Cita</th> 
                                 <th>Estado</th>
-                               
                                 <th>Acciones</th>  
                             </tr>
                         </thead>                                            

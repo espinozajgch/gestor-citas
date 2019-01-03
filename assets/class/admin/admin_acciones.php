@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$password = $_POST["password"];
 				$id_rol = $_POST["id_rol"];
 
-				//$hash = password_hash($password,PASSWORD_DEFAULT) . substr(sha1(time()),0,6);
 				$estado= 1;
 				$res=Admin::agregar($bd, $name, $email, $password, $password, 1, $id_rol);
 			}
@@ -109,6 +108,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	
 }
-	
-
-?>

@@ -407,4 +407,5 @@ else if ($id_operacion == 12){
         $json[0]["str_debug"]="Ocurrió un error inesperado";
     }
     echo json_encode($json);
+
 }

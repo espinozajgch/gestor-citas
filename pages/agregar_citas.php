@@ -245,6 +245,7 @@ $rut_paciente = "";
 input:checked + .slider {
   background-color: #5cb85c;
 }
+<<<<<<< HEAD
 
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
@@ -256,6 +257,19 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+=======
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+>>>>>>> 7a29540f1360c741dcb6e1a3b7034671e890157c
 /* Rounded sliders */
 .slider.round {
   border-radius: 34px;
@@ -435,7 +449,11 @@ input:checked + .slider:before {
                                     </div>
 
 
+<<<<<<< HEAD
                                     <div class="form-group col-4 col-md-4">
+=======
+                                    <div class="form-group col-6 col-md-6">
+>>>>>>> 7a29540f1360c741dcb6e1a3b7034671e890157c
                                         <small><strong><label for="celular">Celular</label></strong></small>
                                         <input id="celular" type="text" class="form-control" placeholder="Celular" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1" disabled>
                                         <div id="error_email" class="text-danger" style="display:none">
@@ -524,9 +542,54 @@ input:checked + .slider:before {
                                             <div id="error_iva" class="text-danger" style="display:none">
                                                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                             </div>
+<<<<<<< HEAD
                                     </div> 
 
 
+=======
+                                    </div>
+                                     <div class="form-row">    
+                                    <div class="form-group col-6 col-sm-6 col-md-6" id="pago">
+                                        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
+                                        ?>
+                                        <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
+                                            <select class="form-control" id="metodo_pago">
+                                                <?php
+                                                $bd = connection::getInstance()->getDb();
+                                                $sql = "SELECT * FROM `metodos_pago`";
+                                                $pdo = $bd->prepare($sql);
+                                                $pdo->execute();
+                                                $resultado = $pdo->fetchall(pdo::FETCH_ASSOC);
+                                                if ($resultado){
+                                                    $longitud = count($resultado);
+                                                    $string = "";                                                            
+                                                    for ($i=0; $i < $longitud; $i++){
+                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\">".$resultado[$i]["nombre"]."</option>";
+                                                    }
+                                                    echo $string;
+                                                }
+                                                else{
+                                                        echo "<option> Ocurrío un error </option>";
+                                                }
+                                                ?>
+                                            </select>
+                                            <div id="error_iva" class="text-danger" style="display:none">
+                                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                            </div>
+                                    </div>
+                                         <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias" style="display: none;">  
+                                        <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
+                                        <select class="form-control js-data-example-ajax" id="terapias_individual" onchange="set_terapia()"></select>
+                                        <div hidden="true">
+                                            <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
+                                        </div>
+
+
+                                            <div id="error_terapias" class="text-danger" style="display:none">
+                                                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                            </div>
+                                    </div> 
+>>>>>>> 7a29540f1360c741dcb6e1a3b7034671e890157c
                                          
                                     <div class="form-group col-12 col-sm-12 col-md-12">
                                         <small><strong><label for="observaciones">Observaciones</label></strong></small>
@@ -539,6 +602,13 @@ input:checked + .slider:before {
 
                                 
                            
+                        </div>
+
+                        <div id="advertencia_general" class="col-lg-12 col-md-12 col-xs-12 col-sm-12" hidden="true">
+                            <div id="alerta">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div id="texto_advertencia_general"></div>
+                             </div>                    
                         </div>
 
                         <div id="advertencia_general" class="col-lg-12 col-md-12 col-xs-12 col-sm-12" hidden="true">
