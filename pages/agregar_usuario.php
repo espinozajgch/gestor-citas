@@ -124,7 +124,7 @@ $estilo_par = "";
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="name">Identificacion</label></strong></small>
-                                         <input id="doc" type="text" class="form-control" placeholder="Identificacion" value="<?php echo Pacientes::obtener_identificacion($bd,$hash_usuario) ?>">
+                                         <input id="doc" type="text" class="form-control" placeholder="Identificacion" value="<?php echo strtoupper(Pacientes::obtener_identificacion($bd,$hash_usuario)) ?>">
                                         <div id="error_doc" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
@@ -132,7 +132,7 @@ $estilo_par = "";
 
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="name">Nombres</label></strong></small>
-                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo Pacientes::obtener_nombre($bd,$hash_usuario) ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo strtoupper(Pacientes::obtener_nombre($bd,$hash_usuario)) ?>" autocomplete="off">
                                         <div id="error_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
                                         </div>
@@ -140,14 +140,14 @@ $estilo_par = "";
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="last_name">Apellido Paterno</label></strong></small>
-                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellidop($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="last_name" placeholder="Apellido" value="<?php echo strtoupper(Pacientes::obtener_apellidop($bd,$hash_usuario)) ?>" autocomplete="off">
                                         <div id="error_last_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
                                     </div>
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="second_name">Apellido Materno</label></strong></small>
-                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php echo Pacientes::obtener_apellidom($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="second_name" placeholder="Apellido" value="<?php echo strtoupper(Pacientes::obtener_apellidom($bd,$hash_usuario)) ?>" autocomplete="off">
                                         <div id="error_second_name" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
                                         </div>
@@ -158,7 +158,7 @@ $estilo_par = "";
                                     
                                     <div class="form-group col-6 col-sm-6 col-md-6">
                                         <small><strong><label for="email">Email</label></strong></small>
-                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php echo Pacientes::obtener_email($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="email" placeholder="Email" value="<?php echo strtoupper(Pacientes::obtener_email($bd,$hash_usuario)) ?>" autocomplete="off">
                                         <div id="error_email" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
                                         </div>
@@ -182,7 +182,7 @@ $estilo_par = "";
 
                                     <div class="form-group col-12 col-sm-12 col-md-12">
                                         <small><strong><label for="direccion">Direccion</label></strong></small>
-                                        <textarea row="3" class="form-control" id="direccion"><?php echo Pacientes::obtener_direccion($bd,$hash_usuario); ?></textarea>
+                                        <textarea row="3" class="form-control" id="direccion"><?php echo strtoupper(Pacientes::obtener_direccion($bd,$hash_usuario)) ?></textarea>
                                         <div id="error_direccion" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>

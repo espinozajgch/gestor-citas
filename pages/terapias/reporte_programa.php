@@ -83,7 +83,7 @@ while (!$fin){
     $pdf->agregarImagen($x_actual, $y_actual, 100, 100, "../../dist/img/logo_salud.jpg", 'R'); 
     $x_actual = $x_inicio;
     $x_actual = $x_fin - 30;
-    $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  date("d-m-Y"),"Emisión");
+    $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  date("d-m-Y H:m:s"),"Fecha y Hora");
     $x_actual = $x_fin - 30;
     //$pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  $pagina,"Página");
     $y_actual += 23;

@@ -551,6 +551,33 @@
 		/**
 		retorna 
 		*/
+		public static function eliminar($bd, $id_paciente)
+		{
+			// Sentencia INSERT
+		   	$consulta = "DELETE FROM paciente WHERE id_paciente = ". $id_paciente;
+		   	//echo $consulta;
+		   	
+		   	try {
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute();
+
+				if($resultado){
+					return 1;       	
+				}
+				return 0;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			}
+		}
+
+		/**
+		retorna 
+		*/
 		public static function cambiar_contraseña($bd, $email, $password, $id_paciente){
 			
 			// Sentencia INSERT

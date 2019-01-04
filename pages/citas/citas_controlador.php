@@ -157,7 +157,7 @@ else if($id_operacion == 3){//Devolver los médiocos para el pillbox
     $json;
     for($i=0; $i<$longitud;$i++){
         $json[$i]["id"] = $resultado[$i]["id_admin"];
-        $json[$i]["text"] = $resultado[$i]["nombre"];
+        $json[$i]["text"] = strtoupper($resultado[$i]["nombre"]);
         //$json[$i]["selected"] = $resultado[$i]["id_medico"]=true;
         
     }
@@ -218,12 +218,12 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
     for ($i=0; $i<$longitud; $i++){
         $json[0]['estado']=1;
         
-        $json[$i+1]['rut']            =   $resultados[$i]["rut"];
+        $json[$i+1]['rut']            =   strtoupper($resultados[$i]["rut"]);
         $json[$i+1]['fecha_inicio']   =   calendario::formatear_fecha(1,$resultados[$i]["fecha_inicio"]);
-        $json[$i+1]['hora_inicio']    =   $resultados[$i]["hora_inicio"];
-        $json[$i+1]['hora_fin']       =   $resultados[$i]["hora_fin"];
-        $json[$i+1]['medio_contacto'] =   $resultados[$i]["medio_contacto_id_mc"];
-        $json[$i+1]['observaciones']  =   $resultados[$i]["observaciones"];
+        $json[$i+1]['hora_inicio']    =   strtoupper($resultados[$i]["hora_inicio"]);
+        $json[$i+1]['hora_fin']       =   strtoupper($resultados[$i]["hora_fin"]);
+        $json[$i+1]['medio_contacto'] =   strtoupper($resultados[$i]["medio_contacto_id_mc"]);
+        $json[$i+1]['observaciones']  =   strtoupper($resultados[$i]["observaciones"]);
         $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
     }
     //FORMATO de json
@@ -315,15 +315,15 @@ else if ($id_operacion == 9){ //TODO, LISTA DE EVENTOS EN BITACORA, mover a un c
         $longitud = count($resultados);
         //echo $longitud;   
         if ($longitud<1){
-            $json[0]['N'] = "No hay información que mostrar";
+            $json[0]['N'] = "";
             $json[0]['Fecha'] = "";
             $json[0]['Tipo'] = "";
             $json[0]['Descripcion'] = "";            
         }
         for ($i=0; $i<$longitud; $i++){            
-            $json[$i]['Descripcion'] = $resultados[$i]["descp_ent"];
-            $json[$i]['Tipo'] = $resultados[$i]["tipo_ent"];
-            $json[$i]['Fecha'] = $resultados[$i]["fecha_ent"];
+            $json[$i]['Descripcion'] = strtoupper($resultados[$i]["descp_ent"]);
+            $json[$i]['Tipo'] = strtoupper($resultados[$i]["tipo_ent"]);
+            $json[$i]['Fecha'] = strtoupper($resultados[$i]["fecha_ent"]);
             $json[$i]['N'] = ($i+1);
             //$json[$i]['N'] =  $i;
         }

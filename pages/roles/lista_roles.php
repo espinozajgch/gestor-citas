@@ -28,7 +28,7 @@
 	            
 				$lista .= ' <tr id="'. $rol["id_rol"] .'">
                             <td class="center text-center pull-center">'. $rol["id_rol"] .'</td>
-                            <td>'. $rol["rol"] .'</td>
+                            <td>'. strtoupper($rol["rol"]) .'</td>
                             <td class="center text-center pull-center" style="width: 15%">
                                 <a class="btn btn-sm btn-info shared" href="agregar_rol.php?id='.  $rol["id_rol"] .'" title="Editar"><i class="fa fa-edit"></i></a>
                                 <a class="btn btn-sm btn-danger eliminar" cod="'.  $rol["id_rol"] .'" title="Eliimnar" ><i class="fa fa-trash"></i></a>

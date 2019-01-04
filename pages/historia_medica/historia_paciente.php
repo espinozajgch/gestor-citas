@@ -19,6 +19,13 @@ if(isset($_REQUEST['id_hm'])){
 
 	$fijo = Pacientes::obtener_telefono($bd, $id_paciente);
 	$celular = Pacientes::obtener_celular($bd, $id_paciente);
+
+	if($fijo == "")
+		$telefonos = $celular;
+	else	
+	if($celular == "")
+		$telefonos = $fijo;
+	else
 	$telefonos = $fijo . " / " . $celular;
 
 	$rut = Pacientes::obtener_identificacion($bd, $id_paciente);
@@ -92,15 +99,15 @@ $pdf->SetTitle("Reporte Historico");;
 //$pdf->SetTextColor(0,255,0);
 
 //$pdf->Image('../../dist/img/logo.jpg',10,10,150,50,-300,'JPG');
-$pdf->Image('../../dist/img/logo.jpg' , 10 ,10, 100 , 20,'JPG', 'http://www.saludintegralcentro.cl');
+$pdf->Image('../../dist/img/logo_salud.jpg' , 10 ,10, 100 , 21,'JPG', 'http://www.saludintegralcentro.cl');
 $pdf->SetFont('Arial','',11);
 //$pdf->Cell(40,10,$id_hm);
 //$pdf->Cell(10,100,$id_paciente,0,0,'C');
 
-$pdf->SetXY(140,15);
+$pdf->SetXY(147,12);
 $pdf->Cell(40,10,"Fecha y Hora",0,0,'C');
 
-$pdf->SetXY(140,22);
+$pdf->SetXY(145,19);
 $pdf->Cell(41,10,$fecha,0,0,'R');
 
 $pdf->SetXY(15,45);	
@@ -139,8 +146,8 @@ $pdf->SetTextColor(3, 3, 3); //Color del texto: Negro
 $pdf->Cell(180,10,$texto,0,0,'C',true);
 //s$pdf->Line(90, 68, 180, 68);
 
-$pdf->SetFont('Arial','',11);
-$pdf->SetXY(15,95);
+$pdf->SetFont('Arial','',8);
+$pdf->SetXY(15,90);
 $pdf->MultiCell(180,6,$historia,0,'J');
 
 if($id==3){

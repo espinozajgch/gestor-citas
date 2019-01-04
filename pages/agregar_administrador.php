@@ -94,7 +94,7 @@ $id_rol = "";
                             <div class="col-sm-12 col-md-8 my-3"> 
                                 <div class="form-group col-6 col-sm-6 col-md-6">
                                     <small><strong><label for="name">Nombre</label></strong></small>
-                                    <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo Admin::obtener_nombre($bd,$hash_usuario) ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="name" placeholder="Nombre" value="<?php  echo strtoupper(Admin::obtener_nombre($bd,$hash_usuario)) ?>" autocomplete="off">
                                     <div id="error_name" class="text-danger" style="display:none">
                                         <i class="fa fa-exclamation"></i><small> Ingresa tu nombre</small>
                                     </div>
@@ -102,7 +102,7 @@ $id_rol = "";
 
                                 <div class="form-group col-6 col-md-6">
                                     <small><strong><label for="email">Email</label></strong></small>
-                                    <input type="email" class="form-control" id="email" placeholder="Email" value="<?php echo Admin::obtener_email($bd,$hash_usuario); ?>" autocomplete="off">
+                                    <input type="email" class="form-control" id="email" placeholder="Email" value="<?php echo strtoupper(Admin::obtener_email($bd,$hash_usuario)) ?>" autocomplete="off">
                                     <div id="error_email" class="text-danger" style="display:none">
                                         <i class="fa fa-exclamation"></i><small> Ingresa tu email</small>
                                     </div>
@@ -110,7 +110,7 @@ $id_rol = "";
 
                                 <div class="form-group col-6 col-md-6">
                                     <small><strong><label for="password">Password</label></strong></small>
-                                    <input type="text" class="form-control" id="password" placeholder="Password" value="<?php echo Admin::obtener_password($bd,$hash_usuario); ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="password" placeholder="Password" value="<?php echo strtoupper(Admin::obtener_password($bd,$hash_usuario)) ?>" autocomplete="off">
                                     <div id="error_password" class="text-danger" style="display:none">
                                         <i class="fa fa-exclamation"></i><small> Ingresa tu Password</small>
                                     </div>
@@ -118,7 +118,7 @@ $id_rol = "";
 
                                 <div class="form-group col-6 col-sm-6 col-md-6">
                                     <small><strong><label for="iva">Rol</label></strong></small>
-                                        <?php echo admin::obtener_listado_roles($bd, $id_rol) ?>
+                                        <?php echo Admin::obtener_listado_roles($bd, $id_rol) ?>
                                         <div id="error_iva" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>

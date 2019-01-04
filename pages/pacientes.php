@@ -123,6 +123,29 @@ $usuario  = "";
     </div>
     <!-- /#wrapper -->
 
+        <!-- Modal Eliminar -->
+    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- jQuery -->
     <script src="../vendor/jquery/jquery.min.js"></script>
 
@@ -165,23 +188,23 @@ $usuario  = "";
             });
 
             $("#loader-wrapper").fadeOut("slow");
-        });
+            });
 
-        $('.button_on').click(function(){
-            idrow = $(this).attr("cod");
-            estado=1;
-            cambiar_estatus(idrow, estado);
+            $('.button_on').click(function(){
+                idrow = $(this).attr("cod");
+                estado=1;
+                cambiar_estatus(idrow, estado);
 
-        });
+            });
 
-        $('.button_off').click(function(){
-            idrow = $(this).attr("cod");
-            estado=0;
-            cambiar_estatus(idrow, estado);
-            
-        });
+            $('.button_off').click(function(){
+                idrow = $(this).attr("cod");
+                estado=0;
+                cambiar_estatus(idrow, estado);
+                
+            });
 
-        function cambiar_estatus(id_admin, estado){
+            function cambiar_estatus(id_admin, estado){
             
             console.log(estado);
             $.ajax({
@@ -206,6 +229,42 @@ $usuario  = "";
                    // window.location.href="cuenta.php?success=no";
                 }
             });/**/
+
+        $(".eliminar_cod").click(function(e){
+            id = $(this).attr("cod");
+            console.log("dd"+id);
+            $('#modal_trash').find(".modal-body").html("<strong> N# "+ id+"</strong>");
+        });
+
+        $('#erase').click(function(e){
+            eliminar(id);
+            //console.log(id);
+        });
+
+        function eliminar(id){
+
+            $.ajax({
+                data:  {accion: 7,id : id},
+                url:   '../assets/class/usuario/usuario_acciones.php',
+                type:  'post',
+                dataType: "json",
+                success:  function (data) {
+
+                    console.log(data);
+                    //$('#modal_trash').modal('hide');
+                    if(data.estado == 0){
+                        //$("#alert_wrong").show();
+                    }
+                    else{
+                        window.location.href="comuna.php";
+                    }
+                },
+                error: function(data){
+                    console.log(data);
+                   // window.location.href="cuenta.php?success=no";
+                }
+            });/**/
+        }
         }
     </script>
 

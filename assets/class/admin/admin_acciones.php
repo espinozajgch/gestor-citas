@@ -46,10 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		else
 		if($accion==3){
 			//ELIMINAR ADMINISTRADOR
-			$id_admin = $_POST["hash_usuario"];
+			$id_admin = $_POST["id"];
 
 			$estado= 1;
-			$res=Admin::eliminar($bd, $id_pregunta);
+			$res=Admin::eliminar_admin($bd, $id_admin);
 		}
 		else
 		if($accion==4){

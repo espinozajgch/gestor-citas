@@ -31,9 +31,9 @@
             foreach ($datos as $historia) {
                 $des = "";
                 $hab = "";
-                $indicaciones =  substr($historia["indicaciones"],0,50);
-                $diagnostico =  substr($historia["diagnostico"],0,50);
-                $diagnostico_general =  substr($historia["descripcion"],0,50);
+                $indicaciones =  strtoupper(substr($historia["indicaciones"],0,50));
+                $diagnostico =  strtoupper(substr($historia["diagnostico"],0,50));
+                $diagnostico_general =  strtoupper(substr($historia["descripcion"],0,50));
 
                 $nombre = $historia["nombre"];
                 $nombre .= " " . $historia["apellidop"];
@@ -45,12 +45,12 @@
                 $cantidad = 1; //  Usuarios::obtener_cant_publicaciones_by_user($bd, $hash_usuario);
 
                 $lista .= ' <tr id='.$historia['id_hm'].'>
-                            <td class="center text-center pull-center">'. $historia["fecha"] .'</td>
+                            <td class="center text-center pull-center" style="width: 15%">'. $historia["fecha"] .'</td>
                             <td>'. $diagnostico_general .'</td>
                             <td>'. $diagnostico .'</td>
                             <td>'. $indicaciones .'</td>
-                            <td>'. $nombre .'</td>
-                            <td class="center text-center pull-center">
+                            <td>'. strtoupper($nombre) .'</td>
+                            <td class="center text-center pull-center" style="width: 20%">
                                 
                                 <a class="btn btn-sm btn-info shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=1" target="_Blank" title="Descargar Diagnostico General"><i class="fa fa-download"></i></a>
                                 <a class="btn btn-sm btn-warning shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=2" target="_Blank" title="Descargar Diagnostico"><i class="fa fa-download"></i></a>

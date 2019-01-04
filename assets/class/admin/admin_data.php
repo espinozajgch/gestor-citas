@@ -427,6 +427,33 @@
 
 		/**
 		retorna 
+		**/
+		public static function eliminar_admin($bd, $hash)
+		{
+			// Sentencia INSERT
+		   	$consulta = "DELETE FROM admin WHERE id_admin = ". $hash;
+		   	//echo $consulta;
+		   	
+		   	try {
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute();
+
+				if($resultado){
+					return 1;       	
+				}
+				return 0;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			}
+		}/**/
+
+		/**
+		retorna 
 		*/
 		public static function editar_notificaciones($bd, $campo){
 			

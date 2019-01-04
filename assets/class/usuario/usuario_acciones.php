@@ -192,6 +192,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::eliminar_historia($bd, $id_hm);
 			$estado = 1;
 		}
+		else
+		if($accion==11){
+			
+			//ELIMINAR HISTORIA
+			$id_paciente = $_POST["id"];
+			
+			$res=pacientes::eliminar($bd, $id_paciente);
+			$estado = 1;
+		}
         else if ($accion==-1){
             $estado = 0.1;
             $id_hm  = 0;

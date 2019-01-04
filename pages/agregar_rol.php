@@ -92,7 +92,7 @@ $visibilidad = "style='display:none';";
                 <br>      
                     <div class="form-group ">
                         <label class="control-label" for="inputSuccess">Rol</label>
-                        <input class="form-control" type="text" id="strperfil" name="strperfil" value="<?php echo Admin::obtener_nombre_rol($bd, $id_rol_nuevo)?>" required>
+                        <input class="form-control" type="text" id="strperfil" name="strperfil" value="<?php echo strtoupper(Admin::obtener_nombre_rol($bd, $id_rol_nuevo))?>" required>
 
                     </div>  
                     <div class="pull-right text-right ">

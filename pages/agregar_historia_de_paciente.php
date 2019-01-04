@@ -27,9 +27,9 @@ $id_hm = "";
 
     if(isset($_GET["id_hm"])){
         $id_hm = $_GET["id_hm"];
-        $diagnostico_general = pacientes::obtener_historia($bd,$id_hm);
-        $diagnostico = pacientes::obtener_diagnostico($bd,$id_hm);
-        $indicaciones = pacientes::obtener_indicaciones($bd, $id_hm);
+        $diagnostico_general = strtoupper(pacientes::obtener_historia($bd,$id_hm));
+        $diagnostico = strtoupper(pacientes::obtener_diagnostico($bd,$id_hm));
+        $indicaciones = strtoupper(pacientes::obtener_indicaciones($bd, $id_hm));
         $accion = 9;
 
         if(isset($_GET["id_paciente"]))
