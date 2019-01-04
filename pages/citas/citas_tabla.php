@@ -33,8 +33,8 @@ include_once("../assets/includes/menu.php") ?>
                                 <th>N</th>
                                 <!--th>Creacion</th-->
                                 <th>Fecha</th>
-                                <th>Inicio</th>
-                                <th>Fin</th>
+                                <th>Horarioth>
+                                
                                 <th>Paciente</th>
                                 <th>Medico</th>   
                                 <th>Cita</th> 

@@ -253,7 +253,6 @@ $usuario  = "";
                     /*{"data": "Creacion"},*/
                     {"data": "Fecha"},
                     {"data": "Hora"},
-                    {"data": "Hora2"},
                     {"data": "Paciente"},
                     {"data": "Medico"},    
                     {"data": "Cita"},                    
@@ -283,7 +282,7 @@ $usuario  = "";
         });
     }
 
-    $("a.eliminar").on('click',function(e){
+    $("a.eliminar-cod").on('click',function(e){
 
             id = $(this).attr("cod");
             //console.log(id);

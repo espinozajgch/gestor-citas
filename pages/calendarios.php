@@ -36,7 +36,7 @@ $bd;
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
 
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
@@ -77,7 +77,7 @@ $bd;
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Calendarios</h1>
+                    <!--h1 class="page-header">Calendarios</h1-->
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
