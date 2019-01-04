@@ -26,7 +26,7 @@ require_once '../assets/class/calendario.php';
 
                 </div>
                 <div class="col-lg-1 text-right pull-right">
-                   <a class="btn btn-sm btn-success shared" href="agregar_citas.php" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
+                   <a class="btn btn-sm btn-success shared" href="agregar_citas.php?nueva=true" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
                 </div>                
                 <div class="col-lg-1 text-right pull-right">
                    <a class="btn btn-sm btn-success shared" href="citas.php?opcion=1&vista=<?php echo $_GET["vista"]*-1;?>" title="Cambiar vista"><i class="fa fa-calendar fa-bg"></i></a>

@@ -44,14 +44,13 @@ $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p,
     LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm "
     .$condicion ;
 
-echo $sql;
+//echo $sql;
 $bd = connection::getInstance()->getDb();
 //echo $sql;
 $pdo = $bd->prepare($sql);
 $pdo->execute();
 $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);   
 
-//echo "<br> paciente: $id_paciente, programa: $id_programa";
 
 //FPDF
 $pdf = new PDF_Invoice( 'P', 'mm', 'A4' );
@@ -80,16 +79,17 @@ while (!$fin){
     $pdf->AddPage();
 
     //Agregar el logo
-    $x_actual = $x_fin - 135;
+    $x_actual = $x_fin - 180;
     $pdf->agregarImagen($x_actual, $y_actual, 100, 100, "../../dist/img/logo_salud.jpg", 'R'); 
     $x_actual = $x_inicio;
+    $x_actual = $x_fin - 30;
     $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  date("d-m-Y"),"Emisión");
     $x_actual = $x_fin - 30;
-    $pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  $pagina,"Página");
+    //$pdf->agregar_rectangulo_circular_texto_etiqueta($x_actual, $y_actual, 40, 20, 255, 255, 255,  $pagina,"Página");
     $y_actual += 23;
     $x_actual = $x_inicio;
     //La página se agrega de ultimo
-    $pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 5, 124, 239, 130, "Agende su hora al: 226328948");
+    //$pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 5, 124, 239, 130, "Agende su hora al: 226328948");
     $y_actual+=10;
     $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
     $y_actual+=5;
@@ -220,25 +220,25 @@ while (!$fin){
 }
 
 
-$pdf->SetFont('Arial','',10);
+/*$pdf->SetFont('Arial','',10);
 // Número de página
-$pdf->SetXY(10, $y+10);
+$pdf->SetXY(10, $y+30);
 $pdf->Cell(0,10,'CENTRO DE TERAPIAS ALTERNATIVAS SALUD INTEGRAL',0,0,'L');
 
-$pdf->SetXY(10, $y+14);
+$pdf->SetXY(10, $y+34);
 $pdf->Cell(0,10,'Santa Lucia 118 - Santiago',0,0,'L');
 
-$pdf->SetXY(10, $y+18);
+$pdf->SetXY(10, $y+38);
 $pdf->Cell(0,10,'http://www.saludintegralcentro.cl',0,0,'L');
 
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+10);
+$pdf->SetXY($pdf->GetPageWidth()-25, $y+30);
 $pdf->Cell(0,10,'Fono: 226328948',0,0,'R');
 
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+14);
+$pdf->SetXY($pdf->GetPageWidth()-25, $y+34);
 $pdf->Cell(0,10,'Call Center:226328960',0,0,'R');
 
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+18);
-$pdf->Cell(0,10,'saludintegralcentro@gmail.com',0,0,'R');
+$pdf->SetXY($pdf->GetPageWidth()-25, $y+38);
+$pdf->Cell(0,10,'saludintegralcentro@gmail.com',0,0,'R');*/
 
 $y+=26;        
 $pdf->Line(10, $y, $pdf->GetPageWidth()-10, $y);

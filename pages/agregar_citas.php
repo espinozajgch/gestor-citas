@@ -488,6 +488,14 @@ input:checked + .slider:before {
                                         </div>
                                     </div>
 
+                                    <div class="form-group col-4 col-md-4">
+                                        <small><strong><label for="referencia">Estatus Pago</label></strong></small>
+                                        <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
+                                        <div id="error_email" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias" style="display: none;">  
                                         <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
                                         <select class="form-control js-data-example-ajax" id="terapias_individual" onchange="set_terapia()"></select>

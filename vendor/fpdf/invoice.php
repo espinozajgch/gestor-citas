@@ -734,5 +734,34 @@ function temporaire( $texte )
 	$this->SetTextColor(0,0,0);
 }
 
+// Pie de página
+    function Footer()
+    {
+        // Posición: a 1,5 cm del final
+        //$this->SetY(-35);
+        // Arial italic 8
+        $this->SetFont('Arial','',10);
+        // Número de página
+        $this->SetXY(10, -35);
+        $this->Cell(0,10,'CENTRO DE TERAPIAS ALTERNATIVAS SALUD INTEGRAL',0,0,'L');
+
+        $this->SetXY(10, -28);
+        $this->Cell(0,10,'Santa Lucia 118 - Santiago',0,0,'L');
+
+        $this->SetXY(10, -21);
+        $this->Cell(0,10,'http://www.saludintegralcentro.cl',0,0,'L');
+
+        $this->SetXY(10, -35);
+        $this->Cell(0,10,'Fono: 226328948',0,0,'R');
+
+        $this->SetXY(10, -28);
+        $this->Cell(0,10,'Call Center:226328960',0,0,'R');
+
+        $this->SetXY(10, -21);
+        $this->Cell(0,10,'saludintegralcentro@gmail.com',0,0,'R');
+
+        
+    }
+
 }
 ?>
