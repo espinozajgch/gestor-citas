@@ -27,7 +27,7 @@ $usuario  = "";
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard - BuscaHogar</title>
+    <title>Dashboard</title>
     <link rel="icon" href="../../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -100,13 +100,7 @@ $usuario  = "";
                 <br>                
                 
                     <?php
-                    if (isset($_GET["opcion"])==1){
-                        include_once("pacientes/historial_paciente_tabla.php");
-                    }
-                    else{
                         include_once("pacientes/lista_pacientes.php") ;
-                    }
-                    
                     ?>
                 </div>
             </div>
@@ -167,22 +161,6 @@ $usuario  = "";
     <script>
 
         $(document).ready(function() {
-            
-           
-            $('#tabla_dinamica').DataTable({  
-                responsive: true,
-                "ajax":"citas/citas_controlador.php?id_operacion=9&id_paciente="<?php if (isset($_GET["id_paciente"]))echo "+".$_GET["id_paciente"];?>,
-                "columns": [
-                    {"data": "N"},
-                    {"data": "Fecha"},                    
-                    {"data": "Tipo"},                    
-                    {"data": "Descripcion"}
-                ]
-            });
-    
-            
-            
-            
             $('#dataTables-example').DataTable({
                 responsive: true
             });
@@ -205,67 +183,57 @@ $usuario  = "";
             });
 
             function cambiar_estatus(id_admin, estado){
-            
-            console.log(estado);
-            $.ajax({
-                data:  {accion: 7,id : id_admin, estado:estado},
-                url:   '../assets/class/usuario/usuario_acciones.php',
-                type:  'post',
-                dataType: "json",
-                success:  function (data) {
-                    //respuesta = JSON.stringify(data);
-                    console.log(data);
-                    //$("#modal_trash").modal('hide');
-                    window.location.href="pacientes.php";
-
-                    /*if(data.estado == 0){
+                
+                //console.log(estado);
+                $.ajax({
+                    data:  {accion: 7,id : id_admin, estado:estado},
+                    url:   '../assets/class/usuario/usuario_acciones.php',
+                    type:  'post',
+                    dataType: "json",
+                    success:  function (data) {
+                        //respuesta = JSON.stringify(data);
+                        console.log(data);
+                        //$("#modal_trash").modal('hide');
+                        window.location.href="pacientes.php";
+                    },
+                    error: function(data){
+                        console.log(data);
                     }
-                    else{
-                       //console.log(data);
-                    }*/
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
             });/**/
+        }    
+            $(".eliminar_cod").click(function(e){
+                id = $(this).attr("cod");
+                //console.log("dd"+id);
+                $('#modal_trash').find(".modal-body").html("<strong> N# "+ id+"</strong>");
+            });
 
-        $(".eliminar_cod").click(function(e){
-            id = $(this).attr("cod");
-            console.log("dd"+id);
-            $('#modal_trash').find(".modal-body").html("<strong> N# "+ id+"</strong>");
-        });
+            $('#erase').click(function(e){
+                eliminar(id);
+            });
 
-        $('#erase').click(function(e){
-            eliminar(id);
-            //console.log(id);
-        });
+            function eliminar(id){
 
-        function eliminar(id){
+                $.ajax({
+                    data:  {accion: 11,id : id},
+                    url:   '../assets/class/usuario/usuario_acciones.php',
+                    type:  'post',
+                    dataType: "json",
+                    success:  function (data) {
 
-            $.ajax({
-                data:  {accion: 7,id : id},
-                url:   '../assets/class/usuario/usuario_acciones.php',
-                type:  'post',
-                dataType: "json",
-                success:  function (data) {
-
-                    console.log(data);
-                    //$('#modal_trash').modal('hide');
-                    if(data.estado == 0){
-                        //$("#alert_wrong").show();
+                        //console.log(data);
+                        if(data.estado == 0){
+                        }
+                        else{
+                            window.location.href="pacientes.php";
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                       // window.location.href="cuenta.php?success=no";
                     }
-                    else{
-                        window.location.href="comuna.php";
-                    }
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
-        }
+                });/**/
+            }
+       
     </script>
 
 </body>

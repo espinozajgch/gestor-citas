@@ -2,6 +2,7 @@
 	<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Identificacion</th>
                 <th>Nombre</th>
                 <th>Telefono</th>
@@ -12,6 +13,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th>#</th>
                 <th>Identificacion</th>
                 <th>Nombre</th>
                 <th>Telefono</th>
@@ -47,6 +49,7 @@
                 //Usuarios::obtener_cant_publicaciones_by_user($bd, $hash_usuario);
 
 				$lista .= ' <tr">
+                            <td>'. strtoupper($particulares["id_paciente"]) .'</td>
                             <td>'. strtoupper($particulares["RUT"]) .'</td>
                             <td>'. strtoupper($particulares["nombre"] .' '. $particulares["apellidop"] .' '. $particulares["apellidom"]) .'</td>
                             <td>'. strtoupper($particulares["celular"]) .'</td>

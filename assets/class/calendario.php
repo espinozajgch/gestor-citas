@@ -95,33 +95,33 @@ class calendario {
         //Consulta para obtener los dias feriados
         if ($id_medico){
             $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-    . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-    . "FROM `admin` \n"
-    . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-    . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-    . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-    . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        WHERE ".$id_medico." 
-            AND reserva_medica.estado NOT LIKE \"finalizada\"
-            AND reserva_medica.estado NOT LIKE \"atendida\"
-            AND reserva_medica.estado NOT LIKE \"cancelado\"
-            AND admin.estado LIKE \"activo\" 
-            GROUP BY reserva_medica.id_rm";
-        }
-        else{
-            $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-    . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-    . "FROM `admin` \n"
-    . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-    . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-    . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-    . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-        AND reserva_medica.estado NOT LIKE \"finalizada\"
-            AND reserva_medica.estado NOT LIKE \"atendida\"
-            AND reserva_medica.estado NOT LIKE \"cancelado\"
-        AND admin.estado LIKE \"activo\"
-        GROUP BY reserva_medica.id_rm";
-        }
+                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
+                . "FROM `admin` \n"
+                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
+                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
+                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
+                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                    WHERE ".$id_medico." 
+                        AND reserva_medica.estado NOT LIKE \"finalizada\"
+                        AND reserva_medica.estado NOT LIKE \"atendida\"
+                        AND reserva_medica.estado NOT LIKE \"cancelado\"
+                        AND admin.estado LIKE \"activo\" 
+                        GROUP BY reserva_medica.id_rm";
+                    }
+                    else{
+                        $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
+                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
+                . "FROM `admin` \n"
+                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
+                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
+                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
+                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                    AND reserva_medica.estado NOT LIKE \"finalizada\"
+                        AND reserva_medica.estado NOT LIKE \"atendida\"
+                        AND reserva_medica.estado NOT LIKE \"cancelado\"
+                    AND admin.estado LIKE \"activo\"
+                    GROUP BY reserva_medica.id_rm";
+                    }
         
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -273,19 +273,21 @@ class calendario {
         
         //echo $sql;
         $sql ='SELECT rm.id_rm as id_rm, rm.fecha_inicio as fecha_inicio, date(rm.fecha_hora_reserva) as fecha_r,
-            rm.hora_inicio as hora_inicio,rm.hora_fin, rm.estado as estado_rm, 
+            rm.hora_inicio as hora_inicio,rm.hora_fin, rm.estado as estado_rm, ep.nombre as estado_ep,
             p.nombre as nombre, p.apellidop as apellidop, 
             p.apellidom, GROUP_CONCAT(a.nombre) as nombre_medico ,
             pt.descripcion_programa_terapeutico as nombre_programa, pt.id_programa_terapeutico as id_programa,
-            ptt.terapia_id_terapia as id_terapia, ptt.id_programa_tiene_terapia as ptt_id
+            ptt.terapia_id_terapia as id_terapia, ptt.id_programa_tiene_terapia as ptt_id, t.nombre_terapia
             FROM reserva_medica rm 
+            INNER JOIN estatus_pago ep ON ep.id_ep=rm.estado
             INNER JOIN paciente_tiene_reserva ptr ON rm.id_rm=ptr.reserva_medica_id_rm 
             INNER JOIN paciente p ON ptr.paciente_id_paciente=p.id_paciente 
             INNER JOIN medico_tiene_reserva mtr ON mtr.reserva_medica_id_rm=rm.id_rm 
             INNER JOIN admin a ON a.id_admin=mtr.admin_id_admin 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.reserva_medica_id_rm = rm.id_rm
             LEFT JOIN programa_terapeutico pt ON ptt.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico
-            WHERE rm.estado NOT LIKE "cancelado" 
+            LEFT JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia
+            WHERE rm.estado !=5 
             GROUP BY rm.id_rm
             order by fecha_hora_reserva DESC';
         $pdo = $bd->prepare($sql);
@@ -315,7 +317,7 @@ class calendario {
             $json[$i]['Paciente'] = strtoupper($resultados[$i]["nombre"]." ".$resultados[$i]["apellidop"]);
             $json[$i]['Hora'] = strtoupper($resultados[$i]["hora_inicio"])." - " . strtoupper($resultados[$i]["hora_fin"]);
             //$json[$i]['Hora2'] = strtoupper($resultados[$i]["hora_fin"]);
-            $json[$i]['Cita'] = strtoupper($resultados[$i]["id_rm"]);
+            $json[$i]['Cita'] = strtoupper($resultados[$i]["nombre_terapia"]);
             $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_inicio"]);
             if ($resultados[$i]["nombre_programa"]==""||$resultados[$i]["nombre_programa"]==null){
                 $nombre_programa = "No pertenece";
@@ -328,7 +330,7 @@ class calendario {
                 $id_terapia =  $resultados[$i]["id_terapia"];
             }
             $json[$i]['Programa'] = $nombre_programa;
-            $json[$i]['Estado'] = strtoupper($resultados[$i]["estado_rm"]);
+            $json[$i]['Estado'] = strtoupper($resultados[$i]["estado_ep"]);
             $json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
             $json[$i]['N'] = ($i+1);           
             
@@ -337,7 +339,7 @@ class calendario {
                     class=\"btn btn-sm btn-success\"  
                     onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\"
                     ";
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";
             }
@@ -347,17 +349,17 @@ class calendario {
                 <a title=\"Detalle\" 
                     class=\"btn btn-sm btn-info\"  
                     href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.="&finalizado=true";
             }            
             $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
                 </a>
-                <a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a>
-                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='/*cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)*/'";
+                <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
+                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)'";
 
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";
             }

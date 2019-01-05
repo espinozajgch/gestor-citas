@@ -200,9 +200,9 @@ if(isset($_GET["rut_paciente"])){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
-                            $("#name").val(json[0].nombre);
-                            $("#last_name").val(json[0].apellidop); 
-                            $("#second_name").val(json[0].apellidom);                            
+                            $("#name").val(json[0].nombre.toUpperCase());
+                            $("#last_name").val(json[0].apellidop.toUpperCase()); 
+                            $("#second_name").val(json[0].apellidom.toUpperCase());                            
                             $("#id_oculto").val(json[0].id_paciente); 
                             $("#descuento_aplicado").val(json[0].descuento);
                             //Verificar si el paciente ya tiene terapias asignadas 

@@ -149,7 +149,7 @@ class citas {
         SET  estado = ?
             WHERE id_rm = ".$id_cita;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array("cancelado"));
+        return $pdo->execute(array("5"));
     }
 
     public static function asignar_paciente_cita($paciente, $id_cita){
@@ -183,11 +183,11 @@ class citas {
     
     public static function validar_cita($id_cita){
         $estado_actual =citas::obtener_estado_cita($id_cita);
-        $estado_nuevo = "pendiente";
-        if ($estado_actual=="pendiente"){
-            $estado_nuevo = "pagado";
+        $estado_nuevo = "2";
+        if ($estado_actual=="1"){
+            $estado_nuevo = "2";
         }
-        else if ($estado_actual == "pagado"){
+        /*else if ($estado_actual == "pagado"){
             $estado_nuevo = "atendida";
         }
         else if ($estado_actual == "atendida"){
@@ -195,7 +195,7 @@ class citas {
         }
         else if ($estado_actual == "cancelado"){
             $estado_nuevo = "cancelado";
-        }
+        }*/
         
         
         $bd = connection::getInstance()->getDb();
@@ -273,4 +273,28 @@ class citas {
             return false;
         }
     }
+
+    public static function obtener_nombre_estado_rm($bd, $id_ep){
+            
+            $consulta = "SELECT nombre FROM estatus_pago WHERE id_ep = ?";
+            
+
+            try {
+                $comando = $bd->prepare($consulta);
+        
+                $comando->execute(array($id_ep));
+                $row = $comando->fetch(PDO::FETCH_ASSOC);
+                        
+                if($row){                           
+                    return $row["nombre"];                             
+                }
+                else{
+                    return false;
+                }
+        
+            } catch (Exception $e) {
+                echo $e;
+                return false;
+            }
+        } //FIN FUNCION OBTENER_NOMBRE_USUARIO
 }

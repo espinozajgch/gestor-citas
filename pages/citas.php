@@ -139,7 +139,74 @@ $usuario  = "";
     </div>    
 
 
-    <script>//        
+    <script>//  
+
+        $("eliminar_cod").click(function(e){
+
+            id = $(this).attr("cod");
+            console.log(id);
+
+            //titulo = $("tr[id="+id+"]").find(".titulo_prop").html();
+            //codigo = $("tr[id="+id+"]").find(".codigo_prop").html();
+
+            //console.log(titulo);
+            $('#modal_trash').find(".modal-body").html("<strong>Rol N# "+ id+"</strong>");
+
+            $('#modal_trash').modal({
+                backdrop: 'static',
+                keyboard: false
+            })/**/
+        });
+
+        $('#erase').click(function(e){
+            eliminar(id);
+            //console.log(id);
+    });
+
+        function eliminar(id){
+            $.ajax({
+                data:  {accion: 7,id : id},
+                url:   '../assets/class/admin/admin_acciones.php',
+                type:  'post',
+                dataType: "json",
+                success:  function (data) {
+                    //respuesta = JSON.stringify(data);
+                    //console.log(data);
+                    $('#modal_trash').modal('hide');
+                    if(data.estado == 0){
+                        //$("#alert_wrong").show();
+                    }
+                    else{
+                        window.location.href="roles.php";
+                    }
+                },
+                error: function(data){
+                    console.log(data);
+                   // window.location.href="cuenta.php?success=no";
+                }
+            });/**/
+        }
+
+    
+        function cancelar_cita(id_cita, id_programa, id_terapia){
+            $.post("citas/citas_controlador.php",
+            {
+                id_operacion: 12,
+                id_cita: id_cita,
+                id_programa: id_programa,
+                id_terapia: id_terapia
+            },function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado == 1){
+                    //Validado con exito
+                    //alert ("La cita fue cancelada");
+                    window.location = "citas.php?opcion=1";
+                }
+                else{
+                    alert ("Ocurrio un error");
+                }
+            });
+        }      
 
         $('.button_on').click(function() {
             idrow = $(this).attr("cod");
@@ -282,72 +349,7 @@ $usuario  = "";
         });
     }
 
-    $("a.eliminar-cod").on('click',function(e){
-
-            id = $(this).attr("cod");
-            //console.log(id);
-
-            //titulo = $("tr[id="+id+"]").find(".titulo_prop").html();
-            //codigo = $("tr[id="+id+"]").find(".codigo_prop").html();
-
-            //console.log(titulo);
-            $('#modal_trash').find(".modal-body").html("<strong>Rol N# "+ id+"</strong>");
-
-            $('#modal_trash').modal({
-                backdrop: 'static',
-                keyboard: false
-            })/**/
-        });
-
-        $('#erase').click(function(e){
-            eliminar(id);
-            //console.log(id);
-    });
-
-        function eliminar(id){
-            $.ajax({
-                data:  {accion: 7,id : id},
-                url:   '../assets/class/admin/admin_acciones.php',
-                type:  'post',
-                dataType: "json",
-                success:  function (data) {
-                    //respuesta = JSON.stringify(data);
-                    //console.log(data);
-                    $('#modal_trash').modal('hide');
-                    if(data.estado == 0){
-                        //$("#alert_wrong").show();
-                    }
-                    else{
-                        window.location.href="roles.php";
-                    }
-                },
-                error: function(data){
-                    console.log(data);
-                   // window.location.href="cuenta.php?success=no";
-                }
-            });/**/
-        }
-
     
-    function cancelar_cita(id_cita, id_programa, id_terapia){
-        $.post("citas/citas_controlador.php",
-        {
-            id_operacion: 12,
-            id_cita: id_cita,
-            id_programa: id_programa,
-            id_terapia: id_terapia
-        },function (result){
-            var respuesta = JSON.parse(result);
-            if (respuesta[0].estado == 1){
-                //Validado con exito
-                //alert ("La cita fue cancelada");
-                window.location = "citas.php?opcion=1";
-            }
-            else{
-                alert ("Ocurrio un error");
-            }
-        });
-    }
     
     function generar_invoice_individual(id_reserva){
         window.open("terapias/terapias_controlador.php?id_operacion=15&individual=true&reserva="+id_reserva, "_newtab");

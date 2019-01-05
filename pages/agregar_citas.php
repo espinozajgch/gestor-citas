@@ -188,6 +188,12 @@ $rut_paciente = "";
         }
         ?>){
                 $("#grand_container input").prop("disabled", true);
+                $("#observaciones").prop("disabled", true);
+                $("#referencia").prop("disabled", true);
+                $("#metodo_pago").prop("disabled", true);
+                $("#estado_pago").prop("disabled", true);
+                $("#dc").prop("disabled", true);
+                $("#medicos").prop("disabled", true);
                 $("#btnguardar").html(" ").prop("onclick", "false").hide();
                 
         }
@@ -351,7 +357,7 @@ input:checked + .slider:before {
 
                                     <div class="form-group col-2 col-sm-2 col-md-2">
                                         <small><strong><label for=name_>Mostrar</label></strong></small><br>
-                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
+                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
                                     </div>
 
 
@@ -376,7 +382,7 @@ input:checked + .slider:before {
                                         <small><strong><label for=name_>RUT</label></strong></small>
                                        
                                         <div class="input-group">
-                                            <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off" value="<?php echo $rut_paciente ?>">
+                                            <input type="text" id="rut_paciente" class="form-control" placeholder="Ingresa el RUT del paciente" autocomplete="off" value="<?php echo strtoupper($rut_paciente) ?>">
                                             <span class="input-group-btn" >
                                               <button id="btn_buscar" class="btn btn-default" type="button" onclick="buscar_info_paciente()"><i class="fa fa-search"></i></button>
                                             </span>
@@ -450,10 +456,20 @@ input:checked + .slider:before {
 
                                 <div class="form-row">    
                                     
+                                    <div class="form-group col-4 col-md-4">
+                                        <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
+                                        <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
+                                            <option value="1">Pendiente</option>
+                                            <option value="2">Pagado</option>
+                                            <!--option value="2">Arrendar</option-->
+                                        </select>
+                                        <div id="error_email" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                        </div>
+                                    </div>
                                     
                                     <div class="form-group col-4 col-sm-4 col-md-4" id="pago">
-                                        <?php $cond_iva = 1; //Usuarios::obtener_cond_iva($bd,$hash);                                             
-                                        ?>
+                                       
                                         <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
                                             <select class="form-control" id="metodo_pago">
                                                 <?php
@@ -488,13 +504,6 @@ input:checked + .slider:before {
                                         </div>
                                     </div>
 
-                                    <div class="form-group col-4 col-md-4">
-                                        <small><strong><label for="referencia">Estatus Pago</label></strong></small>
-                                        <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
-                                        <div id="error_email" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                                        </div>
-                                    </div>
 
                                     <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias" style="display: none;">  
                                         <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
@@ -758,7 +767,7 @@ function validar_inputs(input, div_error){
                     parte2 = rut.substr((rut.length)-1,rut.length);
                     rut = parte1 + "-" + parte2;
                     //console.log(rut); 
-                    $("#rut_paciente").val(rut);
+                    $("#rut_paciente").val(rut.toUpperCase());
                 }
 
                 $.post("citas/citas_controlador.php",{
@@ -771,11 +780,11 @@ function validar_inputs(input, div_error){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
-                            $("#name").val(json[0].nombre);
-                            $("#last_name").val(json[0].apellidop);
-                            $("#second_name").val(json[0].apellidom);
-                            $("#direccion").val(json[0].direccion);
-                            $("#email").val(json[0].email);
+                            $("#name").val(json[0].nombre.toUpperCase());
+                            $("#last_name").val(json[0].apellidop.toUpperCase());
+                            $("#second_name").val(json[0].apellidom.toUpperCase());
+                            $("#direccion").val(json[0].direccion.toUpperCase());
+                            $("#email").val(json[0].email.toUpperCase());
                             $("#fijo").val(json[0].fijo);
                             $("#celular").val(json[0].celular);
                             $("#id_oculto").val(json[0].id_paciente);
@@ -1119,120 +1128,7 @@ function validar_inputs(input, div_error){
             
          
         }
-                
-        /*function enviar_formulario(){
-            //alert ($("#check_slider").prop("checked"));
-            var regex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
-            var bandera = true;
-            //Comprobamos las fechas
-             if (!(regex.test($("#fecha_a").val()))){
-                bandera = false;
-                $("#error_fechas").show(500);
-                $("#error_fechas").hide(5000);                
-            }
-            //Comprobamos que el RUT sea válido, para esto verificamos si el nombre no está vacio
-            regex = /[a-zA-Z0-9]+/;
-            if (!regex.test($("#name").val())){
-                bandera = false;
-                $("#error_rut").show(500);
-                $("#error_rut").hide(5000);
-                //alert ($("#name").val());
-            }            
-            if ($("#medicos").val()==""){
-                bandera = false;
-                alert ("Seleccione al menos un medico");
-            }
-            if (bandera_email_disponible == false){
-                alert ("El email ingresado no está disponible, intente otro");
-                bandera = false;
-            }
-            //alert (bandera);
-            //alert ("Fecha inicio: "+$("#fecha_a").val()+"\n Fecha Fin: "+$("#fecha_b").val()+"\n Hora Inicio: "+$("#hora_a").val()+"\n Hora fin: "+$("#hora_b").val());            
-            if (bandera){
-                //Si la bandera no fue modificada entonces podemos enviar el formulario
-                //Cuando verifiquemos que existe disponibilidad para los medicos seleccionados, procedemos a enviar el formulario
-               
-                $.when(
-                $.post("citas/citas_controlador.php",
-                {
-                    id_operacion: 4,
-                    <?php
-                            /*if (isset($_GET["cita"])){
-                                echo "modificar: true, id_cita: ".$_GET["cita"];
-                            }
-                            else{
-                                echo "modificar: false";
-                            }//*/
-                        ?>,
-                    fecha_inicio: $("#fecha_a").val(),
-                    hora_inicio: $("#hora_a").val(),
-                    hora_fin: $("#hora_b").val(),
-                    medicos: $("#medicos").val()
-                },
-                function(result){
-                    
-                    if (result !="1"){                        
-                        bandera = false;
-                        alert ("No hay citas disponibles en ese periodo, seleccione otro.");
-                    }
-                    else{
-                        
-                        if (bandera_nuevo_usuario){//Si esta seteada hay que agregar el id del usuario                
-                            
-                        
-                            validar_paciente();                            
-                            alert ("Hay disponibilidad, registrando... Agregando nuevo paciente");                            
-                        
-                            //bandera = false;
-                            //$("#btn_buscar").trigger('click');
-                        }
-                        else{
-                            alert ("Hay disponibilidad, registrando...");
-                        }
-                    }
-                }),
-                ).then(function(){
-                    if (bandera){  
-                        var nom_apellido = $("#name").val()+" "+$("#last_name").val();  
-                        //alert ("Diagnostico"+$("#id_oculto").val());
-                        if ($("#check_slider").prop("checked")){//Si es un chequeo creamos un programa terapeutico
-                            bandera = false;
-                            var id_programa = false;
-                            $.when(
-                                $.post("terapias/terapias_controlador.php",
-                                {
-                                    id_operacion:       5,
-                                    terapias_previas:   false,                
-                                    id_paciente:        $("#id_oculto").val(),
-                                    terapias:           1,
-                                    terapias_individual:1,
-                                    cantidad:           1,
-                                    descripcion:        "Diagnóstico preliminar de "+nom_apellido,
-                                    id:                 $("#id_oculto").val(),
-                                    nombre_programa:    "Diagnóstico preliminar de "+nom_apellido
-                                },function (result){               
-                                    var respuesta = JSON.parse(result);
-                                    if (respuesta[0].estado == 1){//Se creo el programa terapeutico
-                                        id_programa = respuesta[0].id_programa;
-                                    }
-                                })).then(function(){                                        
-                                        procesar_informacion(id_programa);
-                                });
-                        }
-                        else{
-                            procesar_informacion(false);
-                        }
-                        
-                    }//FIN IF BANDERA
-                    else{
-                        alert ("No se pudo reservar cita");
-                    }
-                });
-            }
-            else{
-                console.log("Verificar datos");
-            }
-        }//*/
+ 
         
         function procesar_informacion(id_programa){
             var terapias=false;
@@ -1284,13 +1180,16 @@ function validar_inputs(input, div_error){
             medio_contacto  : $("#medio_contacto").val(),
             medio_pago      : $("#metodo_pago").val(),
             observaciones   : $("#observaciones").val(),                            
-            medicos         : bandera = $("#medicos").val()
+            medicos         : bandera = $("#medicos").val(),
+            estado_pago     : $("#estado_pago").val(),
+            referencia      : $("#referencia").val()
             }, 
             function (result){
                 console.log(result)
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
-                    mensaje_retorno+="La cita se guardó con éxito<br>";                
+                    mensaje_retorno+="La cita se guardó con éxito<br>";  
+                    window.location="citas.php?opcion=1";              
                 }
                 else{
                     mensaje_retorno+="Hubo un error al guardar la cita, contacte al ADMIN<br>";
@@ -1374,7 +1273,7 @@ function validar_inputs(input, div_error){
                     right: 'month,agendaWeek,agendaDay'
                 },   
                 businessHours:{
-                    dow: [1,2,3,4,5],
+                    dow: [1,2,3,4,5,6],
                     start: '8:00',
                     end: '18:00'
                 },
@@ -1396,7 +1295,7 @@ function validar_inputs(input, div_error){
                 locale : "es",
                 responsive: true,
                 selectable: true,
-                weekends: false,
+                weekends: true,
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
@@ -1505,8 +1404,10 @@ function validar_inputs(input, div_error){
                     $("#fecha_a").val(respuesta[1].fecha_inicio);
                     $("#hora_a").val(respuesta[1].hora_inicio);
                     $("#hora_b").val(respuesta[1].hora_fin);
-                    $("#metodo_pago").val(respuesta[1].id_mp).prop("disabled", true);
-                    $("#pago").hide();
+                    $("#metodo_pago").val(respuesta[1].id_mp);//prop("disabled", true);
+                    $("#referencia").val(respuesta[1].ref)
+                    $("#estado_pago").val(respuesta[1].estado_pago)
+                    //$("#pago").hide();
                     $("#chequeo").hide();
                 }
                 else{

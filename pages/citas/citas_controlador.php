@@ -73,14 +73,16 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
-    if (isset($_POST["pagado"])){        
+    $pagado         =   $_POST["estado_pago"];
+    $ref            =   $_POST["referencia"];
+    /*if (isset($_POST["pagado"])){        
         $pagado         =   $_POST["pagado"];
         if ($pagado == "true") $pagado = "pagado";
         else $pagado = "pendiente";
     }
     else{
         $pagado         =   "pagado";
-    }
+    }*/
     
     //$chequeo        =   $_POST["chequeo"];
     $id_historico = historico::obtener_id_historico_paciente($id_paciente);
@@ -90,10 +92,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $bd = connection::getInstance()->getDb();
     
     $sql = "INSERT INTO reserva_medica 
-        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
+        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado , referencia) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -202,7 +204,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
     $id_cita = $_POST["cita"];
     $bd = connection::getInstance()->getDb();
     $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, reserva_medica.metodos_pago_id_mp as id_mp,
-        reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.observaciones, reserva_medica.medio_contacto_id_mc
+        reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.observaciones, reserva_medica.medio_contacto_id_mc, reserva_medica.referencia, reserva_medica.estado
         FROM `paciente`         
         INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
         INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm        
@@ -225,6 +227,8 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['medio_contacto'] =   strtoupper($resultados[$i]["medio_contacto_id_mc"]);
         $json[$i+1]['observaciones']  =   strtoupper($resultados[$i]["observaciones"]);
         $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
+        $json[$i+1]['ref']            =   strtoupper($resultados[$i]["referencia"]);
+        $json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
     }
     //FORMATO de json
     //descripcion, fecha inicio, fecha fin
