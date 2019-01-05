@@ -54,7 +54,7 @@
                             <td>'. strtoupper($particulares["nombre"] .' '. $particulares["apellidop"] .' '. $particulares["apellidom"]) .'</td>
                             <td>'. strtoupper($particulares["celular"]) .'</td>
                             <td class="center text-center pull-center" style="width: 30%">
-                                <a class="btn btn-sm btn-success shared" href="agregar_citas.php?rut_paciente='.$particulares["RUT"].'" title="Agengar Cita" '.$disabled.'><i class="fa fa-calendar fa-bg" ></i></a>
+                                <a class="btn btn-sm btn-success shared" href="agregar_citas.php?nueva=true&rut_paciente='.$particulares["RUT"].'" title="Agengar Cita" '.$disabled.'><i class="fa fa-calendar fa-bg" ></i></a>
                                 <a class="btn btn-sm btn-warning shared" href="terapias.php?opcion=1&rut_paciente='.$particulares["RUT"].'" title="Programa Terapuetico" '.$disabled.'><i class="fa fa-group fa-bg" ></i></a>
                                 <a class="btn btn-sm btn-primary shared" href="historia_medica_de_paciente.php?id='.  $particulares['id_paciente'] .'" title="Historia Medica" ><i class="fa fa-file" ></i></a>
                                 <a class="btn btn-sm btn-info shared" href="agregar_usuario.php?accion=2&id='.  $particulares['id_paciente'] .'" title="Editar"><i class="fa fa-edit"></i></a>
