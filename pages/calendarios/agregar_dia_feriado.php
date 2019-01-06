@@ -25,12 +25,14 @@ else{
                    <a class="btn btn-sm btn-success shared" href="calendarios.php?opcion=2" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                    <button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["dia"])){echo "style=\"display:none;\"";}?> title="Eliminar Dia" onclick="eliminar_dia()"><i class="fa fa-trash fa-bg"></i></button>
         </div>
+
     </div>
 <form>
     
     <div class="row">
         <div class="col-sm-12 col-md-12 my-3"> 
             <div class="form-row">
+                <br>
                 <div class="form-group col-6 col-sm-6 col-md-6">
                     <small><strong><label for="name">Descripción de feriado</label></strong></small>
                     <input id="descripcion_feriado" type="text" class="form-control" value="<?php echo $descripcion;?>" placeholder="Descripción">

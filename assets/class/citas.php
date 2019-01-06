@@ -338,7 +338,7 @@ class citas {
         //Nos paseamos por la lista de fechas para constuir la estructura de JSON necesaria        
         $longitud = count($resultados);        
         if ($longitud<1){
-            $json[0]['N'] = "No hay información que mostrar";
+            $json[0]['N'] = "No hay citas disponibles";
             $json[0]['Fecha'] = "";            
             $json[0]['Medico'] = "";
             $json[0]['Paciente'] = "";
@@ -390,17 +390,17 @@ class citas {
                     href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
             if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
-                $str_brn.="&finalizado=true";
+                //$str_brn.="&finalizado=true";
             }            
             $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
                 </a>
                 <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
-                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)'";
+                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' cod='".$resultados[$i]["id_rm"]."' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia, ". ($i+1).")'";
 
             if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
-                $str_brn.=" disabled";
+                //$str_brn.=" disabled";
             }
             $str_brn.=">
                     <i class=\"fa fa-times-circle\"></i>

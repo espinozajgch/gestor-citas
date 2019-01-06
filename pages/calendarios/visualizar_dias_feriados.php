@@ -13,10 +13,9 @@ require_once '../assets/class/calendario.php';
                     <h6> Seleccione un día para modificarlo</h6>
 
                 </div>
-                <div class="col-lg-1 text-right pull-right">
+                <div class="col-lg-2 text-right pull-right">
                    <a class="btn btn-sm btn-success shared" href="calendarios.php?opcion=1" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
-                </div>
-                <div class="col-lg-1 text-right pull-right">
+
                    <a class="btn btn-sm btn-success shared" href="calendarios.php?opcion=2&vista=<?php echo $_GET["vista"]*-1;?>" title="Cambiar vista"><i class="fa fa-calendar fa-bg"></i></a>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -42,17 +41,17 @@ require_once '../assets/class/calendario.php';
                                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
+                    right: 'month'
                 },
                 locale: 'es-us',
                 eventClick: function (info){
                     //alert ("ID:"+info.event.id);                    
                 },navLinks: true,
-        navLinkDayClick: function (date, jsEvent){
+                navLinkDayClick: function (date, jsEvent){
                     
-                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
-                    //alert (fecha_seleccionada);
-                    calendar.changeView('agendaDay', fecha_seleccionada);
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
+                    console.log(fecha_seleccionada);
+                    //calendar.changeView('agendaDay', fecha_seleccionada);
                 },
                         eventLimit: true,
                         editable: true,

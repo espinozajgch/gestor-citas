@@ -152,8 +152,12 @@ $usuario  = "";
         var id = "";
         var codigo = "";
 
-        $(document).ready(function(){ 
-            buscar_info_paciente();
+        $(document).ready(function(){
+
+            if (typeof buscar_info_paciente !== "undefined") { 
+                buscar_info_paciente();
+            } 
+                        
 
 
         $(".form-control").on("keydown",function(event){

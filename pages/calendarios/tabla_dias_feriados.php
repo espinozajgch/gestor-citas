@@ -10,10 +10,9 @@ if (!isset($_SESSION["pagina"])){
                     <h1 class="page-header">Días Feriados</h1>
 
                 </div>
-                <div class="col-lg-1 text-right pull-right">
+                <div class="col-lg-2 text-right pull-right">
                    <a class="btn btn-sm btn-success shared" href="calendarios.php?opcion=1" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
-                </div>
-                <div class="col-lg-1 text-right pull-right">
+                
                    <a class="btn btn-sm btn-success shared" href="calendarios.php?opcion=2&vista=<?php echo $_GET["vista"]*-1;?>" title="Cambiar vista"><i class="fa fa-calendar fa-bg"></i></a>
                 </div>
                 <!-- /.col-lg-12 -->

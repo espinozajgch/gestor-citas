@@ -67,7 +67,7 @@ require_once '../assets/class/calendario.php';
                     start: '8:00',
                     end: '18:00'
                 },
-                defaultView: 'agendaWeek',
+                defaultView: 'month',
                 editable: false,
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){
