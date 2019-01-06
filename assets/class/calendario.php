@@ -105,7 +105,7 @@ class calendario {
                         AND reserva_medica.estado NOT LIKE \"finalizada\"
                         AND reserva_medica.estado NOT LIKE \"atendida\"
                         AND reserva_medica.estado NOT LIKE \"cancelado\"
-                        AND admin.estado LIKE \"activo\" 
+                        AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
                         GROUP BY reserva_medica.id_rm";
                     }
                     else{
@@ -119,7 +119,7 @@ class calendario {
                     AND reserva_medica.estado NOT LIKE \"finalizada\"
                         AND reserva_medica.estado NOT LIKE \"atendida\"
                         AND reserva_medica.estado NOT LIKE \"cancelado\"
-                    AND admin.estado LIKE \"activo\"
+                    AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
                     GROUP BY reserva_medica.id_rm";
                     }
         
@@ -387,10 +387,10 @@ class calendario {
         $bd = connection::getInstance()->getDb();
         
         $sql = 'SELECT  id_admin, id_rm, admin.nombre as nombre_medico
-            FROM `admin` 
+            FROM admin 
             INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
             INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm         
-            WHERE id_rm = "'.$id_cita.'" AND admin.estado LIKE "activo"';
+            WHERE id_rm = "'.$id_cita.'" AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)';
         $pdo = $bd->prepare($sql);
         //echo $sql;
 
