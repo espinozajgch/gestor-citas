@@ -42,9 +42,9 @@
                             <td>'. $diagnostico .'</td>
                             <td>'. $indicaciones .'</td>
                             <td class="center text-center pull-center" style="width: 20%">
-                                <a class="btn btn-sm btn-info shared" href="agregar_historia_de_paciente.php?id_hm='.  $historia['id_hm'] .'&id_paciente='.  $id .'" title="Editar Diagnostico General"><i class="fa fa-edit"></i></a>
-                                <a class="btn btn-sm btn-info shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=1" target="_Blank" title="Descargar Diagnostico General"><i class="fa fa-download"></i></a>
-                                <a class="btn btn-sm btn-warning shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=2" target="_Blank" title="Descargar Diagnostico"><i class="fa fa-download"></i></a>
+                                <a class="btn btn-sm btn-info shared" href="agregar_historia_de_paciente.php?id_hm='.  $historia['id_hm'] .'&id_paciente='.  $id .'" title="Editar"><i class="fa fa-edit"></i></a>
+                                <a class="btn btn-sm btn-info shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=1" target="_Blank" title="Descargar Historial"><i class="fa fa-download"></i></a>
+                                <a class="btn btn-sm btn-warning shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=2" target="_Blank" title="Descargar Indicaciones Generales"><i class="fa fa-download"></i></a>
                                 <a class="btn btn-sm btn-success shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=3" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>
                                 <btn class="btn btn-sm btn-danger delete" cod="'.  $historia['id_hm'] .'" title="Eliminar"><i class="fa fa-trash"></i></btn>
                             </td>

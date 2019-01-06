@@ -184,8 +184,8 @@ while (!$fin){
             $subtotal += $precio_terapia;        
                 $line = array( "FECHA TERAPIA"    => $fecha_t,
                        "DESCRIPCION"  => "$descripcion_terapia",
-                       "P. UNITARIO"      => "$".number_format($precio_terapia,2)."",
-                       "SUB TOTAL" => "$".number_format($subtotal,2)."");
+                       "P. UNITARIO"      => "$".number_format($precio_terapia,"0",",",".")."",
+                       "SUB TOTAL" => "$".number_format($subtotal,"0",",",".")."");
 
 
             $size = $pdf->addLine( $y, $line );
@@ -199,26 +199,26 @@ while (!$fin){
             $line = array( "FECHA TERAPIA"    => " ",
                            "DESCRIPCION"  => "SUB TOTAL",
                            "P. UNITARIO"  =>" ",
-                           "SUB TOTAL" =>"$".number_format($subtotal,2));
+                           "SUB TOTAL" =>"$".number_format($subtotal,"0",",","."));
             $size = $pdf->addLine( $y, $line );
             $y   += $size+3;            
             
             $line = array( "FECHA TERAPIA"    => " ",
                            "DESCRIPCION"  => "DESCUENTO AL PAGO DE CONTADO",
-                           "P. UNITARIO"  =>number_format($resultado[0]["descuento_p"],2)."%",
-                           "SUB TOTAL" =>" - $".number_format(($descuento),2));
+                           "P. UNITARIO"  =>number_format($resultado[0]["descuento_p"],"0",",",".")."%",
+                           "SUB TOTAL" =>" - $".number_format(($descuento),"0",",","."));
             $size = $pdf->addLine( $y, $line );
             $y   += $size + 3;
             $line = array( "FECHA TERAPIA"    => " ",
                            "DESCRIPCION"  => "TOTAL CON DESCUENTO",
                            "P. UNITARIO"  =>" ",
-                           "SUB TOTAL" =>"$".number_format($subtotal-$descuento,2)."");
+                           "SUB TOTAL" =>"$".number_format($subtotal-$descuento,"0",",",".")."");
             $size = $pdf->addLine( $y, $line );
             $y   += $size + 3;
             $line = array( "FECHA TERAPIA"    => " ",
                            "DESCRIPCION"  => " ",
                            "P. UNITARIO"      => " ",
-                           "SUB TOTAL" => "TOTAL: $".number_format($subtotal-$descuento,2)."");
+                           "SUB TOTAL" => "TOTAL: $".number_format($subtotal-$descuento,"0",",",".")."");
             $size = $pdf->addLine( $y, $line );
             $fin = true;
         }        

@@ -148,7 +148,7 @@ else if ($id_operacion == 2.5){//Agregar historico nuevo
     }
 }
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
-    $sql = "SELECT id_admin, nombre FROM `admin` WHERE id_rol = 3 AND id_eu > 0";
+    $sql = "SELECT id_admin, nombre FROM admin WHERE (id_rol = 3 or id_rol = 4) AND id_eu > 0";
     $bd = connection::getInstance()->getDb();
     
     $pdo = $bd->prepare($sql);

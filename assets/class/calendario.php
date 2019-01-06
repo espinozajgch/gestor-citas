@@ -334,7 +334,7 @@ class calendario {
             $json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
             $json[$i]['N'] = ($i+1);           
             
-            $str_brn= "
+            /*$str_brn= "
                 <button title=\"Validar cita\" 
                     class=\"btn btn-sm btn-success\"  
                     onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\"
@@ -343,10 +343,10 @@ class calendario {
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";
             }
-            $str_brn.=">
+            ">
             <i class=\"fa fa-check\"></i>
-                </button>
-                <a title=\"Detalle\" 
+                </button>*/
+            $str_brn="<a title=\"Detalle\" 
                     class=\"btn btn-sm btn-info\"  
                     href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
             if ($resultados[$i]["estado_rm"]=="2"){

@@ -459,9 +459,10 @@ input:checked + .slider:before {
                                     <div class="form-group col-4 col-md-4">
                                         <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
                                         <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
-                                            <option value="1">Pendiente</option>
-                                            <option value="2">Pagado</option>
-                                            <!--option value="2">Arrendar</option-->
+                                            <option value="1">PENDIENTE</option>
+                                            <option value="2">PAGADO</option>
+                                            <option value="6">ATENDIDO</option>
+                                            <option value="5">CANCELADO</option>
                                         </select>
                                         <div id="error_email" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
@@ -482,7 +483,8 @@ input:checked + .slider:before {
                                                     $longitud = count($resultado);
                                                     $string = "";                                                            
                                                     for ($i=0; $i < $longitud; $i++){
-                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\">".$resultado[$i]["nombre"]."</option>";
+                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\" selected>". strtoupper
+                                                        ($resultado[$i]["nombre"])."</option>";
                                                     }
                                                     echo $string;
                                                 }
@@ -532,8 +534,8 @@ input:checked + .slider:before {
                                                 if ($resultado){
                                                     $longitud = count($resultado);
                                                     $string = "";                                                            
-                                                    for ($i=0; $i < $longitud; $i++){
-                                                        $string .="<option value=\"".$resultado[$i]["id_mc"]."\">".$resultado[$i]["nombre"]." - ".$resultado[$i]["cobro"]."</option>";
+                                                    for ($i=0; $i < $longitud; $i++){                                            
+                                                        $string .='<option value="'.$resultado[$i]["id_mc"].'">'.$resultado[$i]["nombre"]." - ".$resultado[$i]["cobro"]."</option>";
                                                     }
                                                     echo $string;
                                                 }
