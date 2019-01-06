@@ -100,17 +100,18 @@ if(isset($_GET["rut_paciente"])){
                 <i class="fa fa-exclamation"></i><small> Ingresa tu apellido</small>
             </div>
         </div>
-
+    </div>    
+    <div class="row">
         <div class="form-group col-6 col-sm-6 col-md-6 " style="display: none;" id="contenedor_nombre_programa">
             <small><strong><label for=name_>Nombre del programa</label></strong></small>
             <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">            
             <div id="error_name_pt" class="text-danger" style="display:none">
-                <i class="fa fa-exclamation"></i><small> Ingresa un nombre válido</small>
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
         </div>
         
         <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago">
-            <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
+            <small><strong><label for="estado_pago">Tipo de Pago</label></strong></small>
             <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="">
                  <option value="7">INDIVIDUAL</option>
                 <option value="3">PARCIAL</option>
@@ -130,7 +131,10 @@ if(isset($_GET["rut_paciente"])){
                 <input type="text" class="form-control" id="descuento_aplicado" value="10">
                 <span class="input-group-addon" id="basic-addon2">%</span>
             </div>
-        </div>  
+        </div> 
+
+    </div>    
+    <div class="row"> 
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " style="display: none;" id="contenedor_metodo_pago_1" >
             <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
@@ -204,14 +208,17 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2" style="display: none;" id="contenedor_boton_pago">
              <small><strong><label for="medico" style="visibility: hidden">Guardar</label></strong></small>
-            <button type="button" id="btnguardar" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-save"></i></button>
+            <button type="button" id="btnguardar_pago" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-save"></i></button>
         </div> 
+
+        </div>    
+        <div class="row">
 
         <div class="form-group col-6 col-sm-6 col-md-6">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
-            <select class="form-control js-data-example-ajax" id="terapias_individual"></select>
+            <select class="form-control js-data-example-ajax" id="terapias_individual" disabled></select>
             <div hidden="true">
-                <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias"></select>
+                <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="terapias" ></select>
             </div>
                 <div id="error_terapias" class="text-danger" style="display:none">
                     <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
@@ -219,14 +226,14 @@ if(isset($_GET["rut_paciente"])){
         </div>        
         <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <small><strong><label for="medico">Cantidad</label></strong></small>
-            <input type="text" class="form-control" id="cantidad" value="1">
+            <input type="text" class="form-control" id="cantidad" value="1" disabled>
         </div>
 
         
         
         <div class="form-group col-xs-4 col-sm-4 col-md-4">
-             <small><strong><label for="medico">Asignar</label></strong></small>
-            <button type="button" id="btnguardar" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-plus"></i></button>
+            <small><strong><label for="medico">Asignar</label></strong></small>
+            <button type="button" id="btnguardar" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;" disabled><i class="fa fa-plus"></i></button>
         </div>        
 
      
@@ -306,21 +313,31 @@ if(isset($_GET["rut_paciente"])){
                             cargar_tabla_terapias(1);
                             //operacion = 11;
                             $("#contenedor_nombre_programa").show();
-                            $("#contenedor_descuento").show();
-                            $("#contenedor_estado_pago").show();
-                            $("#contenedor_metodo_pago_1").show();
-                            $("#contenedor_ref_pago_1").show();
-                            $("#contenedor_metodo_pago_2").show();
-                            $("#contenedor_ref_pago_2").show();
-                            $("#contenedor_boton_pago").show();
+                            //$("#contenedor_descuento").show();
+                            //$("#contenedor_estado_pago").show();
+                            //$("#contenedor_metodo_pago_1").show();
+                            //$("#contenedor_ref_pago_1").show();
+                            //$("#contenedor_metodo_pago_2").show();
+                            //$("#contenedor_ref_pago_2").show();
+                            //$("#contenedor_boton_pago").show();
                             //$("#alerta").prop("class","alert-success alert-dismissable");
                             //$("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
                             //$("#advertencia_general").fadeIn(100).fadeOut(5000);
                             $("#btnguardar").show();
                             //$("#btn_invoice").show();
                             //$("#btn_cancelar").show();
+
+                            
+
+                            $("#terapias_individual").prop('disabled', false);
+                            $("#cantidad").prop('disabled', false);
+                            $("#btnguardar").prop('disabled', false);
                         }
                         else{
+                            $("#terapias_individual").prop('disabled', true);
+                            $("#cantidad").prop('disabled', true);
+                            $("#btnguardar").prop('disabled', true);
+
                             $("#name").val("");
                             $("#last_name").val("");     
                             $("#second_name").val("");                            
@@ -349,7 +366,7 @@ if(isset($_GET["rut_paciente"])){
             
         }     
 
- 
+
         
     function redirigir_terapia(){        
         
@@ -454,7 +471,10 @@ if(isset($_GET["rut_paciente"])){
         }
         
         function agregar_terapias_existentes(id_paciente, notificaciones=true){
-            var bandera_confirm=true;
+
+
+            //if($("#name_programa").val()!=""){
+                var bandera_confirm=true;
                     $.post("terapias/terapias_controlador.php",
                     {
                         id_operacion :  7,
@@ -462,7 +482,7 @@ if(isset($_GET["rut_paciente"])){
                     },
                     function (result){                        
                         var json = JSON.parse(result);       
-                        //alert (result);
+                        $("#error_name_pt").hide();
                         if (json!=null){
                             operacion = 11;                            
                             if(json[0].estado == 1){                            
@@ -482,7 +502,9 @@ if(isset($_GET["rut_paciente"])){
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
                                     $("#btn_invoice").show();
-                                    //alert (preseleccion);
+                                    //$("#contenedor_descuento").show();
+                                    $("#contenedor_estado_pago").show();
+                                    
                                 }
                                 else{
                                     if (confirm ("Será redirigido al formulario para reservar citas para este paciente ¿Está de acuerdo?")){
@@ -505,6 +527,10 @@ if(isset($_GET["rut_paciente"])){
                             return null;
                         }
                     });
+                //}
+                //else{
+                //    $("#error_name_pt").show();
+                //}
         }
         
         function generar_invoice_programa(){

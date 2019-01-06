@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-01-2019 a las 01:42:19
+-- Tiempo de generación: 06-01-2019 a las 21:53:32
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -551,7 +551,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `entrada_historico`
 --
 ALTER TABLE `entrada_historico`
-  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
@@ -576,7 +576,7 @@ ALTER TABLE `facturacion`
 -- AUTO_INCREMENT de la tabla `feriados`
 --
 ALTER TABLE `feriados`
-  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `historias_medicas`
 --
@@ -586,7 +586,7 @@ ALTER TABLE `historias_medicas`
 -- AUTO_INCREMENT de la tabla `historico`
 --
 ALTER TABLE `historico`
-  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_especialidad`
 --
@@ -596,7 +596,7 @@ ALTER TABLE `medico_tiene_especialidad`
 -- AUTO_INCREMENT de la tabla `medico_tiene_reserva`
 --
 ALTER TABLE `medico_tiene_reserva`
-  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 --
 -- AUTO_INCREMENT de la tabla `medio_contacto`
 --
@@ -616,12 +616,12 @@ ALTER TABLE `notificaciones`
 -- AUTO_INCREMENT de la tabla `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_reserva`
 --
 ALTER TABLE `paciente_tiene_reserva`
-  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_tratamiento`
 --
@@ -631,17 +631,17 @@ ALTER TABLE `paciente_tiene_tratamiento`
 -- AUTO_INCREMENT de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
-  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT de la tabla `programa_tiene_terapia`
 --
 ALTER TABLE `programa_tiene_terapia`
-  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 --
 -- AUTO_INCREMENT de la tabla `reserva_medica`
 --
 ALTER TABLE `reserva_medica`
-  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --

@@ -32,7 +32,7 @@ $usuario  = "";
     <meta name="author" content="">
 
     <title>Dashboard</title>
-    <link rel="icon" href="../../img/desing/favicon.ico">
+    <link rel="icon" href="../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -151,6 +151,33 @@ $usuario  = "";
     <script>
         var id = "";
         var codigo = "";
+
+        $("#estado_pago").change(function () {
+            tipo_pago = $("#estado_pago").val();
+            console.log(tipo_pago);
+
+            if(tipo_pago == 3){
+                $("#contenedor_descuento").hide();
+                //$("#contenedor_estado_pago").show();
+                $("#contenedor_metodo_pago_1").show();
+                $("#contenedor_ref_pago_1").show();
+                $("#contenedor_metodo_pago_2").show();
+                $("#contenedor_ref_pago_2").show();
+                $("#contenedor_boton_pago").show();
+            }
+            else
+            if(tipo_pago ==4){
+                $("#contenedor_descuento").show();
+                //$("#contenedor_estado_pago").show();
+                $("#contenedor_metodo_pago_1").show();
+                $("#contenedor_ref_pago_1").show();
+                $("#contenedor_metodo_pago_2").hide();
+                $("#contenedor_ref_pago_2").hide();
+                $("#contenedor_boton_pago").show();
+            }
+
+
+        });
 
         $(document).ready(function(){
 

@@ -33,7 +33,7 @@ $usuario  = "";
     <meta name="author" content="">
 
     <title>Dashboard </title>
-    <link rel="icon" href="../../img/desing/favicon.ico">
+    <link rel="icon" href="../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 

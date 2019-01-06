@@ -1,4 +1,4 @@
-<link rel="icon" href="../../img/desing/favicon.ico">
+<!--link rel="icon" href="../img/desing/favicon.ico"-->
 <!-- Bootstrap core CSS -->
 <link href="../../vendor/plugin/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="../../vendor/plugin/jquery-ui/jquery-ui.css" rel="stylesheet">

@@ -30,7 +30,8 @@ $nombre_paciente            =   "Nombre_paciente";
 
 
 $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p, 
-    rm.fecha_inicio as fecha_c, paciente.apellidop as apellido_p, 
+    rm.fecha_inicio as fecha_c, rm.hora_inicio as hora_inicio, rm.hora_fin as hora_fin,
+    paciente.apellidop as apellido_p, 
     paciente.RUT as rut, paciente.nombre as nombre_p, 
     paciente.direccion as direccion_p,
     terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, 
@@ -175,6 +176,7 @@ while (!$fin){
             $descripcion_terapia    = utf8_decode($resultado[$i]["nombre_t"]);
             $precio_terapia         = utf8_decode($resultado[$i]["precio_t"]);
             $fecha_t                = $resultado[$i]["fecha_c"];
+            $hora_i                 = $resultado[$i]["hora_inicio"];
             if ($fecha_t==null){
                 $fecha_t = " ";
             }
@@ -182,7 +184,7 @@ while (!$fin){
                 $fecha_t = calendario::formatear_fecha(1, $fecha_t);
             }
             $subtotal += $precio_terapia;        
-                $line = array( "FECHA TERAPIA"    => $fecha_t,
+                $line = array( "FECHA TERAPIA"    => $fecha_t . " - " .$hora_i,
                        "DESCRIPCION"  => "$descripcion_terapia",
                        "P. UNITARIO"      => "$".number_format($precio_terapia,"0",",",".")."",
                        "SUB TOTAL" => "$".number_format($subtotal,"0",",",".")."");

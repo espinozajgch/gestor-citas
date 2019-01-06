@@ -52,7 +52,8 @@ $rut_paciente = "";
             $etiqueta           = "Reservar cita para terapia";
         }        
         if (isset($_GET["ref"])){
-            $link = $_GET["ref"]."&rut_paciente=".$_GET["rut_paciente"];
+            $link = "terapias.php?opcion=1&rut_paciente=".$_GET["rut_paciente"];
+            //terapias.php?opcion=1&rut_paciente=1857357-7
             $rut_paciente = $_GET["rut_paciente"];
         }
         else if (isset ($_GET["cita"])){
@@ -74,7 +75,7 @@ $rut_paciente = "";
     <meta name="author" content="">
 
     <title>Dashboard</title>
-    <link rel="icon" href="../../img/desing/favicon.ico">
+    <link rel="icon" href="../img/desing/favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 

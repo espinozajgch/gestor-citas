@@ -405,7 +405,7 @@ class citas {
             $str_brn.=">
                     <i class=\"fa fa-times-circle\"></i>
                 </button>
-                <a title=\"Generar INVOICE\" 
+                <a title=\"Ver Reporte\" 
                         class=\"btn btn-sm btn-success\"
                         onclick=\"generar_invoice_individual(".$resultados[$i]["id_rm"].")\">
                         <i class=\"fa fa-file\"></i>

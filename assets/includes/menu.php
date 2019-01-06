@@ -13,7 +13,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <!-- /.dropdown -->
-        <li>
+        <!--li>
             <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-fw fa-bell"></i>
             <span class="d-lg-none">Alertas
@@ -23,7 +23,7 @@
               <i class="fa fa-fw fa-circle"></i>
             </span>
             </a>
-        </li>
+        </li-->
         <li class="dropdown">
 
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -120,13 +120,13 @@
                 </li>
                 <?php } ?>
                 
-                <?php if(Admin::verificar_acciones_by_rol($bd, 7, $id_rol)){ ?>                 
+                <?php if(Admin::verificar_acciones_by_rol($bd, 6, $id_rol)){ ?>                 
                 <li>
-                    <a href="calendarios.php?opcion=2"><i class="fa fa-group fa-fw"></i> Calendario</a>                    
+                    <a href="calendarios.php?opcion=2"><i class="fa fa-calendar fa-fw"></i> Calendario</a>                    
                 </li>
                 <?php } ?>
 
-                <?php if(Admin::verificar_acciones_by_rol($bd, 6, $id_rol)){ ?> 
+                <?php if(Admin::verificar_acciones_by_rol($bd, 7, $id_rol)){ ?> 
                 <li>
                     <a href="#"><i class="fa fa-wrench fa-fw"></i> Ajustes Generales<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">

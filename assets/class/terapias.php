@@ -378,7 +378,7 @@ class terapias {
                 $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
                 $json[$i]['Acciones'] = "
-                        <a title=\"Generar invoice\" id=\"btn_reserva\" 
+                        <a title=\"Ver Reporte\" id=\"btn_reserva\" 
                             class=\"btn btn-info\"  
                             onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
                             <i class=\"fa fa-file-text-o\"></i>
@@ -502,7 +502,7 @@ class terapias {
                         <i class=\"fa fa-edit\"></i>
                     </a>
                     
-                    <a title=\"Generar INVOICE\" 
+                    <a title=\"Ver Reporte\" 
                         class=\"btn btn-success\"
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-file\"></i>
@@ -525,7 +525,7 @@ class terapias {
                 }
                 else if ($resultado[$i]["estado_t"]=="atendida") {
                     $str_btn = "
-                    <a title=\"Generar INVOICE\" 
+                    <a title=\"Ver Reporte\" 
                         class=\"btn btn-success\"
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-file\"></i>

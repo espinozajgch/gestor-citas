@@ -121,14 +121,15 @@ function mostrar_calendario(){
         header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,agendaWeek'
+                    right: 'month'
                 },
         navLinks: true,
+        selectable: true,
         navLinkDayClick: function (date, jsEvent){
                     
-                    var fecha_seleccionada      =   date.getFullYear()+"-"+date.getMonth()+"-"+(date.getDate()+1);                  
-                    //alert (fecha_seleccionada);
-                    calendar.changeView('agendaWeek', fecha_seleccionada);
+                    var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
+                    console.log(fecha_seleccionada);
+                    //calendar.changeView('agendaWeek', fecha_seleccionada);
                 },
         locale: 'es-us'
         
