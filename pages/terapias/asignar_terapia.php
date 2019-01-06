@@ -44,7 +44,7 @@ if(isset($_GET["rut_paciente"])){
         </div>   
         <div class="form-group col-4 col-sm-4 col-md-4">
             <!--small><strong><label for="medico">Estatus Pago</label></strong></small-->
-            <div id="botones_dinamicos"></div>
+            
         </div>       
         <!--div class="col-lg-12">
            <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
@@ -101,17 +101,111 @@ if(isset($_GET["rut_paciente"])){
             </div>
         </div>
 
-        <div class="form-group col-8 col-sm-8 col-md-8 mt-5" style="display: none;" id="contenedor_nombre_programa">
+        <div class="form-group col-6 col-sm-6 col-md-6 " style="display: none;" id="contenedor_nombre_programa">
             <small><strong><label for=name_>Nombre del programa</label></strong></small>
             <input type="text" class="form-control" id="name_programa" placeholder="Nombre del programa terapeutico">            
             <div id="error_name_pt" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Ingresa un nombre válido</small>
             </div>
         </div>
-        <div class="form-group col-xs-2 col-sm-2 col-md-2 mt-5" id="contenedor_descuento" style="display: none;">
-            <small><strong><label for="medico">Descuento aplicado</label></strong></small>
-            <input type="text" class="form-control" id="descuento_aplicado" placeholder="%" >
-        </div>   
+        
+        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago">
+            <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
+            <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="">
+                 <option value="7">INDIVIDUAL</option>
+                <option value="3">PARCIAL</option>
+                <option value="4">TOTAL</option>
+               
+            </select>
+            <div id="error_estado_pago" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+            </div>
+                                    
+            <!--div id="botones_dinamicos"></div--> 
+        </div> 
+
+        <div class="form-group col-xs-2 col-sm-2 col-md-2 " id="contenedor_descuento" style="display: none;">
+            <small><strong><label for="medico">% Descuento</label></strong></small>
+            <div class="input-group">
+                <input type="text" class="form-control" id="descuento_aplicado" value="10">
+                <span class="input-group-addon" id="basic-addon2">%</span>
+            </div>
+        </div>  
+
+        <div class="form-group col-xs-2 col-sm-2 col-md-2 " style="display: none;" id="contenedor_metodo_pago_1" >
+            <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
+            <select class="form-control" id="metodo_pago">
+                <?php
+                $bd = connection::getInstance()->getDb();
+                $sql = "SELECT * FROM `metodos_pago`";
+                $pdo = $bd->prepare($sql);
+                $pdo->execute();
+                $resultado = $pdo->fetchall(pdo::FETCH_ASSOC);
+                if ($resultado){
+                    $longitud = count($resultado);
+                    $string = "";                                                            
+                    for ($i=0; $i < $longitud; $i++){
+                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\" selected>".$resultado[$i]["nombre"]."</option>";
+                    }
+                    echo $string;
+                }
+                else{
+                        echo "<option> Ocurrío un error </option>";
+                }
+                ?>
+            </select>
+            <div id="error_iva" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+            </div>
+        </div>  
+
+        <div class="form-group col-3 col-sm-3 col-md-3" style="display: none;" id="contenedor_ref_pago_1">                                        
+            <small><strong><label for="referencia">Referencia</label></strong></small>
+            <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
+            <div id="error_email" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+            </div>
+        </div>  
+
+        <div class="form-group col-xs-2 col-sm-2 col-md-2 " style="display: none;" id="contenedor_metodo_pago_2" >
+            <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
+            <select class="form-control" id="metodo_pago">
+                <?php
+                $bd = connection::getInstance()->getDb();
+                $sql = "SELECT * FROM `metodos_pago`";
+                $pdo = $bd->prepare($sql);
+                $pdo->execute();
+                $resultado = $pdo->fetchall(pdo::FETCH_ASSOC);
+                if ($resultado){
+                    $longitud = count($resultado);
+                    $string = "";                                                            
+                    for ($i=0; $i < $longitud; $i++){
+                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\" selected>".$resultado[$i]["nombre"]."</option>";
+                    }
+                    echo $string;
+                }
+                else{
+                        echo "<option> Ocurrío un error </option>";
+                }
+                ?>
+            </select>
+            <div id="error_iva" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+            </div>
+        </div>  
+
+        <div class="form-group col-3 col-sm-3 col-md-3" style="display: none;" id="contenedor_ref_pago_2">                                        
+            <small><strong><label for="referencia">Referencia</label></strong></small>
+            <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
+            <div id="error_email" class="text-danger" style="display:none">
+                <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+            </div>
+        </div> 
+
+        <div class="form-group col-xs-2 col-sm-2 col-md-2" style="display: none;" id="contenedor_boton_pago">
+             <small><strong><label for="medico" style="visibility: hidden">Guardar</label></strong></small>
+            <button type="button" id="btnguardar" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-save"></i></button>
+        </div> 
 
         <div class="form-group col-6 col-sm-6 col-md-6">                                        
             <small><strong><label for="medico">Seleccione las terapias para el programa terapeutico</label></strong></small>
@@ -125,7 +219,7 @@ if(isset($_GET["rut_paciente"])){
         </div>        
         <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <small><strong><label for="medico">Cantidad</label></strong></small>
-            <input type="text" class="form-control" id="cantidad" placeholder="#" >
+            <input type="text" class="form-control" id="cantidad" value="1">
         </div>
 
         
@@ -213,6 +307,12 @@ if(isset($_GET["rut_paciente"])){
                             //operacion = 11;
                             $("#contenedor_nombre_programa").show();
                             $("#contenedor_descuento").show();
+                            $("#contenedor_estado_pago").show();
+                            $("#contenedor_metodo_pago_1").show();
+                            $("#contenedor_ref_pago_1").show();
+                            $("#contenedor_metodo_pago_2").show();
+                            $("#contenedor_ref_pago_2").show();
+                            $("#contenedor_boton_pago").show();
                             //$("#alerta").prop("class","alert-success alert-dismissable");
                             //$("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
                             //$("#advertencia_general").fadeIn(100).fadeOut(5000);
@@ -229,8 +329,14 @@ if(isset($_GET["rut_paciente"])){
                             $("#btn_cancelar").hide();
                             $("#btn_invoice").hide();
                             $("#contenedor_nombre_programa").hide();
+                            $("#contenedor_estado_pago").hide();
+                            $("#contenedor_metodo_pago_1").hide();
+                            $("#contenedor_ref_pago_1").hide();
+                            $("#contenedor_metodo_pago_2").hide();
+                            $("#contenedor_ref_pago_2").hide();
                             $("#contenedor_descuento").hide();
-                            $("#descuento_aplicado").val("0.00");
+                            $("#contenedor_boton_pago").hide();
+                            $("#descuento_aplicado").val("10");
                             //alert ("No hay registros de este paciente");      
                             $("#alerta").prop("class","alert-warning alert-dismissable");
                             $("#texto_advertencia_general").html("No hay registros del paciente");

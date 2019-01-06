@@ -173,7 +173,10 @@ $estilo_par = "";
 
                                     <div class="form-group col-6 col-md-6">
                                         <small><strong><label for="phone">Celular</label></strong></small>
-                                        <input type="phone" class="form-control" id="phone" placeholder="Celular" value="<?php echo Pacientes::obtener_celular($bd,$hash_usuario); ?>" autocomplete="off">
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1">+56</span>
+                                            <input type="phone" class="form-control" id="phone" placeholder="Celular" value="<?php echo Pacientes::obtener_celular($bd,$hash_usuario); ?>" autocomplete="off">
+                                        </div>
                                         <div id="error_phone" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Ingresa tu Celular</small>
                                         </div>

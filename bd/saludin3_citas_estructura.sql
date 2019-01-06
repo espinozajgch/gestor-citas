@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-01-2019 a las 16:16:35
+-- Tiempo de generación: 06-01-2019 a las 01:42:19
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -45,8 +45,7 @@ CREATE TABLE `admin` (
   `telefono` varchar(45) DEFAULT NULL,
   `hash` varchar(256) NOT NULL,
   `id_eu` int(11) NOT NULL,
-  `id_rol` int(11) NOT NULL,
-  `estado` varchar(10) NOT NULL DEFAULT 'activo'
+  `id_rol` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -188,7 +187,7 @@ CREATE TABLE `medico_tiene_reserva` (
 CREATE TABLE `medio_contacto` (
   `id_mc` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL,
-  `cobro` decimal(3,0) NOT NULL
+  `cobro` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -273,7 +272,8 @@ CREATE TABLE `programa_terapeutico` (
   `id_programa_terapeutico` int(10) UNSIGNED NOT NULL,
   `paciente_id_paciente` int(11) NOT NULL,
   `descripcion_programa_terapeutico` varchar(150) NOT NULL,
-  `descuento` decimal(6,2) NOT NULL DEFAULT '0.00',
+  `descuento` varchar(10) NOT NULL DEFAULT '0',
+  `porcentaje_descuento` varchar(10) NOT NULL DEFAULT '10',
   `estado` varchar(45) DEFAULT 'activo',
   `estatus_pago_id_ep` int(11) DEFAULT '1',
   `especial` tinyint(1) NOT NULL DEFAULT '0'
@@ -346,7 +346,7 @@ CREATE TABLE `terapia` (
   `id_terapia` int(10) UNSIGNED NOT NULL,
   `nombre_terapia` varchar(45) NOT NULL,
   `descripcion_terapia` varchar(250) NOT NULL,
-  `precio_terapia` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00',
+  `precio_terapia` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `estado_terapia` varchar(45) DEFAULT 'activa'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -546,12 +546,12 @@ ALTER TABLE `acciones`
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `entrada_historico`
 --
 ALTER TABLE `entrada_historico`
-  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
@@ -561,7 +561,7 @@ ALTER TABLE `especialidad`
 -- AUTO_INCREMENT de la tabla `estatus_pago`
 --
 ALTER TABLE `estatus_pago`
-  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `estatus_usuario`
 --
@@ -596,7 +596,7 @@ ALTER TABLE `medico_tiene_especialidad`
 -- AUTO_INCREMENT de la tabla `medico_tiene_reserva`
 --
 ALTER TABLE `medico_tiene_reserva`
-  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT de la tabla `medio_contacto`
 --
@@ -621,7 +621,7 @@ ALTER TABLE `paciente`
 -- AUTO_INCREMENT de la tabla `paciente_tiene_reserva`
 --
 ALTER TABLE `paciente_tiene_reserva`
-  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_tratamiento`
 --
@@ -631,27 +631,27 @@ ALTER TABLE `paciente_tiene_tratamiento`
 -- AUTO_INCREMENT de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
-  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT de la tabla `programa_tiene_terapia`
 --
 ALTER TABLE `programa_tiene_terapia`
-  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 --
 -- AUTO_INCREMENT de la tabla `reserva_medica`
 --
 ALTER TABLE `reserva_medica`
-  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `rol_accion`
 --
 ALTER TABLE `rol_accion`
-  MODIFY `id_ra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_ra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `terapia`
 --

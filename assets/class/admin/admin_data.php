@@ -351,7 +351,7 @@
 					$listado = '<select class="form-control" id="roles">';
 					foreach ($row as $rol) {
                         $listado .= '<option value="'.$rol["id_rol"].'"';  if($id_rol==$rol["id_rol"]) $listado = 'selected'; 
-                        $listado .= '>'.$rol["rol"].'</option>';
+                        $listado .= '>'.strtoupper($rol["rol"]).'</option>';
 	                }	
 	                $listado .= '</select>';	                        
 					return $listado;								
@@ -629,7 +629,7 @@
 
 		public static function obtener_lista_administadores($bd){
 
-			$consulta = "SELECT id_admin, nombre, email, id_eu, hash, rol, estado FROM admin ad INNER JOIN rol r ON ad.id_rol = r.id_rol WHERE ad.id_rol > 1";
+			$consulta = "SELECT id_admin, nombre, email, id_eu, hash, rol FROM admin ad INNER JOIN rol r ON ad.id_rol = r.id_rol WHERE ad.id_rol > 1";
 
 			try {
 				$comando = $bd->prepare($consulta);

@@ -537,7 +537,7 @@ class terapias {
                     ";
                 $json[$i]['N']          = ($i+1);
                 $json[$i]['Terapias']   = $resultado[$i]["nombre_t"];
-                $json[$i]['Precio']     = $resultado[$i]["precio_t"];
+                $json[$i]['Precio']     = number_format($resultado[$i]["precio_t"],"0",",",".");
                 $json[$i]['Estado']     = $resultado[$i]["estado_t"];                
                 $json[$i]['Acciones']   = $str_btn;
 
@@ -567,7 +567,7 @@ class terapias {
         }
         else{
             //$json[0]["estado"] = 1;
-            $json[0]['N']           = "No hay información que mostrar";
+            $json[0]['N']           = "";
             $json[0]['Terapias']    = "";
             $json[0]['Precio']      = "";
             $json[0]['Estado']      = "";
@@ -672,7 +672,7 @@ class terapias {
                 $json[$i]['N'] = $i+1;
                 $json[$i]['Nombre'] = $resultado[$i]["nombre_terapia"];
                 $json[$i]['Descripcion'] = $resultado[$i]["descripcion_terapia"];
-                $json[$i]['Precio'] = $resultado[$i]["precio_terapia"];
+                $json[$i]['Precio'] = number_format($resultado[$i]["precio_terapia"],"0",",",".");
                 //$json[$i]['Estado'] = $resultado[$i]["estado_terapia"];
                 $json[$i]['Acciones'] = "
                     <a title=\"Editar\" class=\"btn btn-info\" href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"><i class=\"fa fa-edit\"></i></a>
