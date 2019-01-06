@@ -161,14 +161,14 @@ class citas {
         return $pdo->execute(array($paciente, $id_cita));        
     }
     
-    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita){
+    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin , $pagado, $ref, $id_cita){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE reserva_medica
         SET fecha_inicio=?, medio_contacto_id_mc=?, metodos_pago_id_mp=?,
-            observaciones=? , hora_inicio = ?, hora_fin = ?
+            observaciones=? , hora_inicio = ?, hora_fin = ? , estado = ? , referencia = ? 
             WHERE id_rm = ".$id_cita;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones,$hora_inicio,$hora_fin));
+        return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref));
     }
     
     public static function asignar_reserva_terapia($id_programa_t_t, $id_reserva){

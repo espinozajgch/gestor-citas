@@ -283,11 +283,13 @@ else if($id_operacion ==7 || $id_operacion == "7"){//Actualizar una cita
     $medio_pago     =   $_POST["medio_pago"];
     $observaciones  =   $_POST["observaciones"];    
     $medicos        =   $_POST["medicos"];
-    $medicos_previos=   $_POST["medicos_previos"];    
+    $medicos_previos=   $_POST["medicos_previos"]; 
+    $pagado         =   $_POST["estado_pago"];
+    $ref            =   $_POST["referencia"];   
 
     //echo $medio_pago;
             
-    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
+    if(citas::actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref ,$id_cita)){//Si se ejecuta exitosamente procedemos a actualizar los medicos
         //Eliminamos las relaciones existentes y luego ingresamos nuevas relaciones        
         if (!citas::remover_medicos_cita($id_cita)){
             //echo "ERROR remover medicos";
