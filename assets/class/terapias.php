@@ -140,7 +140,7 @@ class terapias {
                     WHERE id_rm = ".$id_cita;
                 $pdo_ = $bd->prepare($sql);
                 //echo $sql;
-                $res_aux = $pdo_->execute(array("cancelado"));                              
+                $res_aux = $pdo_->execute(array("5"));                              
             }                 
         }        
         return true;
@@ -536,9 +536,9 @@ class terapias {
                 $str_btn.="
                     ";
                 $json[$i]['N']          = ($i+1);
-                $json[$i]['Terapias']   = $resultado[$i]["nombre_t"];
+                $json[$i]['Terapias']   = strtoupper($resultado[$i]["nombre_t"]);
                 $json[$i]['Precio']     = number_format($resultado[$i]["precio_t"],"0",",",".");
-                $json[$i]['Estado']     = $resultado[$i]["estado_t"];                
+                $json[$i]['Estado']     = strtoupper($resultado[$i]["estado_t"]);                
                 $json[$i]['Acciones']   = $str_btn;
 
             }   
@@ -705,7 +705,7 @@ class terapias {
         SET estado=?
             WHERE reserva_medica_id_rm = ".$id_cita." AND programa_terapeutico_id_programa_terapeutico = ".$id_programa;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array("cancelado"));
+        return $pdo->execute(array("5"));
     }
     
     public static function habilitar_terapia($id_terapia){
