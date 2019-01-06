@@ -325,6 +325,7 @@ class citas {
             p.nombre                            as  nombre,
             p.apellidop                         as  apellidop, 
             p.apellidom,
+            ep.nombre as estado_ep,
             GROUP_CONCAT(a.nombre)              as  nombre_medico,
             pt.descripcion_programa_terapeutico as  nombre_programa,
             pt.id_programa_terapeutico          as  id_programa,
@@ -332,6 +333,7 @@ class citas {
             ptt.id_programa_tiene_terapia       as  ptt_id,
             t.nombre_terapia                    as  nombre_t
             FROM reserva_medica rm 
+            INNER JOIN estatus_pago ep ON ep.id_ep=rm.estado
             INNER JOIN paciente_tiene_reserva   ptr     ON rm.id_rm                                         =   ptr.reserva_medica_id_rm 
             INNER JOIN paciente                 p       ON ptr.paciente_id_paciente                         =   p.id_paciente 
             INNER JOIN medico_tiene_reserva     mtr     ON mtr.reserva_medica_id_rm                         =   rm.id_rm 
@@ -339,7 +341,7 @@ class citas {
             LEFT  JOIN programa_tiene_terapia   ptt     ON ptt.reserva_medica_id_rm                         =   rm.id_rm
             LEFT  JOIN programa_terapeutico     pt      ON ptt.programa_terapeutico_id_programa_terapeutico =   pt.id_programa_terapeutico
             INNER JOIN terapia                  t       ON t.id_terapia                                     =   ptt.terapia_id_terapia
-            WHERE rm.estado NOT LIKE "cancelado" 
+           WHERE rm.estado !=5 
             GROUP BY rm.id_rm
             order by fecha_hora_reserva DESC';
         $pdo = $bd->prepare($sql);
@@ -380,37 +382,36 @@ class citas {
                 $nombre_terapia = $resultados[$i]["nombre_t"];
             }
             $json[$i]['Terapia'] = $nombre_terapia;
-            $json[$i]['Estado'] = $resultados[$i]["estado_rm"];
+            $json[$i]['Estado'] = $resultados[$i]["estado_ep"];
             //$json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
             $json[$i]['N'] = ($i+1);           
             
-            $str_brn= "
+            /*$str_brn= "
                 <button title=\"Validar cita\" 
-                    class=\"btn btn-success\"  
+                    class=\"btn btn-sm btn-success\"  
                     onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\"
                     ";
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";
             }
-            $str_brn.=">
+            ">
             <i class=\"fa fa-check\"></i>
-                </button>
-                <a title=\"Detalle\" 
-                    class=\"btn btn-info\"  
+                </button>*/
+            $str_brn="<a title=\"Detalle\" 
+                    class=\"btn btn-sm btn-info\"  
                     href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.="&finalizado=true";
             }            
             $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
                 </a>
-                <button title=\"Cancelar\" 
-                    class=\"btn btn-danger\"  
-                    onclick =\"cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\" 
-                        ";
-            if ($resultados[$i]["estado_rm"]=="atendida"){
+                <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
+                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)'";
+
+            if ($resultados[$i]["estado_rm"]=="2"){
                 //echo $resultados[$i]["estado_rm"];
                 $str_brn.=" disabled";
             }
@@ -418,11 +419,11 @@ class citas {
                     <i class=\"fa fa-times-circle\"></i>
                 </button>
                 <a title=\"Generar INVOICE\" 
-                        class=\"btn btn-success\"
+                        class=\"btn btn-sm btn-success\"
                         onclick=\"generar_invoice_individual(".$resultados[$i]["id_rm"].")\">
                         <i class=\"fa fa-file\"></i>
                     </a>
-";
+            ";
             
             $json[$i]['Acciones'] = $str_brn;
         }
