@@ -178,6 +178,37 @@ $rut_paciente = "";
             $("#medio_contacto").val("1");
             $("#contacto").hide();
             $("#chequeo").hide();
+            if (<?php 
+                                if (isset($_GET["id_ptt"])){
+                                    echo "true";
+                                }
+                                else{
+                                    echo "false";
+                                }
+                                ?>){                                
+                                var id_ptt = <?php 
+                                if (isset($_GET["id_ptt"])){
+                                    echo $_GET["id_ptt"];
+                                }         
+                                else echo "false";
+                                        ?>;
+                                    $.post("citas/citas_controlador.php",
+                                    {
+                                        id_operacion    :   1.1,
+                                        id_ptt          :   id_ptt
+                                    },
+                                    function (result){
+                                        var respuesta = JSON.parse(result);                                        
+                                        if (respuesta[0].estado == 1){                                            
+                                            var n_opcion = new Option(respuesta[0].nombre_t, respuesta[0].id_t, true, true);
+                                            $("#terapias_individual").append(n_opcion);   //*/                                
+                                            $("#terapias_individual").trigger('change').prop("disabled","true");
+                                        }
+                                        else{
+                                            alert ("ERROR");
+                                        }
+                                    });
+                                }
         }
         if (<?php
         if (isset($_GET["finalizado"])){
@@ -205,7 +236,7 @@ $rut_paciente = "";
         else echo "false";
         ?>)        
         {
-            $("#contenedor_lista_terapias").show();
+            $("#contenedor_lista_terapias").prop("disabled", "true");
         }
         inicializar_lista_terapias("terapias_individual");
     });
@@ -505,7 +536,7 @@ input:checked + .slider:before {
                                     </div>
 
 
-                                    <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias" style="display: none;">  
+                                    <div class="form-group col-6 col-sm-6 col-md-6" id="contenedor_lista_terapias">  
                                         <small><strong><label for="medico">Seleccione la terapias para el paciente</label></strong></small>
                                         <select class="form-control js-data-example-ajax" id="terapias_individual" onchange="set_terapia()"></select>
                                         <div hidden="true">
@@ -806,6 +837,8 @@ function validar_inputs(input, div_error){
                             else{
                                 clase = "alert alert-warning alert-dismissable";
                                 msj = "El paciente <strong>no tiene</strong> programa terapéutico activo";
+                                
+                                
                             }
                             //$("#programa_notificacion").prop("class",clase);
                             //$("#texto_notificacion_programa").html(msj);                    
@@ -1277,7 +1310,7 @@ function validar_inputs(input, div_error){
                     start: '8:00',
                     end: '18:00'
                 },
-                editable: true,
+                //editable: true,
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){
                     
@@ -1295,7 +1328,7 @@ function validar_inputs(input, div_error){
                 locale : "es",
                 responsive: true,
                 selectable: true,
-                weekends: true,
+                hiddenDays: [0],
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
@@ -1406,7 +1439,12 @@ function validar_inputs(input, div_error){
                     $("#hora_b").val(respuesta[1].hora_fin);
                     $("#metodo_pago").val(respuesta[1].id_mp);//prop("disabled", true);
                     $("#referencia").val(respuesta[1].ref)
-                    $("#estado_pago").val(respuesta[1].estado_pago)
+                    $("#estado_pago").val(respuesta[1].estado_pago);
+                    var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
+                    //alert (n_opcion);
+                    $("#terapias_individual").append(n_opcion);   //*/
+                    //$("#terapias_individual").val(respuesta[1].terapia_id);
+                    $("#terapias_individual").trigger('change').prop("disabled","true");
                     //$("#pago").hide();
                     $("#chequeo").hide();
                 }

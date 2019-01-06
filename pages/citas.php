@@ -319,10 +319,10 @@ $usuario  = "";
                     {"data": "N"},
                     /*{"data": "Creacion"},*/
                     {"data": "Fecha"},
-                    {"data": "Hora"},
+                    {"data": "Horario"},
                     {"data": "Paciente"},
                     {"data": "Medico"},    
-                    {"data": "Cita"},                    
+                    {"data": "Terapia"},                    
                     {"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]

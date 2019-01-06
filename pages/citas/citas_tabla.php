@@ -30,14 +30,14 @@ include_once("../assets/includes/menu.php") ?>
                 <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>N</th>
                                 <!--th>Creacion</th-->
                                 <th>Fecha</th>
                                 <th>Horario</th>
                                 
                                 <th>Paciente</th>
                                 <th>Medico</th>   
-                                <th>Cita</th> 
+                                <th>Terapia</th> 
                                 <th>Estado</th>
                                 <th>Acciones</th>  
                             </tr>

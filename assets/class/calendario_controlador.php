@@ -3,6 +3,7 @@
 //require_once("../vendor/class/propiedad/propiedad_data.php");
 require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/calendario.php';
+require_once '../../assets/class/citas.php';
 
 if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
     $bd = connection::getInstance()->getDb();
@@ -55,7 +56,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
          */
         $id_medicos = $_GET["medicos"];
         if ($id_medicos == ""){
-            $eventos_json = calendario::devolver_eventos_medicos_json();
+            $eventos_json = calendario::devolver_eventos_medicos_json(false, false);
         }
         else{//Hay médicos en la consulta
             $array_medicos = explode(",", $id_medicos);
@@ -67,7 +68,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
                 }
                 $str_condicion.=" id_admin=".$array_medicos[$i];
             }
-            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion);
+            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false);
         }        
         if (is_string($eventos_json)){
             echo $eventos_json;
@@ -77,7 +78,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
     }
     else if (($_POST["id_operacion"]==6)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==6))){
         //Devolver eventos para medicos para formato de tabla
-        $json_temp = json_decode(calendario::tabla_dias_citas());
+        $json_temp = json_decode(citas::tabla_dias_citas());        
         //print_r($json_temp);
         $json_final["data"]=$json_temp;
         $json_listo= json_encode($json_final);

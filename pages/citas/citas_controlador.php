@@ -34,6 +34,9 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         if ($resultado[0]["programa"]!=false){
             $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+            $resultado[0]["id_t"] = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
+          //  $resultado[0]["nombre_t"] = terapias::obtener_nombre_terapia_cita($resultado[0]["programa"]);
+            
         }
         else{
             $resultado[0]["descuento"] = 0;
@@ -53,6 +56,19 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     /*for ($i=0; $i<$longitud; $i++){
         
     }//*/    
+}
+else if ($id_operacion == 1.1){//Obtener terapia seleccionada TODO: OPTIMIZAR ESTA LLAMADA
+    $id_ptt = $_POST["id_ptt"];
+    $json;
+    $json[0]["id_t"] = terapias::obtener_id_terapia_cita($id_ptt);
+    $json[0]["nombre_t"] = terapias::obtener_nombre_terapia_cita($id_ptt);
+    if ($json[0]["id_t"]&&$json[0]["nombre_t"]){
+        $json[0]["estado"] = 1;
+    }
+    else{
+        $json[0]["estado"] = 0;
+    }
+    echo json_encode($json);
 }
 else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     //Listamos los valores que jugaran un papel en la insercion
@@ -203,12 +219,24 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
     
     $id_cita = $_POST["cita"];
     $bd = connection::getInstance()->getDb();
-    $sql = 'SELECT  paciente.rut, reserva_medica.fecha_inicio, reserva_medica.metodos_pago_id_mp as id_mp,
-        reserva_medica.hora_inicio, reserva_medica.hora_fin, reserva_medica.observaciones, reserva_medica.medio_contacto_id_mc, reserva_medica.referencia, reserva_medica.estado
+    $sql = 'SELECT  
+        paciente.rut,
+        reserva_medica.fecha_inicio,
+        reserva_medica.metodos_pago_id_mp as id_mp,
+        reserva_medica.hora_inicio,
+        reserva_medica.hora_fin, 
+        reserva_medica.observaciones, 
+        reserva_medica.medio_contacto_id_mc, 
+        reserva_medica.referencia, 
+        reserva_medica.estado,
+        ptt.terapia_id_terapia as terapia_id,
+        t.nombre_terapia as terapia_nombre
         FROM `paciente`         
-        INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente 
-        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm        
-		WHERE id_rm = '.$id_cita;
+        INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+        INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm
+        LEFT JOIN programa_tiene_terapia as ptt ON ptt.reserva_medica_id_rm = id_rm
+        LEFT JOIN terapia t ON ptt.terapia_id_terapia = t.id_terapia
+	WHERE id_rm = '.$id_cita;
     $pdo = $bd->prepare($sql);        
     //echo $sql;
     $pdo->execute();   
@@ -229,6 +257,10 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
         $json[$i+1]['ref']            =   strtoupper($resultados[$i]["referencia"]);
         $json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
+        $json[$i+1]['id_terapia']     =   strtoupper($resultados[$i]["terapia_id"]);
+        $json[$i+1]['nombre_terapia'] =   strtoupper($resultados[$i]["terapia_nombre"]);
+        
+        
     }
     //FORMATO de json
     //descripcion, fecha inicio, fecha fin

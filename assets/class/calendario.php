@@ -84,7 +84,7 @@ class calendario {
         return $json;
     }
     
-    public static function devolver_eventos_medicos_json($id_medico=false){
+    public static function devolver_eventos_medicos_json($id_medico=false, $links = true){
         //Una variable donde almacenaremos los resultados con el formato requerido
         //$json;
         $str_debug="";
@@ -142,7 +142,10 @@ class calendario {
             $json[$i]['start']  = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_inicio"];
             $json[$i]['end']    = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_fin"];
             $json[$i]['id']     = $resultados[$i]["id_rm"];
-            $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            if ($links){
+                $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            }
+            
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin

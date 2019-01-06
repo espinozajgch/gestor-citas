@@ -232,6 +232,41 @@ class terapias {
         }
     }
     
+    public static function obtener_id_terapia_cita($id_programa_t){
+        $sql = "SELECT t.id_terapia as id_t, ptt.id_programa_tiene_terapia
+                FROM terapia t
+                INNER JOIN programa_tiene_terapia ptt ON ptt.terapia_id_terapia=t.id_terapia
+                WHERE ptt.id_programa_tiene_terapia = $id_programa_t";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        //echo $sql;
+        if ($resultado){
+            return $resultado[0]["id_t"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
+    public static function obtener_nombre_terapia_cita($id_programa_t){
+        $sql = "SELECT t.nombre_terapia as nombre_t, ptt.id_programa_tiene_terapia
+                FROM terapia t
+                INNER JOIN programa_tiene_terapia ptt ON ptt.terapia_id_terapia=t.id_terapia
+                WHERE ptt.id_programa_tiene_terapia = $id_programa_t";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["nombre_t"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
     public static function obtener_descuento_programa($id_programa){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `id_programa_terapeutico`=$id_programa";
