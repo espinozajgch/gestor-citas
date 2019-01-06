@@ -102,9 +102,7 @@ class calendario {
                 . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
                 . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
                     WHERE ".$id_medico." 
-                        AND reserva_medica.estado NOT LIKE \"finalizada\"
-                        AND reserva_medica.estado NOT LIKE \"atendida\"
-                        AND reserva_medica.estado NOT LIKE \"cancelado\"
+                        AND reserva_medica.estado = 1
                         AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
                         GROUP BY reserva_medica.id_rm";
                     }
@@ -116,9 +114,7 @@ class calendario {
                 . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
                 . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
                 . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-                    AND reserva_medica.estado NOT LIKE \"finalizada\"
-                        AND reserva_medica.estado NOT LIKE \"atendida\"
-                        AND reserva_medica.estado NOT LIKE \"cancelado\"
+                    AND reserva_medica.estado = 1
                     AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
                     GROUP BY reserva_medica.id_rm";
                     }
@@ -135,10 +131,14 @@ class calendario {
         //echo "<br>";
         //print_r($resultados);
         $longitud = count($resultados);
-        //echo $longitud;        
-        //print_r($resultados);
+        $json[0]['title']  = "";
+        $json[0]['start']  = "";
+        $json[0]['end']    = "";
+        $json[0]['id']     = "";
+        $json[0]['url']    = "";
+
         for ($i=0; $i<$longitud; $i++){
-            $json[$i]['title']  = $resultados[$i]["nombre_medico"];
+            $json[$i]['title']  = strtoupper($resultados[$i]["nombre_medico"]);
             $json[$i]['start']  = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_inicio"];
             $json[$i]['end']    = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_fin"];
             $json[$i]['id']     = $resultados[$i]["id_rm"];
@@ -146,10 +146,10 @@ class calendario {
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin
-        if (!$longitud<1){
+        //if (!$longitud<1){
             $json = json_encode($json);
             
-        }        
+        //}        
         //$json[0]['str_debug']   =  $str_debug;
         //echo $str_debug;
         return $json;

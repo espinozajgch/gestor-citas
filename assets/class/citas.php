@@ -330,7 +330,7 @@ class citas {
             INNER JOIN terapia                  t       ON t.id_terapia                                     =   ptt.terapia_id_terapia
            WHERE rm.estado !=5 
             GROUP BY rm.id_rm
-            order by fecha_hora_reserva DESC';
+            order by fecha_hora_reserva, hora_inicio DESC';
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos

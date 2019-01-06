@@ -1,5 +1,5 @@
 <?php
-$etiqueta = "Detalle del programa";
+$etiqueta = "Reporte Programa Terepeutico";
 $id_programa;
 if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a modificar    
     $id_terapia = $_GET["id_paciente"];
@@ -58,7 +58,8 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
         <h3 class="page-header">Nombre del programa: <small id="texto_programa"></small></h3>
     </div>  
     <div class="form-group col-4 col-sm-4 col-md-4">
-        <div id="botones_dinamicos"></div>
+        <!--div id="botones_dinamicos"></div-->
+        <button class="btn btn-sm btn-info shared" id="btn_invoice" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
     </div>  
      
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">

@@ -89,9 +89,9 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
     else if (($_POST["id_operacion"]==7)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==7))){
     //Devolver eventos medicos   
         $eventos_json = calendario::devolver_eventos_medicos_json();
-        //echo $eventos_json;
+        echo $eventos_json;
         //var_dump($eventos_json);
-         echo json_encode($eventos_json);
+        //echo json_encode($eventos_json);
     }
     else if ($_POST["id_operacion"] == 8){
         $id_dia= $_POST["dia"];
