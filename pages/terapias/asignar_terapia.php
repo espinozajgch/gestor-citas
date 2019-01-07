@@ -128,7 +128,7 @@ if(isset($_GET["rut_paciente"])){
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " id="contenedor_descuento" style="display: none;">
             <small><strong><label for="medico">% Descuento</label></strong></small>
             <div class="input-group">
-                <input type="text" class="form-control" id="descuento_aplicado" value="10">
+                <input type="text" class="form-control" id="descuento_aplicado">
                 <span class="input-group-addon" id="basic-addon2">%</span>
             </div>
         </div> 
@@ -255,7 +255,27 @@ if(isset($_GET["rut_paciente"])){
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-    
+    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
         <hr>
        <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_paciente">
@@ -301,6 +321,7 @@ if(isset($_GET["rut_paciente"])){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
+                            var check = true;
                             $("#name").val(json[0].nombre.toUpperCase());
                             $("#last_name").val(json[0].apellidop.toUpperCase()); 
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
@@ -311,13 +332,21 @@ if(isset($_GET["rut_paciente"])){
                             $("#referencia").val(json[0].referencia_1);
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
-                            if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){
+                            if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){                                
                                 $("#estado_pago").prop("disabled","true");
-                                $("#metodo_pago").prop("disabled","true");
-                                $("#referencia").prop("disabled","true");
-                                $("#metodo_pago_2").prop("disabled","true");
-                                $("#referencia_2").prop("disabled","true");
-                                $("#btnguardar_pago").prop("disabled","true");
+                                if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
+                                    $("#metodo_pago").prop("disabled","true");
+                                    $("#referencia").prop("disabled","true");
+                                    check = false;
+                                }
+                                if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
+                                    $("#metodo_pago_2").prop("disabled","true");
+                                    $("#referencia_2").prop("disabled","true");
+                                    check = false;
+                                }
+                                if (check){
+                                    $("#btnguardar_pago").prop("disabled","true");    
+                                }                                
                                 $("#descuento_aplicado").prop("disabled","true");                                
                             }
                             //Verificar si el paciente ya tiene terapias asignadas 
@@ -436,6 +465,7 @@ if(isset($_GET["rut_paciente"])){
                 if (respuesta[0].estado == 1){
                     $("#alert_ok").show(500);                
                     buscar_info_paciente(false);    
+                    setTimeout(function(){window.location.reload(),1500});
                 }
                 else{
                     $("#alert_fail").show();            
@@ -500,6 +530,7 @@ if(isset($_GET["rut_paciente"])){
 
             //if($("#name_programa").val()!=""){
                 var bandera_confirm=true;
+                
                     $.post("terapias/terapias_controlador.php",
                     {
                         id_operacion :  7,
@@ -591,7 +622,8 @@ if(isset($_GET["rut_paciente"])){
         }
         
         function eliminar_terapia(id_programa, id_terapia){
-            if (confirm("¿Está seguro que desea eliminar esta terapia? Esta acción no puede deshacerse.")){
+            //if (confirm("¿Está seguro que desea eliminar esta terapia? Esta acción no puede deshacerse.")){
+            if (true){
                 $.post("terapias/terapias_controlador.php",
                 {
                     id_operacion: 18,
@@ -617,27 +649,43 @@ if(isset($_GET["rut_paciente"])){
         }
         
         function establecer_tipo_pago(){
-            $.post("terapias/terapias_controlador.php",
-            {
-                id_operacion : 20,
-                id_paciente:        $("#id_oculto").val(),
-                tipo_pago:          $("#estado_pago").val(),
-                metodo_pago_1:      $("#metodo_pago").val(),
-                referencia_1:       $("#referencia").val(),
-                metodo_pago_2:      $("#metodo_pago_2").val(),
-                referencia_2:       $("#referencia_2").val(),
-                descuento:          $("#descuento_aplicado").val()
-            },
-            function (result){
-                var respuesta = JSON.parse(result);
-                if (respuesta[0].estado == 1 ){//EXITO
-                    $("#alert_ok").show(500);
-                }
-                else{
-                    $("#alert_error").show(500);
-                }
-            });
+            var bandera = confirm("¿Seguro que quiere establecer este tipo de pago?");            
+            
+            if (bandera){
+                $.post("terapias/terapias_controlador.php",
+                {
+                    id_operacion : 20,
+                    id_paciente:        $("#id_oculto").val(),
+                    tipo_pago:          $("#estado_pago").val(),
+                    metodo_pago_1:      $("#metodo_pago").val(),
+                    referencia_1:       $("#referencia").val(),
+                    metodo_pago_2:      $("#metodo_pago_2").val(),
+                    referencia_2:       $("#referencia_2").val(),
+                    descuento:          $("#descuento_aplicado").val()
+                },
+                function (result){
+                    var respuesta = JSON.parse(result);
+                    if (respuesta[0].estado == 1 ){//EXITO
+                        $("#alert_ok").show(500);
+                        setTimeout(function(){window.location.reload(),1500});
+                    }
+                    else{
+                        $("#alert_error").show(500);
+                    }
+                });
+            }
+            
         }
         
+        /*$("#btn_guardar_pago").click(function(e){
+                id = $(this).attr("cod");
+                //console.log("dd"+id);
+                $('#modal_trash').find(".modal-body").html("<strong> N# "+ id+"</strong>");
+            });
+
+            $('#erase').click(function(e){
+                eliminar(id);
+            });
+        //*/
 </script>
 

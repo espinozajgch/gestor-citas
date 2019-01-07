@@ -164,6 +164,7 @@ $usuario  = "";
                 $("#contenedor_metodo_pago_2").show();
                 $("#contenedor_ref_pago_2").show();
                 $("#contenedor_boton_pago").show();
+                $("#descuento_aplicado").val(0);
             }
             else
             if(tipo_pago ==4){
@@ -174,6 +175,9 @@ $usuario  = "";
                 $("#contenedor_metodo_pago_2").hide();
                 $("#contenedor_ref_pago_2").hide();
                 $("#contenedor_boton_pago").show();
+                $("#descuento_aplicado").val(10);
+                //alert ("WUA!!!");
+                
             }
             else{
                 $("#contenedor_descuento").hide();
@@ -183,6 +187,7 @@ $usuario  = "";
                 $("#contenedor_metodo_pago_2").hide();
                 $("#contenedor_ref_pago_2").hide();
                 $("#contenedor_boton_pago").hide();
+                $("#descuento_aplicado").val(0);
             }
 
 

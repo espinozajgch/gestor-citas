@@ -848,7 +848,7 @@ function validar_inputs(input, div_error){
                             //$("#texto_notificacion_programa").html(msj);                    
                             //$("#notificacion_programa").fadeIn(100);  
                             //alert (json[0].tipo_pago );
-                            if (json[0].tipo_pago != 7){//No es individual
+                            if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
                                 $("#pago").hide();
                                 $("#contenedor_referencia").hide();
                             }
