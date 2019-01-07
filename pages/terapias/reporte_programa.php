@@ -1,5 +1,5 @@
 <?php
-
+//echo "a";
 require('../../vendor/fpdf/invoice.php');
 require_once '../../assets/class/terapias.php';
 require_once '../../assets/class/calendario.php';
@@ -44,8 +44,8 @@ $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p,
     INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia 
     INNER JOIN programa_terapeutico pt ON programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico 
     INNER JOIN paciente ON pt.paciente_id_paciente = paciente.id_paciente 
-    INNER JOIN estatus_pago ep ON ep.id_ep=pt.estatus_pago_id_ep
-    INNER JOIN metodos_pago mp ON pt.metodos_pago_id_mp=mp.id_mp
+    LEFT JOIN estatus_pago ep ON ep.id_ep=pt.estatus_pago_id_ep
+    LEFT JOIN metodos_pago mp ON pt.metodos_pago_id_mp=mp.id_mp
     LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm 
     LEFT JOIN pagos_parciales pp ON pt.id_programa_terapeutico=pp.programa_terapeutico_id_programa_terapeutico "
     .$condicion ;
@@ -180,8 +180,8 @@ while (!$fin){
             $x_actual+=15;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
-            $x_actual+=40;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            /*$x_actual+=40;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);//*/
         }
     }
     else{
