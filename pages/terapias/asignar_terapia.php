@@ -321,7 +321,7 @@ if(isset($_GET["rut_paciente"])){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
-                            var check = true;
+                            var check = 0;
                             $("#name").val(json[0].nombre.toUpperCase());
                             $("#last_name").val(json[0].apellidop.toUpperCase()); 
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
@@ -336,19 +336,24 @@ if(isset($_GET["rut_paciente"])){
                                 $("#estado_pago").prop("disabled","true");
                                 if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
                                     $("#metodo_pago").prop("disabled","true");
-                                    $("#referencia").prop("disabled","true");
-                                    check = false;
-                                }
+                                    $("#referencia").prop("disabled","true");                                    
+                                    check++;
+                                }                                
                                 if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
                                     $("#metodo_pago_2").prop("disabled","true");
-                                    $("#referencia_2").prop("disabled","true");
-                                    check = false;
-                                }
-                                if (check){
+                                    $("#referencia_2").prop("disabled","true");                                    
+                                    check++;
+                                }           
+                                if (json[0].tipo_pago == 4){
+                                check++;
+                            }
+                                alert (check);
+                                if (check>=2){
                                     $("#btnguardar_pago").prop("disabled","true");    
                                 }                                
                                 $("#descuento_aplicado").prop("disabled","true");                                
                             }
+                            
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             $("#tabla_paciente").DataTable().destroy();
