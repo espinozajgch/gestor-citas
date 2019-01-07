@@ -489,7 +489,7 @@ input:checked + .slider:before {
 
                                 <div class="form-row">    
                                     
-                                    <div class="form-group col-4 col-md-4">
+                                    <div class="form-group col-4 col-md-4" id="contenedor_estatus">
                                         <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
                                         <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
                                             <option value="1">PENDIENTE</option>
@@ -851,6 +851,8 @@ function validar_inputs(input, div_error){
                             if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
                                 $("#pago").hide();
                                 $("#contenedor_referencia").hide();
+                                $("#contenedor_estatus").hide();
+                                $("#estado_pago").val(2);
                             }
                         }
                         else{

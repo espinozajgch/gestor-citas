@@ -347,7 +347,7 @@ if(isset($_GET["rut_paciente"])){
                                 if (json[0].tipo_pago == 4){
                                 check++;
                             }
-                                alert (check);
+                                //alert (check);
                                 if (check>=2){
                                     $("#btnguardar_pago").prop("disabled","true");    
                                 }                                
