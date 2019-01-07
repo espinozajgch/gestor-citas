@@ -37,13 +37,17 @@ $sql = "SELECT paciente.celular as celular_p, paciente.email as email_p,
     terapia.id_terapia as id_terapia, programa_tiene_terapia.estado as estado_t, 
     terapia.nombre_terapia as nombre_t, terapia.precio_terapia as precio_t, 
     terapia.id_terapia as id_t, pt.descripcion_programa_terapeutico as desc_p,
-    pt.descuento as descuento_p, ep.nombre as nombre_ep, rm.estado as rm_estado, pt.especial
+    pt.descuento as descuento_p, ep.nombre as nombre_ep, rm.estado as rm_estado, pt.especial,
+    pt.estatus_pago_id_ep as estatus_pago_p, pt.referencia as referencia_pt,
+    mp.nombre as nombre_mp, pp.metodos_pago_id_mp as nombre_mp_2, pp.referencia as referencia_pt_2
     FROM terapia 
     INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia 
     INNER JOIN programa_terapeutico pt ON programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico = pt.id_programa_terapeutico 
     INNER JOIN paciente ON pt.paciente_id_paciente = paciente.id_paciente 
     INNER JOIN estatus_pago ep ON ep.id_ep=pt.estatus_pago_id_ep
-    LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm "
+    INNER JOIN metodos_pago mp ON pt.metodos_pago_id_mp=mp.id_mp
+    LEFT JOIN reserva_medica rm ON rm.id_rm=programa_tiene_terapia.reserva_medica_id_rm 
+    LEFT JOIN pagos_parciales pp ON pt.id_programa_terapeutico=pp.programa_terapeutico_id_programa_terapeutico "
     .$condicion ;
 
 //echo $sql;
@@ -128,9 +132,57 @@ while (!$fin){
         $y_actual+=5;
         $x_actual = $x_inicio;
 
-        $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
-        $x_actual+=15;
-        $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+        if ($resultado[0]["estatus_pago_p"] == 4){//TOTAL
+            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=15;
+            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=40;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=20;
+            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_mp"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=45;
+            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=30;
+            $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+        }
+        else if ($resultado[0]["estatus_pago_p"] == 3){//Parcial
+            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=15;
+            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=40;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=20;
+            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_mp"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=45;
+            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=30;
+            $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $y_actual+=4;
+            $x_actual=65;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=20;
+            $nombre_mp = terapias::obtener_nombre_mp($resultado[0]["nombre_mp_2"]);
+            $pdf->agregar_texto(strtoupper($nombre_mp), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=45;
+            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=30;
+            $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt_2"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+        }
+        else{
+            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=15;
+            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=40;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+        }
     }
     else{
         $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);

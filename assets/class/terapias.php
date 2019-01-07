@@ -349,6 +349,22 @@ class terapias {
             return false;
         }
     }
+    
+    public static function obtener_nombre_mp ($id_mp){
+        $sql = "SELECT * FROM `metodos_pago` 
+            WHERE `id_mp`=$id_mp";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["nombre"];
+        }
+        else{            
+            return false;
+        }
+    }
     public static function obtener_metodo_pago_parcial ($id_programa){
         $sql = "SELECT * FROM `pagos_parciales` 
             WHERE `programa_terapeutico_id_programa_terapeutico`=$id_programa";
@@ -384,7 +400,9 @@ class terapias {
     public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false, $especial = false, $tipo_pago = 7){
         $bd = connection::getInstance()->getDb();
         $array;
-        //echo "aaa".$id_paciente;
+        if ($tipo_pago == ""){
+            $tipo_pago = 7;
+        }
         if ($especial){
             $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento, especial, estatus_pago_id_ep)
             VALUES (?,?,?,?,?)";

@@ -204,6 +204,7 @@ $rut_paciente = "";
                                             var n_opcion = new Option(respuesta[0].nombre_t, respuesta[0].id_t, true, true);
                                             $("#terapias_individual").append(n_opcion);   //*/                                
                                             $("#terapias_individual").trigger('change').prop("disabled","true");
+                                            set_terapia(false);
                                         }
                                         else{
                                             alert ("ERROR");
@@ -530,7 +531,7 @@ input:checked + .slider:before {
                                             </div>
                                     </div>
 
-                                    <div class="form-group col-4 col-md-4">
+                                    <div class="form-group col-4 col-md-4" id="contenedor_referencia"> 
                                         <small><strong><label for="referencia">Referencia</label></strong></small>
                                         <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
                                         <div id="error_email" class="text-danger" style="display:none">
@@ -845,7 +846,12 @@ function validar_inputs(input, div_error){
                             }
                             //$("#programa_notificacion").prop("class",clase);
                             //$("#texto_notificacion_programa").html(msj);                    
-                            //$("#notificacion_programa").fadeIn(100);                           
+                            //$("#notificacion_programa").fadeIn(100);  
+                            //alert (json[0].tipo_pago );
+                            if (json[0].tipo_pago != 7){//No es individual
+                                $("#pago").hide();
+                                $("#contenedor_referencia").hide();
+                            }
                         }
                         else{
                             $("#name").attr('disabled', false);
@@ -1077,7 +1083,7 @@ function validar_inputs(input, div_error){
                     if ($("#check_slider").prop("checked")||(terapia_seteada)){
                     //Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
                         bandera = false;
-                        
+//                        alert (terapia_seteada + "CREAR PROGRAMA");
                         var terapias;
                         var terapias_individual;
                         var descripcion;
@@ -1444,6 +1450,7 @@ function validar_inputs(input, div_error){
                     $("#terapias_individual").trigger('change').prop("disabled","true");
                     //$("#pago").hide();
                     $("#chequeo").hide();
+                    
                 }
                 else{
                     
@@ -1525,9 +1532,9 @@ function validar_inputs(input, div_error){
             });
         }
         
-    function set_terapia(){
+    function set_terapia(val = true){
         
-        terapia_seteada = true;
+        terapia_seteada = val;
     }
   </script>
   <script src="../vendor/select2/js/select2.full.min.js"></script>

@@ -396,8 +396,13 @@ $usuario  = "";
                     {"data": "N"},
                     {"data": "Terapias"},                    
                     {"data": "Precio"},                    
-                    {"data": "Estado"},
-                    {"data": "Acciones"}
+                    {"data": "Estado"}
+                    <?php 
+                    if (!isset($_GET["id_paciente"])){
+                        echo ',{"data": "Acciones"}';
+                    }
+                    ?>
+                    
                 ],
                 "initComplete": function (settings, json){
                     $("#texto_programa").html(json.data[0].desc_prt);

@@ -311,7 +311,15 @@ if(isset($_GET["rut_paciente"])){
                             $("#referencia").val(json[0].referencia_1);
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
-                            
+                            if (json[0].tipo_pago != 7){
+                                $("#estado_pago").prop("disabled","true");
+                                $("#metodo_pago").prop("disabled","true");
+                                $("#referencia").prop("disabled","true");
+                                $("#metodo_pago_2").prop("disabled","true");
+                                $("#referencia_2").prop("disabled","true");
+                                $("#btnguardar_pago").prop("disabled","true");
+                                $("#descuento_aplicado").prop("disabled","true");                                
+                            }
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             $("#tabla_paciente").DataTable().destroy();
@@ -359,7 +367,7 @@ if(isset($_GET["rut_paciente"])){
                             $("#contenedor_ref_pago_2").hide();
                             $("#contenedor_descuento").hide();
                             $("#contenedor_boton_pago").hide();
-                            $("#descuento_aplicado").val("10");
+                            //$("#descuento_aplicado").html(10);
                             //alert ("No hay registros de este paciente");      
                             $("#alerta").prop("class","alert-warning alert-dismissable");
                             $("#texto_advertencia_general").html("No hay registros del paciente");

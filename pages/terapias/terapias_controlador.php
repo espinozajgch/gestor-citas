@@ -96,6 +96,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
         else $especial = false;
     }
     else $especial = false;
+    
     //$especial = $_POST["especial"];
     
     $str_debug.="-Se agregaran $cantidad terapias-";    

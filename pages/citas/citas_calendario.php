@@ -81,7 +81,8 @@ require_once '../assets/class/calendario.php';
                     url: url,
                     method: 'GET'
                 },
-                locale : "es-us",
+                hiddenDays: [0],
+                locale : "es-es",
                 responsive: true,
                 navLinks: true,
                 selectable: true

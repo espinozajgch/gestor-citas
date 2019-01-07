@@ -71,7 +71,11 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
                     <th>Terapias</th>
                     <th>Precio</th>                                
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <?php if (!isset($_GET["id_paciente"])){
+                        echo '<th>Acciones</th>';
+                    }
+                        ?>
+                    
                 </tr>
             </thead>                                            
             <tbody >
@@ -163,6 +167,14 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
            window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val()+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
         }
     }
-    
+    function generar_invoice_programa(){
+            id_paciente = $("#id_oculto").val();
+            if (id_paciente){
+                window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
+            }
+            else{
+                //alert ("Procedimiento inválido");
+            }
+        }
     
 </script>

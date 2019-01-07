@@ -39,8 +39,10 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
             if ($resultado[0]["tipo_pago"] != false){
                 $resultado[0]["metodo_1"] = terapias::obtener_id_metodo_pago($resultado[0]["programa"]);
                 $resultado[0]["referencia_1"] = terapias::obtener_referencia_pago($resultado[0]["programa"]);
-                $resultado[0]["metodo_2"] = terapias::obtener_metodo_pago_parcial($resultado[0]["programa"]);
-                $resultado[0]["referencia_2"] = terapias::obtener_referencia_pago_parcial($resultado[0]["programa"]);//*/
+                $aux = terapias::obtener_metodo_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["metodo_2"] = $aux ? $aux : " ";
+                $aux = terapias::obtener_referencia_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["referencia_2"] = $aux ? $aux : " " ;
             }
           //  $resultado[0]["nombre_t"] = terapias::obtener_nombre_terapia_cita($resultado[0]["programa"]);
             
@@ -237,12 +239,14 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         reserva_medica.referencia, 
         reserva_medica.estado,
         ptt.terapia_id_terapia as terapia_id,
-        t.nombre_terapia as terapia_nombre
+        t.nombre_terapia as terapia_nombre,
+        pt.estatus_pago_id_ep as tipo_pago
         FROM `paciente`         
         INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
         INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm
         LEFT JOIN programa_tiene_terapia as ptt ON ptt.reserva_medica_id_rm = id_rm
         LEFT JOIN terapia t ON ptt.terapia_id_terapia = t.id_terapia
+        INNER JOIN programa_terapeutico pt ON pt.id_programa_terapeutico=ptt.programa_terapeutico_id_programa_terapeutico
 	WHERE id_rm = '.$id_cita;
     $pdo = $bd->prepare($sql);        
     //echo $sql;
@@ -266,6 +270,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
         $json[$i+1]['id_terapia']     =   strtoupper($resultados[$i]["terapia_id"]);
         $json[$i+1]['nombre_terapia'] =   strtoupper($resultados[$i]["terapia_nombre"]);
+        $json[$i+1]['tipo_pago']      =   ($resultados[$i]["tipo_pago"]);
         
         
     }
