@@ -1116,6 +1116,7 @@ function validar_inputs(input, div_error){
                                 descripcion:        descripcion,
                                 id:                 $("#id_oculto").val(),
                                 nombre_programa:    nombre_programa,
+                                tipo_pago:               7,
                                 especial            : <?php if(isset($_GET["nueva"]))
                                                             {
                                                                 echo "true";                                                                
@@ -1224,7 +1225,8 @@ function validar_inputs(input, div_error){
             observaciones   : $("#observaciones").val(),                            
             medicos         : bandera = $("#medicos").val(),
             estado_pago     : $("#estado_pago").val(),
-            referencia      : $("#referencia").val()
+            referencia      : $("#referencia").val(),
+            tipo_pago       : $("#estado_pago").val()
             }, 
             function (result){
                 console.log(result)
