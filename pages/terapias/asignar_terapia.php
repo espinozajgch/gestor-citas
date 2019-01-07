@@ -173,7 +173,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " style="display: none;" id="contenedor_metodo_pago_2" >
             <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
-            <select class="form-control" id="metodo_pago">
+            <select class="form-control" id="metodo_pago_2">
                 <?php
                 $bd = connection::getInstance()->getDb();
                 $sql = "SELECT * FROM `metodos_pago`";
@@ -200,7 +200,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-3 col-sm-3 col-md-3" style="display: none;" id="contenedor_ref_pago_2">                                        
             <small><strong><label for="referencia">Referencia</label></strong></small>
-            <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
+            <input id="referencia_2" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
             <div id="error_email" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
@@ -208,7 +208,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2" style="display: none;" id="contenedor_boton_pago">
              <small><strong><label for="medico" style="visibility: hidden">Guardar</label></strong></small>
-            <button type="button" id="btnguardar_pago" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-save"></i></button>
+            <button type="button" id="btnguardar_pago" class="btn btn-success" onclick="establecer_tipo_pago()" style="display: block;"><i class="fa fa-save"></i></button>
         </div> 
 
         </div>    
@@ -306,6 +306,12 @@ if(isset($_GET["rut_paciente"])){
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
                             $("#id_oculto").val(json[0].id_paciente); 
                             $("#descuento_aplicado").val(json[0].descuento);
+                            $("#estado_pago").val(json[0].tipo_pago).trigger('change');
+                            $("#metodo_pago").val(json[0].metodo_1);
+                            $("#referencia").val(json[0].referencia_1);
+                            $("#metodo_pago_2").val(json[0].metodo_2);
+                            $("#referencia_2").val(json[0].referencia_2);
+                            
                             //Verificar si el paciente ya tiene terapias asignadas 
                             //alert ($("#id_oculto").val());
                             $("#tabla_paciente").DataTable().destroy();
@@ -378,7 +384,12 @@ if(isset($_GET["rut_paciente"])){
             $("#error_rut").hide(5000);
             //alert ($("#name").val());
         }     
-
+        if (!regex.test($("#name_programa").val())){
+            bandera = false;
+            $("#error_name_pt").show(500);
+            $("#error_name_pt").hide(5000);
+            //alert ($("#name").val());
+        }     
 
         //console.log($("#terapias").val());
         if ($("#cantidad").val()==""){
@@ -405,7 +416,13 @@ if(isset($_GET["rut_paciente"])){
                 id:                 $("#id_oculto").val(),
                 nombre_programa:    $("#name_programa").val(),
                 cantidad:           $("#cantidad").val(),
-                descuento:          $("#descuento_aplicado").val()
+                descuento:          $("#descuento_aplicado").val(),
+                tipo_pago:          $("#estado_pago").val(),
+                /*metodo_pago_1:      $("#metodo_pago").val(),
+                referencia_1:       $("#referencia").val(),
+                metodo_pago_2:      $("#metodo_pago_2").val(),
+                referencia_2:       $("#referencia_2").val()//*/
+                
             },function (result){                
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
@@ -590,5 +607,29 @@ if(isset($_GET["rut_paciente"])){
             }
             
         }
+        
+        function establecer_tipo_pago(){
+            $.post("terapias/terapias_controlador.php",
+            {
+                id_operacion : 20,
+                id_paciente:        $("#id_oculto").val(),
+                tipo_pago:          $("#estado_pago").val(),
+                metodo_pago_1:      $("#metodo_pago").val(),
+                referencia_1:       $("#referencia").val(),
+                metodo_pago_2:      $("#metodo_pago_2").val(),
+                referencia_2:       $("#referencia_2").val(),
+                descuento:          $("#descuento_aplicado").val()
+            },
+            function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado == 1 ){//EXITO
+                    $("#alert_ok").show(500);
+                }
+                else{
+                    $("#alert_error").show(500);
+                }
+            });
+        }
+        
 </script>
 

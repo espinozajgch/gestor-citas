@@ -79,6 +79,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
     $str_debug              =   "Inicio ";
     $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
+    $tipo_pago = $_POST["tipo_pago"];
     $descuento;
     $especial;
     if (isset($_POST["descuento"])){
@@ -125,7 +126,7 @@ else if ($id_operacion == 5){//Crear un programa terapeutico
             $str_debug.="-El paciente no tiene programa terapeutico activo, lo crearemos-";
         }
         
-        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true,$especial);
+        $id_insert = terapias::crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento,true,$especial, $tipo_pago);
         if ($id_insert!=0){
             $str_debug.="-Programa creado con el indice $id_insert-";
             $json[0]["id_programa"] = $id_insert;
@@ -197,6 +198,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $terapia = $_POST["terapias_individual"];
     $cantidad = $_POST["cantidad"];
     $descuento = $_POST["descuento"];
+    $tipo_pago = $_POST["tipo_pago"];
     if ($descuento == ""){
         $descuento = 0;
     }
@@ -208,7 +210,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     //Encontrar el id del programa
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
-    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa, $descuento)){        
+    if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa, $descuento, $tipo_pago)){        
         if(count($lista_terapias>0)){
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
@@ -365,11 +367,66 @@ else if ($id_operacion == 19){//Establecer modo de pago
     $id_programa    = $_POST["id_programa"];
     $tipo_pago      = $_POST["tipo_pago"];
     $json;
+    echo "a121312312";
     if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
         $json[0]["estado"]=1;
     }
     else{
         $json[0]["estado"]=0;
     }
+    echo json_encode($json);
+}
+else if ($id_operacion == 20){ // Establecer el tipo de pago de un programa
+    
+    $id_paciente    =   $_POST["id_paciente"];
+    $tipo_pago      =   $_POST["tipo_pago"];
+    $metodo_pago1   =   $_POST["metodo_pago_1"];
+    $metodo_pago2   =   $_POST["metodo_pago_2"];
+    $referencia1    =   $_POST["referencia_1"];
+    $referencia2    =   $_POST["referencia_2"];    
+    $descuento      =   $_POST["descuento"];
+    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    //Establecer primero el tipo de pago
+    $json;
+    if ($tipo_pago == 3){//Pago parcial
+        if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
+            if (terapias::establecer_metodo_pago($metodo_pago1, $referencia1, $id_programa)){
+                if ($metodo_pago2 != ""){
+                    if (terapias::agregar_pago_parcial($id_programa, $referencia2, $metodo_pago2)){
+                        $json[0]["estado"] = 1;
+                    }
+                    else{
+                        $json[0]["estado"] = 0;
+                    }
+                }
+            }
+            else{
+                $json[0]["estado"] = 0;
+            }
+        }
+        else{
+            $json[0]["estado"] = 0;
+        }  
+    }
+    else if ($tipo_pago == 4){//Pago total
+        if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
+            if (terapias::eliminar_pago_parcial($id_programa)){
+                if (terapias::establecer_metodo_pago($metodo_pago1, $referencia1, $id_programa)){
+                    terapias::establecer_descuento_programa_terapeutico($id_programa, $descuento);
+                    $json[0]["estado"] = 1;
+                }
+            }
+            else{
+                $json[0]["estado"] = 0;
+            }
+        }
+        else{
+            $json[0]["estado"] = 0;
+        }
+    }
+    else{
+        $json[0]["estado"] = 0;
+    }
+              
     echo json_encode($json);
 }

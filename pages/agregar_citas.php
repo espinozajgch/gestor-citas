@@ -1340,9 +1340,7 @@ function validar_inputs(input, div_error){
                     var fecha_seleccionada_b    =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
                     var hora_seleccionada       =   arg.start.getHours()+":"+arg.start.getMinutes()+":"+arg.start.getSeconds();
                     var hora_seleccionada_b     =   arg.end.getHours()+":"+arg.end.getMinutes()+":"+arg.end.getSeconds();                    
-                    var hoy                     =   new Date();
-                    /*alert (hoy);
-                    alert (arg.start);//*/
+                    var hoy                     =   new Date();                    
                     if (arg.allDay){                        
 //                        $("#fecha_a").val(fecha_seleccionada);
 //                        $("#hora_a").val(hora_seleccionada);
@@ -1362,17 +1360,14 @@ function validar_inputs(input, div_error){
                             condicion_1 = false;                         
                         }
                         else {
-                            condicion_1 = true;
-                            
+                            condicion_1 = true;                            
                         }
                         if (arg.start<hoy){
                             condicion_2 = false;                            
                         }
-                        else{
-                            
+                        else{                            
                             condicion_2 = true;
-                        }
-                        //alert (condicion_1 + " - - - " + condicion_2);
+                        }                        
                         if (condicion_1 && condicion_2){//Si la fecha no está en horario de oficina
                             $("#fecha_a").val(fecha_seleccionada);
                             $("#hora_a").val(hora_seleccionada);
@@ -1387,8 +1382,7 @@ function validar_inputs(input, div_error){
                         
                             $("#fecha_b").val("");
                             $("#hora_b").val("");
-                        }
-                        
+                        }                        
                     }
                 }
             });        

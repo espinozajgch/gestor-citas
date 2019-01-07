@@ -94,13 +94,13 @@ class terapias {
         return $pdo->execute(array($nombre, $descripcion, $precio));
     }
     
-    public static function actualizar_programa_terapeutico_basico($id_programa, $descripcion, $descuento){
+    public static function actualizar_programa_terapeutico_basico($id_programa, $descripcion, $descuento, $tipo_pago){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_terapeutico
-        SET descripcion_programa_terapeutico=?, descuento = ?
+        SET descripcion_programa_terapeutico=?, descuento = ?, estatus_pago_id_ep = ?
             WHERE id_programa_terapeutico = ".$id_programa;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array($descripcion, $descuento));
+        return $pdo->execute(array($descripcion, $descuento, $tipo_pago));
     }
     
     public static function cancelar_programa_terapeutico($id_programa){
@@ -158,11 +158,22 @@ class terapias {
         return $pdo->execute();
     }
     
+    
     public static function eliminar_terapia_individual($id_programa, $id_terapia){
         $bd = connection::getInstance()->getDb();        
         $sql = "DELETE FROM programa_tiene_terapia
             WHERE id_programa_tiene_terapia=".$id_programa."
                 AND terapia_id_terapia=".$id_terapia;
+        
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        return $pdo->execute();
+    }
+    
+    public static function eliminar_pago_parcial($id_programa){
+        $bd = connection::getInstance()->getDb();        
+        $sql = "DELETE FROM pagos_parciales
+            WHERE programa_terapeutico_id_programa_terapeutico=".$id_programa;
         
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -177,6 +188,16 @@ class terapias {
         $pdo = $bd->prepare($sql);       
         //echo $sql;
         return $pdo->execute(array("$modo_pago"));
+    }
+    
+    public static function establecer_descuento_programa_terapeutico ($id_programa, $descuento){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET descuento=?
+            WHERE id_programa_terapeutico = ".$id_programa;
+        $pdo = $bd->prepare($sql);       
+        //echo $sql;
+        return $pdo->execute(array("$descuento"));
     }
     
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
@@ -267,6 +288,83 @@ class terapias {
         }
     }
     
+    public static function obtener_id_tipo_pago ($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["estatus_pago_id_ep"];
+        }
+        else{            
+            return false;
+        }
+    }
+    public static function obtener_id_metodo_pago ($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["metodos_pago_id_mp"];
+        }
+        else{            
+            return false;
+        }
+    }
+    public static function obtener_referencia_pago ($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["referencia"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
+    public static function obtener_referencia_pago_parcial ($id_programa){
+        $sql = "SELECT * FROM `pagos_parciales` 
+            WHERE `programa_terapeutico_id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["referencia"];
+        }
+        else{            
+            return false;
+        }
+    }
+    public static function obtener_metodo_pago_parcial ($id_programa){
+        $sql = "SELECT * FROM `pagos_parciales` 
+            WHERE `programa_terapeutico_id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["metodos_pago_id_mp"];
+        }
+        else{            
+            return false;
+        }
+    }
+    
     public static function obtener_descuento_programa($id_programa){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `id_programa_terapeutico`=$id_programa";
@@ -283,19 +381,19 @@ class terapias {
         }
     }    
     
-    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false, $especial = false){
+    public static function crear_programa_terapeutico($id_paciente, $nombre_programa, $descuento, $retornar_id=false, $especial = false, $tipo_pago = 7){
         $bd = connection::getInstance()->getDb();
         $array;
         //echo "aaa".$id_paciente;
         if ($especial){
-            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento, especial)
-            VALUES (?,?,?,?)";
-            $array = array ($id_paciente, $nombre_programa,$descuento, $especial);
+            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento, especial, estatus_pago_id_ep)
+            VALUES (?,?,?,?,?)";
+            $array = array ($id_paciente, $nombre_programa,$descuento, $especial, $tipo_pago);
         }
         else{
-            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento)
-            VALUES (?,?,?)";
-            $array = array ($id_paciente, $nombre_programa,$descuento);
+            $consulta = "INSERT INTO programa_terapeutico (paciente_id_paciente, descripcion_programa_terapeutico, descuento, estatus_pago_id_ep)
+            VALUES (?,?,?,?)";
+            $array = array ($id_paciente, $nombre_programa,$descuento,$tipo_pago);
         }
         
         //echo $consulta;
@@ -716,4 +814,33 @@ class terapias {
         $pdo = $bd->prepare($sql);        
         return $pdo->execute(array("activa"));
     }
+    
+    public static function establecer_metodo_pago ($metodo, $referencia, $id_programa){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET metodos_pago_id_mp=?, referencia=?
+            WHERE id_programa_terapeutico = ".$id_programa;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array($metodo, $referencia));
+    }
+    
+    public static function agregar_pago_parcial($id_programa, $referencia, $metodo){
+        $bd = connection::getInstance()->getDb();
+        
+        $consulta = "INSERT INTO pagos_parciales 
+            (metodos_pago_id_mp, programa_terapeutico_id_programa_terapeutico, referencia)
+            VALUES (?,?,?)";
+       // echo $consulta;
+        $comando = $bd->prepare($consulta);
+        $resultado = $comando->execute(array($metodo, $id_programa, $referencia));
+        
+        if ($resultado){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    
 }
