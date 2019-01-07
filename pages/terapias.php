@@ -175,6 +175,15 @@ $usuario  = "";
                 $("#contenedor_ref_pago_2").hide();
                 $("#contenedor_boton_pago").show();
             }
+            else{
+                $("#contenedor_descuento").hide();
+                //$("#contenedor_estado_pago").show();
+                $("#contenedor_metodo_pago_1").hide();
+                $("#contenedor_ref_pago_1").hide();
+                $("#contenedor_metodo_pago_2").hide();
+                $("#contenedor_ref_pago_2").hide();
+                $("#contenedor_boton_pago").hide();
+            }
 
 
         });
