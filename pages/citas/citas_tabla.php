@@ -26,26 +26,64 @@ include_once("../assets/includes/menu.php") ?>
             <!-- /.row -->
 
             <div class="col-lg-12">
-                <br>
-                <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
-                        <thead>
-                            <tr>
-                                <th>N</th>
-                                <!--th>Creacion</th-->
-                                <th>Fecha</th>
-                                <th>Horario</th>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#publicadas" data-toggle="tab">Pendientes</a>
+                    </li>
+                    <li>
+                        <a href="#oculta" data-toggle="tab">Pagadas</a>
+                    </li>
+                    <li>
+                        <a href="#pendiente" data-toggle="tab">Atendidas</a>
+                    </li>
+                    <li>
+                        <a href="#destacada" data-toggle="tab">Canceladas</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active mx-4" id="publicadas">
+                        <br>
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
+                            <thead>
+                                <tr>
+                                    <th>N</th>
+                                    <!--th>Creacion</th-->
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    
+                                    <th>Paciente</th>
+                                    <th>Medico</th>   
+                                    <th>Terapia</th> 
+                                    <th>Estado</th>
+                                    <th>Acciones</th>  
+                                </tr>
+                            </thead>                                            
+                            <tbody >
                                 
-                                <th>Paciente</th>
-                                <th>Medico</th>   
-                                <th>Terapia</th> 
-                                <th>Estado</th>
-                                <th>Acciones</th>  
-                            </tr>
-                        </thead>                                            
-                        <tbody >
-                            
-                        </tbody>
-                       </table>
+                            </tbody>
+                            </table>
+                        <br>
+                    </div>
+                    <div class="tab-pane fade" id="oculta">
+                        <br>
+                        <?php //include_once("publicaciones/lista_publicaciones_ocultas.php") ?>
+                        <br>
+                    </div>
+                    <div class="tab-pane fade" id="pendiente">
+                        <br>
+                        <?php ///include_once("publicaciones/lista_publicaciones_pendiente.php") ?>
+                        <br>
+                    </div>
+                    <div class="tab-pane fade" id="destacada">
+                        <br>
+                        <?php //include_once("publicaciones/lista_publicaciones_destacadas.php") ?>
+                        <br>
+                    </div>
+                </div>
+
             </div>
 
 

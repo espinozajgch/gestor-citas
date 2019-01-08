@@ -51,9 +51,9 @@
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
-                <li>
+                <!--li>
                     <a href="index.php"><i class="fa fa-dashboard fa-fw"></i> Notificaciones</a>
-                </li>
+                </li-->
 
                 <?php if(Admin::verificar_acciones_by_rol($bd, 1, $id_rol)){ ?>
                 <li>

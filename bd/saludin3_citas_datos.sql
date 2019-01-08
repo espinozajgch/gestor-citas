@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 07-01-2019 a las 12:36:55
+-- Tiempo de generación: 07-01-2019 a las 21:47:12
 -- Versión del servidor: 5.6.39-cll-lve
 -- Versión de PHP: 5.6.30
 
@@ -101,7 +101,10 @@ INSERT INTO `estatus_pago` (`id_ep`, `nombre`) VALUES
 (1, 'PENDIENTE'),
 (2, 'PAGADO'),
 (3, 'PARCIAL'),
-(4, 'TOTAL');
+(4, 'TOTAL'),
+(5, 'CANCELADO'),
+(6, 'ATENDIDO'),
+(7, 'INDIVIDUAL');
 
 --
 -- Volcado de datos para la tabla `estatus_usuario`
@@ -117,7 +120,10 @@ INSERT INTO `estatus_usuario` (`id_eu`, `nombre`) VALUES
 
 INSERT INTO `historias_medicas` (`id_hm`, `fecha`, `descripcion`, `indicaciones`, `diagnostico`, `id_paciente`) VALUES
 (3, '2019-01-05 17:57:10', 'ARDOR EN PIERNA BILATERAL DISTAL. MAYOR A DERECHA, 1 MES\nOBS; LESIÓN LUMBAR, SIN ESTUDIOS RADIOLÓGICOS.\nDISLIPIDEMIA, PERFIL LIPÍDICO.\nHTA, CON TRATAMIENTO, ALMODIPINO, 10 MG, 1 COMPRIMIDO POR DIA, HOLTER DE PRESIÓN ARTERIAL\nHIPERTROFIA PROSTÁTICA, CON TRATAMIENTO, DUODART, 0,5 MG, 1 POR DIA, ECO DE CONFIRMACIÓN.\n', 'SENIOR 180 CAPSULAS ; 2 CAPSULAS CON DESAYUNO.\nMAGNESIO; 2 CAPSULAS CON EL ALMUERZO.\nGUATERO DE SEMILLAS: APLICAR POR 20 MINUTOS POR LA NOCHE, POR 10 DÍAS.\nARTRIOL 90 CAPSULAS ; TOMAR 1 CAPSULA 10 Y 20 HORAS.', 'REPOSO PARCIAL, NO DEBE REALIZAR FUERZAS MECANICAS\nAPLICAR CALOR LOCAL HÚMEDO, GUATERO DE SEMILLAS,  EN ZONA LUMBAR POR 20 MINUTOS POR LA NOCHE POR 10 DÍAS.\nCONTROL 20 DÍAS.\n\n', 4),
-(5, '2019-01-07 15:04:24', 'RESISTENCIA A LA INSULINA, TRIGLICERIDOS ELEVADOS,NO RECUERDA EL NOMBRE DEL MEDICAMENTO PRESCRITO ; HIPOTIROIDISMO, TRATAMIENTO EUTIROX 88 MG., HEMORROIDES, DISBIOSIS INTESTINAL, SIENTE IRRITACIóN INTESTINAL.', 'PASIFLORA 60 CAP: 1 CAPSULA C/ 6 HRS, 9 - 15 - 21 HRS.\nDIENTE DE LEÓN 60  CAP..; TOMAR 2 CAPSULAS 1/2 HORA ANTES DE COMIDAS PRINCIPALES ALMUERZO Y CENA.\nUÑA DE GATO 60 CAP.: TOMAR 1 CAPSULA 1/2 HORA ANTES DE LAS COMIDAS PRINCIPALES.\nCEREBRO TONICO  90 CAP : TOMAR 2 CAPSULAS CON DESAYUNO.\n', 'RéGIMEN DETOX POR 10 DÍAS / CONTROL\nACTIVIDAD FíSICA 30 MINUTOS 3 VECES POR SEMANA\nINFUSIÓN DEPURATIVA; MALVA ROSA, LLANTÉN, MANZANILLA, TOMAR 3 VECES POR DíA.', 11);
+(5, '2019-01-07 15:04:24', 'RESISTENCIA A LA INSULINA, TRIGLICERIDOS ELEVADOS,NO RECUERDA EL NOMBRE DEL MEDICAMENTO PRESCRITO ; HIPOTIROIDISMO, TRATAMIENTO EUTIROX 88 MG., HEMORROIDES, DISBIOSIS INTESTINAL, SIENTE IRRITACIóN INTESTINAL.', 'PASIFLORA 60 CAP: 1 CAPSULA C/ 6 HRS, 9 - 15 - 21 HRS.\nDIENTE DE LEÓN 60  CAP..; TOMAR 2 CAPSULAS 1/2 HORA ANTES DE COMIDAS PRINCIPALES ALMUERZO Y CENA.\nUÑA DE GATO 60 CAP.: TOMAR 1 CAPSULA 1/2 HORA ANTES DE LAS COMIDAS PRINCIPALES.\nCEREBRO TONICO  90 CAP : TOMAR 2 CAPSULAS CON DESAYUNO.\n', 'RéGIMEN DETOX POR 10 DÍAS / CONTROL\nACTIVIDAD FíSICA 30 MINUTOS 3 VECES POR SEMANA\nINFUSIÓN DEPURATIVA; MALVA ROSA, LLANTÉN, MANZANILLA, TOMAR 3 VECES POR DíA.', 11),
+(6, '2019-01-07 17:56:21', 'FIBROSIS PULMONAR / CRóNICA, OPERADA DE VESíCULA 16 DE DICIEMBRE 2019. DOLOR PIERNA DERECHA, RODILLA; SUSPENDIó TRATAMIENTO DE PIRFENEX, MEDICACIóN PARA FIBROSIS PULMONAR, POR TRASTORNOS DIGESTIVOS, INAPETENTE.\nTRATAMIENTO MEDICO CODEINA GOTAS 30 GOTAS C/8 HRS., MEMOREX', 'ARTRIOL 90 CAPSULAS: TOMAR 2 CAPSULAS A LAS 10 AM.\nUNGUENTO BOTANICO: APLICAR 2 VECES POR DÍA EN ZONA DE DOLOR.\nBIO ALER 60 CAPSULAS: TOMAR 2 CAPSULAS MAÑANA Y NOCHE\nSENEDIUM 90 CAPSULAS: TOMAR 2 CAPSULAS CON DESAYUNO.\n\n', 'RÉGIMEN DE MANTENCION\nDEBE EVITAR CARGAS MECÁNICAS\nAPLICAR FRICCIONES DE UNGÜENTO BOTÁNICO, 2 VECES POR DÍA.\nPENDIENTE TRATAMIENTO PARA INSUFICIENCIA VENOSA, INDICARLO EN PRÓXIMO CONTROL.\n\nPARA CONTROL DEBE TRAER EXÁMENES DE SANGRE.\n', 13),
+(7, '2019-01-07 18:23:25', 'BOCHORNOS, SE HA SENTIDO UN POCO MAREADA DESPUÉS DE TOMAR TRATAMIENTO PARA LA PRESIÓN ARTERIAL, LOSARTAN, NITRENDIPINO, ASPIRINA, \nPESO; 86 KGS.', 'SENIOR; 2 CAPSULAS AL DESAYUNO\nNEUROSENTE 90 CAPSULAS: TOMAR 1 CAPSULA ALAS 10 Y 20 HRS.\nSILUETA 180 CAPSULAS: 2 CAPSULAS A MEDIA MAÑANA CON UN GRAN VASO DE AGUA.\nLONG LIFE 90 CAPSULAS: TOMAR 2 CAPSULAS ANTES DE ALMUERZO.', 'NO JUNTAR TERAPIAS ANTIHIPERTENSIVAS, SEPARARLAS, TOMAR PRIMERO LOSARTAN / ASPIRINA Y LUEGO DESPUÉS DE 1 HORA NITRENDIPINO / PRODUCTO PARA VARICES.\nMANTENER RÉGIMEN DE MANTENCION.\nREALIZAR ACTIVIDAD FÍSICA, 30 MINUTOS 3 VECES POR SEMANA.', 14),
+(8, '2019-01-07 19:00:40', '', '', '', 5);
 
 --
 -- Volcado de datos para la tabla `historico`
@@ -207,7 +213,6 @@ INSERT INTO `paciente` (`id_paciente`, `RUT`, `nombre`, `fijo`, `celular`, `emai
 (8, '6854565-K', 'paulina', '228310688', '', '', 'melipilla', '', NULL, 'sanchez', 'sanchez', 0, '1', 8),
 (10, '6.349.895-1', 'ODETTE DEL CARMEN', '', '949352421', '', '', '', NULL, 'TOY', 'VALDEZ', 0, '1', 11),
 (11, '11693947-9', 'PAMELA ', '', '996250556', 'pafosnbdo@hotmail.com', 'SAN BERNARDO', '', NULL, 'FEBRE', 'OJEDA', 0, '1', 12),
-(12, '4196271-2', 'YOLANDA', '223595671', '', '', 'PEDRO AGUIRRE CERDA', '', NULL, 'GUTIEREZ', 'ADASME', 0, '1', 13),
 (13, '4196271-2', 'YOLANDA', '223595671', '', '', 'PEDRO AGUIRRE CERDA', '', NULL, 'GUTIEREZ', 'ADASME', 0, '1', 14),
 (14, '8444188-0', 'YOLANDA ', '', '942616513', '', 'PEDRO AGUIRRE CERDA', '', NULL, 'HERNANDEZ', 'GUTIERREZ', 0, '1', 15),
 (15, '4406471-5', 'HILDEBRANDO', '', '998441629', '', 'SANTIAGO', '', NULL, 'SCHULZ', 'BELLO', 0, '1', 16),
@@ -236,21 +241,21 @@ INSERT INTO `paciente_tiene_reserva` (`id_paciente_tiene_reserva`, `paciente_id_
 -- Volcado de datos para la tabla `programa_terapeutico`
 --
 
-INSERT INTO `programa_terapeutico` (`id_programa_terapeutico`, `paciente_id_paciente`, `descripcion_programa_terapeutico`, `descuento`, `estado`, `estatus_pago_id_ep`, `especial`) VALUES
-(15, 7, 'Primera terapia de maria cristina vallejos', '0.00', 'activo', 1, 1),
-(16, 8, 'Primera terapia de paulina sanchez', '0.00', 'activo', 1, 1),
-(17, 9, 'Primera terapia de herminia poblete', '0.00', 'activo', 1, 1),
-(18, 9, 'masoterapia', '10.00', 'activo', 1, 0),
-(19, 4, 'masoterapia', '0.00', 'activo', 1, 0),
-(20, 10, 'Primera terapia de ODETTE DEL CARMEN TOY', '0.00', 'activo', 1, 1),
-(21, 11, 'Primera terapia de PAMELA  FEBRE', '0.00', 'activo', 1, 1),
-(22, 12, 'Primera terapia de YOLANDA GUTIEREZ', '0.00', 'activo', 1, 1),
-(23, 13, 'Primera terapia de YOLANDA GUTIEREZ', '0.00', 'activo', 1, 1),
-(24, 14, 'Primera terapia de YOLANDA  HERNANDEZ', '0.00', 'activo', 1, 1),
-(25, 15, 'Primera terapia de HILDEBRANDO SCHULZ', '0.00', 'activo', 1, 1),
-(26, 15, 'Primera terapia de HILDEBRANDO SCHULZ', '0.00', 'activo', 1, 1),
-(27, 16, 'Primera terapia de juana inostroza', '0.00', 'activo', 1, 1),
-(28, 5, 'Primera terapia de MARCELO  FARAY', '0.00', 'activo', 1, 1);
+INSERT INTO `programa_terapeutico` (`id_programa_terapeutico`, `paciente_id_paciente`, `descripcion_programa_terapeutico`, `descuento`, `porcentaje_descuento`, `estado`, `estatus_pago_id_ep`, `referencia`, `especial`, `metodos_pago_id_mp`) VALUES
+(15, 7, 'Primera terapia de maria cristina vallejos', '0.00', '10', 'activo', 1, '', 1, NULL),
+(16, 8, 'Primera terapia de paulina sanchez', '0.00', '10', 'activo', 1, '', 1, NULL),
+(17, 9, 'Primera terapia de herminia poblete', '0.00', '10', 'activo', 1, '', 1, NULL),
+(18, 9, 'masoterapia', '10.00', '10', 'activo', 1, '', 0, NULL),
+(19, 4, 'masoterapia', '0.00', '10', 'activo', 1, '', 0, NULL),
+(20, 10, 'Primera terapia de ODETTE DEL CARMEN TOY', '0.00', '10', 'activo', 1, '', 1, NULL),
+(21, 11, 'Primera terapia de PAMELA  FEBRE', '0.00', '10', 'activo', 1, '', 1, NULL),
+(22, 12, 'Primera terapia de YOLANDA GUTIEREZ', '0.00', '10', 'activo', 1, '', 1, NULL),
+(23, 13, 'Primera terapia de YOLANDA GUTIEREZ', '0.00', '10', 'activo', 1, '', 1, NULL),
+(24, 14, 'Primera terapia de YOLANDA  HERNANDEZ', '0.00', '10', 'activo', 1, '', 1, NULL),
+(25, 15, 'Primera terapia de HILDEBRANDO SCHULZ', '0.00', '10', 'activo', 1, '', 1, NULL),
+(26, 15, 'Primera terapia de HILDEBRANDO SCHULZ', '0.00', '10', 'activo', 1, '', 1, NULL),
+(27, 16, 'Primera terapia de juana inostroza', '0.00', '10', 'activo', 1, '', 1, NULL),
+(28, 5, 'Primera terapia de MARCELO  FARAY', '0.00', '10', 'activo', 1, '', 1, NULL);
 
 --
 -- Volcado de datos para la tabla `programa_tiene_terapia`
@@ -275,7 +280,7 @@ INSERT INTO `programa_tiene_terapia` (`id_programa_tiene_terapia`, `programa_ter
 (69, 22, 1, 30, 'pagado'),
 (70, 23, 1, 31, 'cancelado'),
 (71, 24, 1, 32, 'pagado'),
-(72, 25, 17, 33, 'pagado'),
+(72, 25, 17, 33, '5'),
 (73, 26, 17, 34, 'pagado'),
 (74, 27, 17, 35, 'pagado'),
 (75, 28, 2, 36, 'cancelado');
@@ -284,19 +289,19 @@ INSERT INTO `programa_tiene_terapia` (`id_programa_tiene_terapia`, `programa_ter
 -- Volcado de datos para la tabla `reserva_medica`
 --
 
-INSERT INTO `reserva_medica` (`id_rm`, `fecha_hora_reserva`, `fecha_inicio`, `medio_contacto_id_mc`, `observaciones`, `precio`, `estado`, `hora_inicio`, `hora_fin`, `metodos_pago_id_mp`, `referencia`) VALUES
-(25, '2019-01-05 13:35:31', '2019-01-08', 1, '', NULL, '1', '10:00:00', '11:00:00', 6, ''),
-(26, '2019-01-05 13:37:40', '2019-01-08', 1, '', NULL, '1', '11:00:00', '12:00:00', 6, ''),
-(27, '2019-01-05 13:47:01', '2019-01-07', 1, '', NULL, '2', '10:00:00', '11:00:00', 6, '76005415'),
-(28, '2019-01-07 10:32:22', '2019-01-09', 1, '', NULL, '1', '16:00:00', '17:00:00', 1, ''),
-(29, '2019-01-07 10:43:46', '2019-01-07', 1, '', NULL, '1', '11:00:00', '12:00:00', 3, ''),
-(30, '2019-01-07 12:10:04', '2019-01-07', 1, '', NULL, '1', '14:00:00', '15:00:00', 1, ''),
-(31, '2019-01-07 13:07:34', '2019-01-07', 1, '', NULL, '5', '14:00:00', '15:00:00', 1, ''),
-(32, '2019-01-07 12:51:49', '2019-01-07', 1, '', NULL, '2', '15:00:00', '16:00:00', 1, ''),
-(33, '2019-01-07 12:21:08', '2019-01-07', 2, 'INSUFICIENCIA VENOSA', NULL, '2', '17:00:00', '18:00:00', 1, ''),
-(34, '2019-01-07 12:53:26', '2019-01-08', 1, '', NULL, '1', '11:00:00', '12:00:00', 3, ''),
-(35, '2019-01-07 13:12:11', '2019-01-08', 2, 'dislipidemia', NULL, '1', '14:00:00', '15:00:00', 1, ''),
-(36, '2019-01-07 13:15:22', '2019-01-08', 1, '', NULL, '5', '10:00:00', '11:00:00', 1, '');
+INSERT INTO `reserva_medica` (`id_rm`, `fecha_hora_reserva`, `fecha_inicio`, `medio_contacto_id_mc`, `observaciones`, `precio`, `estado`, `hora_inicio`, `hora_fin`, `metodos_pago_id_mp`, `referencia`, `estatus_pago_id_ep`) VALUES
+(25, '2019-01-05 13:35:31', '2019-01-08', 1, '', NULL, '1', '10:00:00', '11:00:00', 6, '', NULL),
+(26, '2019-01-05 13:37:40', '2019-01-08', 1, '', NULL, '1', '11:00:00', '12:00:00', 6, '', NULL),
+(27, '2019-01-05 13:47:01', '2019-01-07', 1, '', NULL, '2', '10:00:00', '11:00:00', 6, '76005415', NULL),
+(28, '2019-01-07 10:32:22', '2019-01-09', 1, '', NULL, '1', '16:00:00', '17:00:00', 1, '', NULL),
+(29, '2019-01-07 10:43:46', '2019-01-07', 1, '', NULL, '1', '11:00:00', '12:00:00', 3, '', NULL),
+(30, '2019-01-07 12:10:04', '2019-01-07', 1, '', NULL, '1', '14:00:00', '15:00:00', 1, '', NULL),
+(31, '2019-01-07 13:07:34', '2019-01-07', 1, '', NULL, '5', '14:00:00', '15:00:00', 1, '', NULL),
+(32, '2019-01-07 12:51:49', '2019-01-07', 1, '', NULL, '2', '15:00:00', '16:00:00', 1, '', NULL),
+(33, '2019-01-07 14:04:43', '2019-01-07', 2, 'INSUFICIENCIA VENOSA', NULL, '5', '17:00:00', '18:00:00', 1, '', NULL),
+(34, '2019-01-07 12:53:26', '2019-01-08', 1, '', NULL, '1', '11:00:00', '12:00:00', 3, '', NULL),
+(35, '2019-01-07 13:12:11', '2019-01-08', 2, 'dislipidemia', NULL, '1', '14:00:00', '15:00:00', 1, '', NULL),
+(36, '2019-01-07 13:15:22', '2019-01-08', 1, '', NULL, '5', '10:00:00', '11:00:00', 1, '', NULL);
 
 --
 -- Volcado de datos para la tabla `rol`
@@ -330,20 +335,20 @@ INSERT INTO `rol_accion` (`id_ra`, `id_accion`, `id_rol`) VALUES
 --
 
 INSERT INTO `terapia` (`id_terapia`, `nombre_terapia`, `descripcion_terapia`, `precio_terapia`, `estado_terapia`) VALUES
-(1, 'CONTROL', 'CONTROL', '10000.00', 'activa'),
-(2, 'MASOTERAPIA  30 MINUTOS', 'MASOTERAPIA  30 MINUTOS', '10000.00', 'activa'),
-(9, 'MASOTERAPIA 45 MINUTOS', 'MASOTERAPIA 45 MINUTOS', '20000.00', 'activa'),
-(10, 'MASOTERAPIA 45 MINUTOS + CONTROL', 'MASOTERAPIA 45 MINUTOS + CONTROL', '25000.00', 'activa'),
-(11, 'MASAJE SHIATSU 45 MINUTOS', 'MASAJE SHIATSU 45 MINUTOS', '25000.00', 'activa'),
-(12, 'MASAJE SHIATSU + CONTROL', 'MASAJE SHIATSU + CONTROL', '30000.00', 'activa'),
-(13, 'DRENAJE LINFATICO 45 MINUTOS', 'DRENAJE LINFATICO 45 MINUTOS', '25000.00', 'activa'),
-(14, 'DRENAJE LINFATICO 45 MINUTOS + CONTROL', 'DRENAJE LINFATICO 45 MINUTOS + CONTROL', '30000.00', 'activa'),
-(15, 'MASOTERAPIA + VENTOSA 45 MINUTOS', 'MASOTERAPIA + VENTOSA 45 MINUTOS', '20000.00', 'activa'),
-(16, 'EVALUACION TERAPIA DE DOLOR GENERAL', 'EVALUACION TERAPIA DE DOLOR GENERAL', '20000.00', 'activa'),
-(17, 'EVALUACION GENERAL', 'EVALUACION GENERAL', '20000.00', 'activa'),
-(19, 'EVALUACION TERAPIA DE DOLOR  CLIENTE PREFEREN', 'EVALUACION TERAPIA DE DOLOR  CLIENTE PREFERENCIAL\n', '10000.00', 'activa'),
-(20, 'EVALUACION GENERAL CLIENTE PREFERENCIAL', 'EVALUACION GENERAL CLIENTE PREFERENCIAL\n\n', '10000.00', 'activa'),
-(21, 'TERAPIA FLORAL', 'TERAPIA FLORAL\n\n\n', '30000.00', 'activa');
+(1, 'CONTROL', 'CONTROL', 10000, 'activa'),
+(2, 'MASOTERAPIA  30 MINUTOS', 'MASOTERAPIA  30 MINUTOS', 10000, 'activa'),
+(9, 'MASOTERAPIA 45 MINUTOS', 'MASOTERAPIA 45 MINUTOS', 20000, 'activa'),
+(10, 'MASOTERAPIA 45 MINUTOS + CONTROL', 'MASOTERAPIA 45 MINUTOS + CONTROL', 25000, 'activa'),
+(11, 'MASAJE SHIATSU 45 MINUTOS', 'MASAJE SHIATSU 45 MINUTOS', 25000, 'activa'),
+(12, 'MASAJE SHIATSU + CONTROL', 'MASAJE SHIATSU + CONTROL', 30000, 'activa'),
+(13, 'DRENAJE LINFATICO 45 MINUTOS', 'DRENAJE LINFATICO 45 MINUTOS', 25000, 'activa'),
+(14, 'DRENAJE LINFATICO 45 MINUTOS + CONTROL', 'DRENAJE LINFATICO 45 MINUTOS + CONTROL', 30000, 'activa'),
+(15, 'MASOTERAPIA + VENTOSA 45 MINUTOS', 'MASOTERAPIA + VENTOSA 45 MINUTOS', 20000, 'activa'),
+(16, 'EVALUACION TERAPIA DE DOLOR GENERAL', 'EVALUACION TERAPIA DE DOLOR GENERAL', 20000, 'activa'),
+(17, 'EVALUACION GENERAL', 'EVALUACION GENERAL', 20000, 'activa'),
+(19, 'EVALUACION TERAPIA DE DOLOR  CLIENTE PREFEREN', 'EVALUACION TERAPIA DE DOLOR  CLIENTE PREFERENCIAL\n', 10000, 'activa'),
+(20, 'EVALUACION GENERAL CLIENTE PREFERENCIAL', 'EVALUACION GENERAL CLIENTE PREFERENCIAL\n\n', 10000, 'activa'),
+(21, 'TERAPIA FLORAL', 'TERAPIA FLORAL\n\n\n', 30000, 'activa');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

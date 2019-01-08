@@ -98,7 +98,7 @@ $usuario  = "";
                     if (isset($_GET["opcion"])){
                         if ($_GET["opcion"]==1){
                             if ($_GET["vista"]==1){
-                                include_once("citas/citas_tabla.php");
+                                include_once("citas/citas_tabla.php"); 
                             }
                             else if ($_GET["vista"]==-1){
                                 include_once("citas/citas_calendario.php");
@@ -139,7 +139,8 @@ $usuario  = "";
     </div>    
 
 
-    <script>//  
+    <script>
+
         var id_cita = 0;
         var id_programa = 0;
         var id_terapia = 0;
