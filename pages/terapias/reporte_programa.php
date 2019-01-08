@@ -151,28 +151,42 @@ while (!$fin){
             $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
             $x_actual+=15;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
-            
+            if ($resultado[0]["nombre_mp"]==""){
+                $nombre_mp = "NO DEFINIDO";
+                $referencia = "NO DEFINIDO";
+            }
+            else{
+                $nombre_mp = $resultado[0]["nombre_mp"];
+                $referencia = $resultado[0]["referencia_pt"];
+            } 
             $x_actual+=40;
             $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
             $x_actual+=20;
-            $pdf->agregar_texto(strtoupper($resultado[0]["nombre_mp"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
-            
-            $x_actual+=45;
-            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
-            $x_actual+=30;
-            $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
-            
-            $y_actual+=4;
-            $x_actual=65;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
-            $x_actual+=20;
-            $nombre_mp = terapias::obtener_nombre_mp($resultado[0]["nombre_mp_2"]);
             $pdf->agregar_texto(strtoupper($nombre_mp), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $x_actual+=45;
             $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
             $x_actual+=30;
-            $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt_2"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            $pdf->agregar_texto(strtoupper($referencia), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $y_actual+=4;
+            $x_actual=65;
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=20;
+            if ($resultado[0]["nombre_mp_2"]==""){
+                $nombre_mp = "NO DEFINIDO";
+                $referencia = "NO DEFINIDO";
+            }
+            else{
+                $nombre_mp = terapias::obtener_nombre_mp($resultado[0]["nombre_mp_2"]);
+                $referencia = $resultado[0]["referencia_pt_2"];
+            }            
+            $pdf->agregar_texto(strtoupper($nombre_mp), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+            
+            $x_actual+=45;
+            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $x_actual+=30;
+            $pdf->agregar_texto(strtoupper($referencia), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
         }
         else{
