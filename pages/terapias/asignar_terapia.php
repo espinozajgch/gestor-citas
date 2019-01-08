@@ -293,6 +293,30 @@ if(isset($_GET["rut_paciente"])){
             </tbody>
        </table>
     </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modal_pago" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de establecer el pago seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="guardar_pago" type="button" onclick="guardar_pago()" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     
 <script type="text/javascript">
 
@@ -652,11 +676,9 @@ if(isset($_GET["rut_paciente"])){
             }
             
         }
-        
-        function establecer_tipo_pago(){
-            var bandera = confirm("¿Seguro que quiere establecer este tipo de pago?");            
-            
-            if (bandera){
+
+        function guardar_pago(){
+            //if (bandera){
                 $.post("terapias/terapias_controlador.php",
                 {
                     id_operacion : 20,
@@ -678,8 +700,15 @@ if(isset($_GET["rut_paciente"])){
                         $("#alert_error").show(500);
                     }
                 });
-            }
+            //}
             
+        }
+
+        function establecer_tipo_pago(){
+            $('#modal_pago').modal({
+                backdrop: 'static',
+                keyboard: false
+            })            
         }
         
         /*$("#btn_guardar_pago").click(function(e){
