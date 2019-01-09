@@ -1153,7 +1153,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
+                    setTimeout(function(){window.location = "<?php echo $link;?>"},200);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -1235,7 +1235,7 @@ function validar_inputs(input, div_error){
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     mensaje_retorno+="La cita se guardó con éxito<br>";  
-                    window.location="citas.php?opcion=1";              
+                    //window.location="citas.php?opcion=1";              
                 }
                 else{
                     mensaje_retorno+="Hubo un error al guardar la cita, contacte al ADMIN<br>";
