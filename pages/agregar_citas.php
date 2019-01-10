@@ -1153,7 +1153,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    setTimeout(function(){window.location = "<?php echo $link;?>"},200);
+                    //setTimeout(function(){window.location = "<?php echo $link;?>"},200);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -1453,6 +1453,7 @@ function validar_inputs(input, div_error){
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
                     $("#terapias_individual").trigger('change').prop("disabled","true");
                     //$("#pago").hide();
+                    set_terapia(false);
                     $("#chequeo").hide();
                     
                 }

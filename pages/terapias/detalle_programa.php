@@ -55,9 +55,15 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
         </div>
     </div>  
     <div class="form-group col-12 col-sm-12 col-md-12">
-        <h3 class="page-header">Nombre del programa: <small id="texto_programa"></small></h3>
+        <h3>Nombre del programa: <small id="texto_programa"></small></h3>
     </div>  
     <div class="form-group col-4 col-sm-4 col-md-4">
+        <h4>Tipo de pago: <small id="tipo_pago"></small></h4>
+    </div>  
+    <div class="form-group col-4 col-sm-4 col-md-4">
+        <h4>Detalles pago: <small id="detalles_pago"></small></h4>
+    </div>  
+    <div class="form-group col-12 col-sm-12 col-md-12">
         <!--div id="botones_dinamicos"></div-->
         <button class="btn btn-sm btn-info shared" id="btn_invoice" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
     </div>  
@@ -97,7 +103,7 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
             if (respuesta[0].estado == 1){
                 $("#terapia_t").html(respuesta[1].html); 
                 $("#texto_programa").html(respuesta[0].desc_prt);
-                
+                $("#tipo_pago").html(respuesta[0].tipo_pago);
             }
         });
     }

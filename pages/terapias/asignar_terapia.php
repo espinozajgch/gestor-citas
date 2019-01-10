@@ -694,7 +694,7 @@ if(isset($_GET["rut_paciente"])){
                     var respuesta = JSON.parse(result);
                     if (respuesta[0].estado == 1 ){//EXITO
                         $("#alert_ok").show(500);
-                        setTimeout(function(){window.location.reload(),1500});
+                        //setTimeout(function(){window.location.reload(),1500});
                     }
                     else{
                         $("#alert_error").show(500);

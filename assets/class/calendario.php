@@ -84,7 +84,7 @@ class calendario {
         return $json;
     }
     
-    public static function devolver_eventos_medicos_json($id_medico=false){
+    public static function devolver_eventos_medicos_json($id_medico=false, $url = false){
         //Una variable donde almacenaremos los resultados con el formato requerido
         //$json;
         $str_debug="";
@@ -94,30 +94,43 @@ class calendario {
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
         if ($id_medico){
-            $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-                . "FROM `admin` \n"
-                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-                    WHERE ".$id_medico." 
-                        AND reserva_medica.estado = 1
-                        AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
-                        GROUP BY reserva_medica.id_rm";
-                    }
-                    else{
-                        $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-                . "FROM `admin` \n"
-                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-                    AND reserva_medica.estado = 1
-                    AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
-                    GROUP BY reserva_medica.id_rm";
-                    }
+            $sql = "SELECT id_admin, 
+                reserva_medica.id_rm,
+                group_concat(admin.nombre) as nombre_medico,
+                paciente.nombre,
+                paciente.apellidop,
+                paciente. rut,
+                reserva_medica.fecha_inicio,
+                reserva_medica.hora_inicio,
+                reserva_medica.hora_fin
+                FROM `admin`
+                INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
+                INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                WHERE ".$id_medico." 
+                AND reserva_medica.estado = 1 OR reserva_medica.estado = 2
+                AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
+                GROUP BY reserva_medica.id_rm";
+        }
+        else{
+            $sql = "SELECT id_admin,
+                reserva_medica.id_rm, 
+                group_concat(admin.nombre) as nombre_medico, 
+                paciente.nombre, 
+                paciente.apellidop, 
+                paciente. rut, 
+                reserva_medica.fecha_inicio,
+                reserva_medica.hora_inicio, reserva_medica.hora_fin
+                FROM `admin` 
+                INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
+                INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                WHERE reserva_medica.estado = 1 OR reserva_medica.estado = 2
+                AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
+                GROUP BY reserva_medica.id_rm";
+            }
         
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -142,7 +155,9 @@ class calendario {
             $json[$i]['start']  = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_inicio"];
             $json[$i]['end']    = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_fin"];
             $json[$i]['id']     = $resultados[$i]["id_rm"];
-            $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            if ($url){
+                $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            }            
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin

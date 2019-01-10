@@ -298,7 +298,7 @@ class citas {
             }
         } //FIN FUNCION OBTENER_NOMBRE_USUARIO
         
-        public static function tabla_dias_citas(){
+        public static function tabla_dias_citas($estado = 1){
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
 
@@ -328,9 +328,9 @@ class citas {
             LEFT  JOIN programa_tiene_terapia   ptt     ON ptt.reserva_medica_id_rm                         =   rm.id_rm
             LEFT  JOIN programa_terapeutico     pt      ON ptt.programa_terapeutico_id_programa_terapeutico =   pt.id_programa_terapeutico
             INNER JOIN terapia                  t       ON t.id_terapia                                     =   ptt.terapia_id_terapia
-           WHERE rm.estado !=5 
+            WHERE rm.estado = '.$estado.'
             GROUP BY rm.id_rm
-            order by fecha_hora_reserva, hora_inicio DESC';
+            order by fecha_hora_reserva DESC';
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos

@@ -68,7 +68,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
                 }
                 $str_condicion.=" id_admin=".$array_medicos[$i];
             }
-            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false);
+            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false, false);
         }        
         if (is_string($eventos_json)){
             echo $eventos_json;
@@ -77,12 +77,15 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         
     }
     else if (($_POST["id_operacion"]==6)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==6))){
-        //Devolver eventos para medicos para formato de tabla
-        $json_temp = json_decode(citas::tabla_dias_citas());        
+        //Devolver eventos para medicos para formato de tabla        
+        $estado_cita = 1;
+        if (isset($_GET["estado"])){
+            $estado_cita = $_GET["estado"];
+        }
+        $json_temp = json_decode(citas::tabla_dias_citas($estado_cita));        
         //print_r($json_temp);
         $json_final["data"]=$json_temp;
-        $json_listo= json_encode($json_final);
-        //echo "<br>";
+        $json_listo= json_encode($json_final);        
        
         echo $json_listo;
     }

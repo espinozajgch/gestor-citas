@@ -27,24 +27,24 @@ include_once("../assets/includes/menu.php") ?>
 
             <div class="col-lg-12">
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#publicadas" data-toggle="tab">Pendientes</a>
+                <ul class="nav nav-tabs" id="pestagnas">
+                    <li id="pendientes">
+                        <a href="#" onclick="cargar_tabla_dinamica(1, $(this).parent().attr('id'))"> Pendientes</a>
                     </li>
-                    <li>
-                        <a href="#oculta" data-toggle="tab">Pagadas</a>
+                    <li id="pagadas">
+                        <a href="#" onclick="cargar_tabla_dinamica(2, $(this).parent().attr('id'))"> Pagadas </a>
                     </li>
-                    <li>
-                        <a href="#pendiente" data-toggle="tab">Atendidas</a>
+                    <li id="atendidas">
+                        <a href="#" onclick="cargar_tabla_dinamica(6, $(this).parent().attr('id'))">Atendidas</a>
                     </li>
-                    <li>
-                        <a href="#destacada" data-toggle="tab">Canceladas</a>
+                    <li id="canceladas">
+                        <a href="#" onclick="cargar_tabla_dinamica(5, $(this).parent().attr('id'))">Canceladas</a>
                     </li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane fade in active mx-4" id="publicadas">
+                    <div class="tab-pane fade in active mx-4">
                         <br>
                             <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
                             <thead>
@@ -66,22 +66,7 @@ include_once("../assets/includes/menu.php") ?>
                             </tbody>
                             </table>
                         <br>
-                    </div>
-                    <div class="tab-pane fade" id="oculta">
-                        <br>
-                        <?php //include_once("publicaciones/lista_publicaciones_ocultas.php") ?>
-                        <br>
-                    </div>
-                    <div class="tab-pane fade" id="pendiente">
-                        <br>
-                        <?php ///include_once("publicaciones/lista_publicaciones_pendiente.php") ?>
-                        <br>
-                    </div>
-                    <div class="tab-pane fade" id="destacada">
-                        <br>
-                        <?php //include_once("publicaciones/lista_publicaciones_destacadas.php") ?>
-                        <br>
-                    </div>
+                    </div>                    
                 </div>
 
             </div>
