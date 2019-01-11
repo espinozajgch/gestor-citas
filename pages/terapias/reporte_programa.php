@@ -99,10 +99,10 @@ while (!$fin){
     $y_actual+=10;
     $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
     $y_actual+=5;
-    $pdf->agregar_texto("NOMBRES Y APELLIDOS: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
-    $x_actual += 50;
+    $pdf->agregar_texto("PACIENTE: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $x_actual += 23;
     $pdf->agregar_texto(strtoupper($resultado[0]["nombre_p"]." ".$resultado[0]["apellido_p"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
-    $x_actual += 55;
+    $x_actual += 82;
     $pdf->agregar_texto("RUT: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
     $x_actual += 10;
     $pdf->agregar_texto(strtoupper($resultado[0]["rut"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);

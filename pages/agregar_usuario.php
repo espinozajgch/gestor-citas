@@ -85,9 +85,9 @@ $estilo_par = "";
 </head>
 
   <body>
-  <div id="loader-wrapper" class="loader-wrapper">
+  <!--div id="loader-wrapper" class="loader-wrapper">
     <div id="loader" class="loader"></div>
-  </div>
+  </div-->
     <!-- Navigation -->
     <?php include_once("../assets/includes/menu.php") ?>
 
