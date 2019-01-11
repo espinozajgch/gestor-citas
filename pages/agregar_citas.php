@@ -1153,7 +1153,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
+                    setTimeout(function(){window.location = "<?php echo $link;?>"},200);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -1235,7 +1235,7 @@ function validar_inputs(input, div_error){
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     mensaje_retorno+="La cita se guardó con éxito<br>";  
-                    window.location="citas.php?opcion=1";              
+                    //window.location="citas.php?opcion=1";              
                 }
                 else{
                     mensaje_retorno+="Hubo un error al guardar la cita, contacte al ADMIN<br>";
@@ -1310,7 +1310,7 @@ function validar_inputs(input, div_error){
         }
         function inicializar_calendario (){
             calendarEl = document.getElementById('calendario'); // grab element reference
-            var url = '../assets/class/calendario_controlador.php?id_operacion=5&medicos='+$("#medicos").val();
+            var url = '../assets/class/calendario_controlador.php?id_operacion=5&medicos='+$("#medicos").val()+"&feriados=true";
             //alert (url);
             calendar = new FullCalendar.Calendar(calendarEl, {      
                 header: {
@@ -1363,7 +1363,7 @@ function validar_inputs(input, div_error){
                     else{//Sino procedemos a colocar las dos fechas juntas
                         //Asegurarse que no se seleccionen horas no laborables
                         //alert (arg.start.getHours());
-                        var condicion_1, condicion_2;
+                        var condicion_1, condicion_2, condicion_3;
                         //var hoy = $.fullCalendar.formatDate(new Date(), 'yyyy-MM-dd');
                         //alert (hoy);
                         if (!(arg.start.getHours()>=9)&&!(arg.start.getHours()<17)){
@@ -1378,7 +1378,9 @@ function validar_inputs(input, div_error){
                         else{                            
                             condicion_2 = true;
                         }                        
-                        if (condicion_1 && condicion_2){//Si la fecha no está en horario de oficina
+                        condicion_3 = arg.start.getDate() == arg.end.getDate() ? true : false;
+                        //alert (condicion_3+"START:"+arg.start.getDate()+",END:"+arg.end.getDate());
+                        if (condicion_1 && condicion_2 && condicion_3){//Si la fecha no está en horario de oficina
                             $("#fecha_a").val(fecha_seleccionada);
                             $("#hora_a").val(hora_seleccionada);
                         
@@ -1453,6 +1455,7 @@ function validar_inputs(input, div_error){
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
                     $("#terapias_individual").trigger('change').prop("disabled","true");
                     //$("#pago").hide();
+                    set_terapia(false);
                     $("#chequeo").hide();
                     
                 }

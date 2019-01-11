@@ -116,12 +116,32 @@ $id_rol = "";
 
 
 
-    <script>
-        $(document).ready(function() {
-            $('#dataTables-example').DataTable({
-                responsive: true
+    <script>        
+        document.addEventListener('DOMContentLoaded', function() { // page is now ready...
+            cargar_tabla_notificaciones ();
+    });
+    
+    function cargar_tabla_notificaciones(){        
+        
+        $('#tabla_notificaciones').DataTable({  
+                responsive: true,
+                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
+                "columns": [
+                    {"data": "N"},
+                    /*{"data": "Creacion"},*/
+                    {"data": "Fecha"},
+                    {"data": "Horario"},
+                    {"data": "Paciente"},
+                    {"data": "Medico"},    
+                    {"data": "Terapia"},                    
+                    {"data": "Estado"},                    
+                    {"data": "Acciones"}
+                ]
             });
-        });
+        $("#tabla_dinamica").fadeOut(150);    
+        $("#tabla_dinamica").fadeIn(150);
+    }
+        
     </script>
 </body>
 

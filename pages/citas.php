@@ -312,9 +312,19 @@ $usuario  = "";
 
 <script type="text/javascript"> 
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
-            $('#tabla_dinamica').DataTable({  
+            cargar_tabla_dinamica (1);
+    });
+    
+    function cargar_tabla_dinamica(estado = 1, id = false){
+        $("#tabla_dinamica").DataTable().destroy();
+        if (id){
+            $("#pestagnas li").removeClass();
+            $("#"+id).attr('class','active');
+        }
+        
+        $('#tabla_dinamica').DataTable({  
                 responsive: true,
-                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6",
+                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
                 "columns": [
                     {"data": "N"},
                     /*{"data": "Creacion"},*/
@@ -327,7 +337,9 @@ $usuario  = "";
                     {"data": "Acciones"}
                 ]
             });
-    });
+        $("#tabla_dinamica").fadeOut(150);    
+        $("#tabla_dinamica").fadeIn(150);
+    }
     
     function validar_cita(id_cita, id_programa, id_terapia){
         $.post("citas/citas_controlador.php",

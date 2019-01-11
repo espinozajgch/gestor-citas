@@ -555,14 +555,27 @@ class terapias {
     
     public static function lista_terapias_programa($id_programa, $id_referer = false){
         $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id,
-            rm.id_rm as id_rm, terapia.id_terapia as id_terapia, 
-            programa_tiene_terapia.estado as estado_t, terapia.nombre_terapia as nombre_t, 
-            terapia.precio_terapia as precio_t, terapia.id_terapia as id_t,
-            prt.descripcion_programa_terapeutico desc_prt, prt.id_programa_terapeutico as prt_id
+            rm.id_rm                                        as id_rm, 
+            terapia.id_terapia                              as id_terapia, 
+            programa_tiene_terapia.estado                   as estado_t, 
+            terapia.nombre_terapia                          as nombre_t, 
+            terapia.precio_terapia                          as precio_t,
+            terapia.id_terapia                              as id_t,
+            prt.descripcion_programa_terapeutico            as desc_prt, 
+            prt.id_programa_terapeutico                     as prt_id,
+            prt.estatus_pago_id_ep                          as tipo_pago,
+            ep.nombre                                       as nombre_pago,
+            mp.nombre                                       as nombre_mp,
+            prt.referencia                                  as referencia_pt,
+            pp.metodos_pago_id_mp                           as id_mp_pp,
+            pp.referencia                                   as referencia_pp
             FROM terapia            
-            INNER JOIN programa_tiene_terapia ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
-            INNER JOIN programa_terapeutico prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
-            LEFT JOIN reserva_medica rm ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm            
+            INNER JOIN programa_tiene_terapia       ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
+            INNER JOIN programa_terapeutico     prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
+            LEFT JOIN reserva_medica            rm  ON programa_tiene_terapia.reserva_medica_id_rm = rm.id_rm            
+            LEFT JOIN estatus_pago              ep  ON prt.estatus_pago_id_ep = ep.id_ep
+            LEFT JOIN pagos_parciales           pp  ON pp.programa_terapeutico_id_programa_terapeutico = prt.id_programa_terapeutico
+            LEFT JOIN metodos_pago              mp  ON mp.id_mp = prt.metodos_pago_id_mp
             WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa
             ORDER BY programa_tiene_terapia.id_programa_tiene_terapia";
         
@@ -577,8 +590,41 @@ class terapias {
             $bandera_validar_programa = true;
             //echo $longitud;
             $json[0]["estado"] = 1;
+            //Nombre del programa
             $json[0]["desc_prt"] = $resultado[0]["desc_prt"];
+            //Estatus del programa
+            $json[0]["tipo_pago"] = $resultado[0]["nombre_pago"];
             $str_btn="";
+            //Detalles de pago
+            $str_metodos_pago="";
+            $metodo_1 = $resultado[0]["nombre_mp"];
+            if ($resultado[0]["tipo_pago"]==7){
+                $str_metodos_pago.= "PAGO POR CITA";
+            }
+            else{                
+                $metodo_1 = $resultado[0]["nombre_mp"];                
+                $referencia_1 = $resultado[0]["referencia_pt"];
+                if ($metodo_1 == "" || $metodo_1 == null){
+                    $str_metodo = "PAGO #1 NO DEFINIDO";
+                }
+                else{
+                    $str_metodo = "METODO: $metodo_1, REFERENCIA: $referencia_1";
+                }
+                $str_metodos_pago.= $str_metodo;
+                $metodo_2 = terapias::obtener_metodo_pago_parcial($resultado[0]["prt_id"]);
+                $referencia_2 = $resultado[0]["referencia_pp"];
+                if ($metodo_2 == "" || $metodo_2 == null || $metodo_2 == false){
+                    $str_metodo_2 = "PAGO #2 NO DEFINIDO";
+                }
+                else{
+                    $str_metodo_2 = "METODO: $metodo_2, REFERENCIA: $referencia_2";
+                }
+                $str_metodos_pago.=", ".$str_metodo_2;
+            }
+            
+            
+            $json[0]["detalle_pago"] = $str_metodos_pago;
+            
             if ($longitud<1){
                 $json[0]['N'] = "No hay información que mostrar";
                 $json[0]['Terapias'] = "";
