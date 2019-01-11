@@ -83,7 +83,12 @@ while (!$fin){
 
     //Agregamos una página nueva
     $pdf->AddPage();
-
+    if (isset($_GET["temporal"])){
+        $pdf->temporaire(utf8_decode("NO VÁLIDA"));
+    }
+    else{
+        //$pdf->temporaire(utf8_decode("NO VÁLIDA"));
+    }
     //Agregar el logo
     $x_actual = $x_fin - 180;
     $pdf->agregarImagen($x_actual, $y_actual, 100, 100, "../../dist/img/logo_salud.jpg", 'R'); 
@@ -261,7 +266,15 @@ while (!$fin){
             $i++;
         }
         if ($i>=$longitud){
-            $descuento = ($resultado[0]["descuento_p"]/100)*$subtotal;
+            if(isset($_GET["descuento"])){
+                $descuento = ($_GET["descuento"]/100)*$subtotal;
+                $descuento_nominal = $_GET["descuento"];
+            }
+            else{
+                $descuento = ($resultado[0]["descuento_p"]/100)*$subtotal;
+                $descuento_nominal = $resultado[0]["descuento_p"];
+            }
+            
             $max_altura = $pdf->GetPageHeight();
             $y = $max_altura - 80;
             $line = array( "FECHA TERAPIA"    => " ",
@@ -273,7 +286,7 @@ while (!$fin){
             
             $line = array( "FECHA TERAPIA"    => " ",
                            "DESCRIPCION"  => "DESCUENTO AL PAGO DE CONTADO",
-                           "P. UNITARIO"  =>number_format($resultado[0]["descuento_p"],"0",",",".")."%",
+                           "P. UNITARIO"  =>number_format($descuento_nominal,"0",",",".")."%",
                            "SUB TOTAL" =>" - $".number_format(($descuento),"0",",","."));
             $size = $pdf->addLine( $y, $line );
             $y   += $size + 3;

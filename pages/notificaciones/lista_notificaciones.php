@@ -1,21 +1,13 @@
 <div class="col-12 mx-5 px-5">
-	<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+	<table width="100%" class="table table-striped table-bordered table-hover" id="tabla_notificaciones">
         <thead>
             <tr>
-            	<th>#</th>
+            	<th>N</th>
                 <th>Pregunta</th>
                 <th>Respuesta</th>
                 <th>Acciones</th>
             </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Acciones</th>
-            </tr>
-        </tfoot>
+        </thead>        
         <tbody>
 
 

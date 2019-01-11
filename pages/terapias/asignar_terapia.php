@@ -40,7 +40,8 @@ if(isset($_GET["rut_paciente"])){
         <div class="col-lg-12 ">
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
-            <button class="btn btn-sm btn-info shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+            <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+            <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
         </div>   
         <div class="form-group col-4 col-sm-4 col-md-4">
             <!--small><strong><label for="medico">Estatus Pago</label></strong></small-->
@@ -351,31 +352,45 @@ if(isset($_GET["rut_paciente"])){
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
                             $("#id_oculto").val(json[0].id_paciente); 
                             $("#descuento_aplicado").val(json[0].descuento);
-                            $("#estado_pago").val(json[0].tipo_pago).trigger('change');
+                            $("#estado_pago").val(json[0].tipo_pago);
                             $("#metodo_pago").val(json[0].metodo_1);
                             $("#referencia").val(json[0].referencia_1);
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
-                            if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){                                
-                                $("#estado_pago").prop("disabled","true");
+                            if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){                                                                
                                 if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
                                     $("#metodo_pago").prop("disabled","true");
                                     $("#referencia").prop("disabled","true");                                    
                                     check++;
                                 }                                
                                 if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
+                                    
                                     $("#metodo_pago_2").prop("disabled","true");
-                                    $("#referencia_2").prop("disabled","true");                                    
+                                    $("#referencia_2").prop("disabled","true");                                                                        
                                     check++;
                                 }           
                                 if (json[0].tipo_pago == 4){
-                                check++;
-                            }
+                                    check++;
+                                    $("#contenedor_metodo_pago_1").show();
+                                    $("#contenedor_ref_pago_1").show();
+                                    $("#contenedor_descuento").show();
+                                }
+                                else if (json[0].tipo_pago == 3){
+                                    $("#contenedor_metodo_pago_1").show();
+                                    $("#contenedor_ref_pago_1").show();
+                                    $("#contenedor_metodo_pago_2").show();
+                                    $("#contenedor_ref_pago_2").show();
+                                }
+                                else if (json[0].tipo_pago == 7){
+                                    
+                                }
                                 //alert (check);
                                 if (check>=2){
                                     $("#btnguardar_pago").prop("disabled","true");    
+                                    $("#descuento_aplicado").prop("disabled","true");   
+                                    $("#estado_pago").prop("disabled","true");
                                 }                                
-                                $("#descuento_aplicado").prop("disabled","true");                                
+                                $("#contenedor_boton_pago").show();
                             }
                             
                             //Verificar si el paciente ya tiene terapias asignadas 
@@ -417,6 +432,7 @@ if(isset($_GET["rut_paciente"])){
                             $("#name_programa").val("");
                             $("#btn_cancelar").hide();
                             $("#btn_invoice").hide();
+                            $("#btn_previsualizar").hide();
                             $("#contenedor_nombre_programa").hide();
                             $("#contenedor_estado_pago").hide();
                             $("#contenedor_metodo_pago_1").hide();
@@ -587,6 +603,7 @@ if(isset($_GET["rut_paciente"])){
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
                                     $("#btn_invoice").show();
+                                    $("#btn_previsualizar").show();
                                     //$("#contenedor_descuento").show();
                                     $("#contenedor_estado_pago").show();
                                     
@@ -622,6 +639,17 @@ if(isset($_GET["rut_paciente"])){
             id_paciente = $("#id_oculto").val();
             if (id_paciente){
                 window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
+            }
+            else{
+                //alert ("Procedimiento inválido");
+            }
+        }
+        
+        function previsualizar_invoice(){
+            id_paciente = $("#id_oculto").val();
+            var descuento_actual = $("#descuento_aplicado").val();
+            if (id_paciente){
+                window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente+"&descuento="+descuento_actual+"&temporal=true", "_newtab");
             }
             else{
                 //alert ("Procedimiento inválido");

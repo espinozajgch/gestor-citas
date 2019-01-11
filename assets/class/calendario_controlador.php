@@ -56,7 +56,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
          */
         $id_medicos = $_GET["medicos"];
         if ($id_medicos == ""){
-            $eventos_json = calendario::devolver_eventos_medicos_json(false, false);
+            $eventos_json = calendario::devolver_eventos_medicos_json(false, false, true);
         }
         else{//Hay médicos en la consulta
             $array_medicos = explode(",", $id_medicos);
@@ -68,7 +68,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
                 }
                 $str_condicion.=" id_admin=".$array_medicos[$i];
             }
-            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false, false);
+            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false, true);
         }        
         if (is_string($eventos_json)){
             echo $eventos_json;
