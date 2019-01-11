@@ -1153,7 +1153,7 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    //setTimeout(function(){window.location = "<?php echo $link;?>"},200);
+                    setTimeout(function(){window.location = "<?php echo $link;?>"},200);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
