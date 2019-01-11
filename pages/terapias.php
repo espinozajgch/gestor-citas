@@ -438,7 +438,7 @@ $usuario  = "";
         });
     }
     
-    function seleccionar_terapia(id_terapia, estado, modificar = false){
+    function seleccionar_terapia(id_terapia, estado, modificar = false, estado_alterno = false){
         terapia_seleccionada = id_terapia;        
         //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"        
         if (estado == 1){
@@ -446,7 +446,11 @@ $usuario  = "";
         }
         else{
             if (modificar==true){
-                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
+                var cadena_location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
+                if (estado_alterno!=false){
+                    cadena_location+="&id_alterno="+estado_alterno;
+                }
+                window.location = cadena_location;
             }
             else{
                 window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();

@@ -657,10 +657,11 @@ class terapias {
                 else if($resultado[$i]["estado_t"]=="pagado"){
                     $id_cita = citas::obtener_id_cita_de_terapia($id_terapia, $id_programa);
                     //Se puede modificar la cita que se habia reservado
+                    $id_ptt =$resultado[$i]["ptt_id"];
                     $str_btn = "
                     <a title=\"Modificar Reserva\" 
                         class=\"btn btn-warning\"  
-                        onclick = \"seleccionar_terapia($id_cita, 2, true)\">
+                        onclick = \"seleccionar_terapia($id_cita, 2, true, $id_ptt)\">
                         <i class=\"fa fa-edit\"></i>
                     </a>
                     

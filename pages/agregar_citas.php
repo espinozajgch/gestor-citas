@@ -188,7 +188,8 @@ $rut_paciente = "";
                                 ?>){                                
                                 var id_ptt = <?php 
                                 if (isset($_GET["id_ptt"])){
-                                    echo $_GET["id_ptt"];
+                                    $aux = isset($_GET["id_alterno"]) ? $_GET["id_alterno"] : $_GET["id_ptt"];
+                                    echo $aux;
                                 }         
                                 else echo "false";
                                         ?>;
