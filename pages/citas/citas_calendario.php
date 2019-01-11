@@ -63,7 +63,7 @@ require_once '../assets/class/calendario.php';
                     right: 'month,agendaWeek,agendaDay'
                 },                  
                 businessHours:{
-                    dow: [1,2,3,4,5],
+                    daysOfWeek: [1,2,3,4,5,6],
                     start: '8:00',
                     end: '18:00'
                 },
@@ -81,6 +81,8 @@ require_once '../assets/class/calendario.php';
                     url: url,
                     method: 'GET'
                 },
+                minTime: "8:00",
+                maxTime: "18:00",
                 hiddenDays: [0],
                 locale : "es-es",
                 responsive: true,

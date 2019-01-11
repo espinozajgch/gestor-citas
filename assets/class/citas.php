@@ -298,6 +298,23 @@ class citas {
             }
         } //FIN FUNCION OBTENER_NOMBRE_USUARIO
         
+        public static function obtener_id_estado_rm($bd, $id_cita){
+            
+            $sql = "SELECT * FROM `reserva_medica` 
+                WHERE `id_rm`=$id_cita";
+            $bd = connection::getInstance()->getDb();
+            $pdo = $bd->prepare($sql);
+            //echo $sql;
+            $pdo->execute();
+            $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+            if ($resultado){
+                return $resultado[0]["estado"];
+            }
+            else{            
+                return false;
+            }
+        } //FIN FUNCION OBTENER_NOMBRE_USUARIO
+        
         public static function tabla_dias_citas($estado = 1){
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();

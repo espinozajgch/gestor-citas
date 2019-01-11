@@ -21,7 +21,17 @@ else if (isset($_GET["id_operacion"])){
 
 if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $rut = $_POST["rut"];
-    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellidop`, apellidom , `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
+    $sql = "SELECT DISTINCT 
+        `id_paciente`,
+        `nombre`, 
+        `apellidop`, 
+        apellidom , 
+        `celular`,
+        `fijo`,
+        `email`,
+        `direccion`
+        FROM 
+        `paciente` WHERE `RUT` = \"$rut\"";
     
     $bd = connection::getInstance()->getDb();
     
@@ -49,6 +59,8 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
         }
         else{
             $resultado[0]["descuento"] = 0;
+            //$resultado[0]["estatus_pago_id_ep"];
+            $resultado[0]["tipo_pago"] = 7;
         }
         
         
@@ -117,10 +129,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $bd = connection::getInstance()->getDb();
     
     $sql = "INSERT INTO reserva_medica 
-        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado , referencia) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado , referencia, estatus_pago_id_ep) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref, 7));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
