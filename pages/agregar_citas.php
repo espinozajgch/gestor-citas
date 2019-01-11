@@ -849,9 +849,9 @@ function validar_inputs(input, div_error){
                             //$("#notificacion_programa").fadeIn(100);  
                             //alert (json[0].tipo_pago );
                             if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
-                                //$("#pago").hide();
-                                //$("#contenedor_referencia").hide();
-                                //$("#contenedor_estatus").hide();
+                                $("#pago").hide();
+                                $("#contenedor_referencia").hide();
+                                $("#contenedor_estatus").hide();
                                 $("#estado_pago").val(2);
                             }
                         }
@@ -1451,6 +1451,7 @@ function validar_inputs(input, div_error){
                     $("#hora_b").val(respuesta[1].hora_fin);
                     $("#metodo_pago").val(respuesta[1].id_mp);//prop("disabled", true);
                     $("#referencia").val(respuesta[1].ref)
+                    //alert ("a");
                     $("#estado_pago").val(respuesta[1].estado_pago);
                     var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
                     //alert (n_opcion);
