@@ -174,7 +174,7 @@ while (!$fin){
             $x_actual+=30;
             $pdf->agregar_texto(strtoupper($referencia), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
-            $y_actual+=4;
+            $y_actual+=6;
             $x_actual=65;
             $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
             $x_actual+=20;
@@ -211,7 +211,7 @@ while (!$fin){
     }
     
 
-    $y = 90;
+    $y = 120;
 
     $cols=array( "FECHA TERAPIA"    => 45,
                  "DESCRIPCION"  => 88,
@@ -225,7 +225,7 @@ while (!$fin){
     $pdf->addLineFormat( $cols);
     //$pdf->addLineFormat($cols);
 
-    $y    = 109;    
+//    $y    = 109;    
     if ($resultado){
         $longitud = count($resultado);
         //echo $longitud;

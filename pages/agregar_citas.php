@@ -849,9 +849,9 @@ function validar_inputs(input, div_error){
                             //$("#notificacion_programa").fadeIn(100);  
                             //alert (json[0].tipo_pago );
                             if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
-                                $("#pago").hide();
-                                $("#contenedor_referencia").hide();
-                                $("#contenedor_estatus").hide();
+                                //$("#pago").hide();
+                                //$("#contenedor_referencia").hide();
+                                //$("#contenedor_estatus").hide();
                                 $("#estado_pago").val(2);
                             }
                         }
@@ -1319,7 +1319,7 @@ function validar_inputs(input, div_error){
                     right: 'month,agendaWeek,agendaDay'
                 },   
                 businessHours:{
-                    dow: [1,2,3,4,5,6],
+                    daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
                     start: '8:00',
                     end: '18:00'
                 },
@@ -1336,10 +1336,13 @@ function validar_inputs(input, div_error){
                     url: url,
                     method: 'GET'
                 },
+                minTime: "8:00",
+                maxTime: "18:00",
                 nowIndicator: true,
                 //defaultView: 'agendaDay',                
                 locale : "es",
                 responsive: true,
+                contentHeight: 500,
                 selectable: true,
                 hiddenDays: [0],
                 select : function (arg){
@@ -1399,7 +1402,7 @@ function validar_inputs(input, div_error){
                 }
             });        
             
-            $("#contenedor_calendario").hide(); 
+            $("#contenedor_calendario").hide();             
             calendar.render();
       }
     

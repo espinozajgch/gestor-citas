@@ -312,7 +312,7 @@ $usuario  = "";
 
 <script type="text/javascript"> 
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
-            cargar_tabla_dinamica (1);
+            cargar_tabla_dinamica (1, "pendientes");
     });
     
     function cargar_tabla_dinamica(estado = 1, id = false){
@@ -333,7 +333,7 @@ $usuario  = "";
                     {"data": "Paciente"},
                     {"data": "Medico"},    
                     {"data": "Terapia"},                    
-                    {"data": "Estado"},                    
+                    //{"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]
             });

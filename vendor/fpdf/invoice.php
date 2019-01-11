@@ -381,7 +381,7 @@ function addCols( $tab )
 	
 	$r1  = 10;
 	$r2  = $this->w - ($r1 * 2) ;
-	$y1  = 100;
+	$y1  = 110;
 	$y2  = $this->h - 50 - $y1;
 	$this->SetXY( $r1, $y1 );
 	$this->Rect( $r1, $y1, $r2, $y2, "D");
