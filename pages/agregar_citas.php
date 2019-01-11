@@ -35,7 +35,7 @@ $rut_paciente = "";
             if (isset($_GET["ref"])){//Viene para reservar una cita nueva
                 $etiqueta = "Asignar cita para terapia";
                 $id_operacion = "2";
-            }
+            }            
             else{
                 $etiqueta = "Modificar Cita";
                 $id_operacion = "7";
