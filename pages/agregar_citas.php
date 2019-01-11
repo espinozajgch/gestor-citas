@@ -123,15 +123,14 @@ $rut_paciente = "";
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
-        var calendar;
-        
+        var calendar;        
         
         //Iniciar el calendario de FULLCALENDAR
         inicializar_calendario();
         //Iniciar la pillbox donde se agregarán los médicos
         inicializar_lista_medicos();     
-        
-        
+        //$("#dc").prop("disabled", true);      
+        $("#dc").attr('disabled', true);
         if (<?php 
             $operacion = 2;
             if (isset($_GET["cita"])||(isset($_GET["ref"]))){
@@ -241,6 +240,7 @@ $rut_paciente = "";
             $("#contenedor_lista_terapias").prop("disabled", "true");
         }
         inicializar_lista_terapias("terapias_individual");
+        
     });
     </script>
 <style>
@@ -1409,8 +1409,19 @@ function validar_inputs(input, div_error){
     function actualizar_eventos_medicos(){                      
         //var calendarEl = document.getElementById('calendario'); // grab element reference
         //calendar.destroy();
-        $("#calendario").html(" ");
-        inicializar_calendario();
+        if ($("#medicos").val()!=""){
+            $("#calendario").html(" ");
+            inicializar_calendario();
+            $("#dc").attr('disabled', false);
+            //alert ("a");
+        }
+        else{
+            $("#calendario").html(" ");
+            inicializar_calendario();
+            $("#dc").attr('disabled', true);
+            //alert ("b");
+        }
+        
         //calendar.refetchEvents();
         //alert (calendarEl.fullCalendar('refetchEvents'));
         

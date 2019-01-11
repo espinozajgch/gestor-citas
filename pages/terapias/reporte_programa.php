@@ -231,9 +231,14 @@ while (!$fin){
     }
     else{
         $estatus_pago = $resultado[0]["estatus_p_rm"];
+        $estado_pago =$resultado[0]["nombre_ep_aux"];
+        if ($estatus_pago == null){
+            $estatus_pago = $resultado[0]["rm_estado"];
+            $estado_pago = $resultado[0]["nombre_ep"];
+        }        
         $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
         $x_actual+=15;
-        $estado_pago = $resultado[0]["nombre_ep_aux"];
+        //$estado_pago = $resultado[0]["nombre_ep_aux"];
         $pdf->agregar_texto(strtoupper($estado_pago), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     }
     
