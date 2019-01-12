@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.php"><img src="../dist/img/logo1.png" class="imgLogo"></a>
+        <a class="navbar-brand" href="index.php"><img src="../dist/img/logo2.png" class="imgLogo"></a>
     </div>
     <!-- /.navbar-header -->
 

@@ -325,6 +325,11 @@ $usuario  = "";
         $('#tabla_dinamica').DataTable({  
                 responsive: true,
                 "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
+                "columnDefs": [
+                { "width": "10%", "targets": 1 },
+                { "width": "10%", "targets": 2 },
+                { "width": "15%", "targets": 6 }
+                ],
                 "columns": [
                     {"data": "N"},
                     /*{"data": "Creacion"},*/

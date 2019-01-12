@@ -148,9 +148,9 @@ $id_rol = "";
                     {"data": "Horario"},
                     {"data": "Paciente"},
                     {"data": "Medico"},    
-                    {"data": "Terapia"},                    
-                    //{"data": "Estado"},                    
-                    {"data": "Acciones"}
+                    {"data": "Terapia"},                 
+                    {"data": "Estado"}                   
+                    //{"data": "Acciones"}
                 ]
             });
         $("#tabla_dinamica").fadeOut(150);    

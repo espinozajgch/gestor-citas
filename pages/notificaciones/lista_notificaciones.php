@@ -29,8 +29,8 @@ include_once("../assets/includes/menu.php") ?>
                                 <th>Paciente</th>
                                 <th>Medico</th>   
                                 <th>Terapia</th> 
-                                <!--<th>Estado</th>-->
-                                <th>Acciones</th>  
+                                <th>Estado</th>
+                                <!--th>Acciones</th-->  
                             </tr>
                         </thead>                                            
                         <tbody >

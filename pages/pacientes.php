@@ -53,11 +53,7 @@ $usuario  = "";
     <link href="../dist/css/preloader.css" rel="stylesheet">
     
     <style type="text/css">
-        .imgLogo{
-            min-width: 70%;
-            max-width: 100%;
-            height: 100%;
-        }
+
 
         .logo_panel{
             height: 60px;
