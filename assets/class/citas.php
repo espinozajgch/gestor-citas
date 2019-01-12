@@ -182,22 +182,8 @@ class citas {
     }
     
     public static function validar_cita($id_cita){
-        $estado_actual =citas::obtener_estado_cita($id_cita);
-        $estado_nuevo = "2";
-        if ($estado_actual=="1"){
-            $estado_nuevo = "2";
-        }
-        /*else if ($estado_actual == "pagado"){
-            $estado_nuevo = "atendida";
-        }
-        else if ($estado_actual == "atendida"){
-            $estado_nuevo = "atendida";
-        }
-        else if ($estado_actual == "cancelado"){
-            $estado_nuevo = "cancelado";
-        }*/
         
-        
+        $estado_nuevo = 6;
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE reserva_medica
         SET estado=?
@@ -315,12 +301,12 @@ class citas {
             }
         } //FIN FUNCION OBTENER_NOMBRE_USUARIO
         
-        public static function tabla_dias_citas($estado = false, $fecha_inicio=false, $fecha_fin=false){
+        public static function tabla_dias_citas($estado = false, $fecha_inicio=false, $fecha_fin=false, $validar = false){
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
-        $condicion_estado = !$estado ? $condicion_estado = "<> 0" : $condicion_estado = "= $estado";
-        $condicion_estado.= $fecha_inicio ? " AND fecha_inicio > $fecha_inicio " : "";
-        $condicion_estado.= $fecha_inicio ? " AND fecha_inicio < $fecha_fin " : "";
+        $condicion_estado = !$estado ? $condicion_estado = "<> 5 AND rm.estado <> 6 " : $condicion_estado = "= $estado";
+        $condicion_estado.= $fecha_inicio!=false ? " AND fecha_inicio >= \"$fecha_inicio\" " : "";
+        $condicion_estado.= $fecha_fin!=false ? " AND fecha_inicio <= \"$fecha_fin\" " : "";
         $sql ='SELECT 
             rm.id_rm                            as  id_rm,
             rm.fecha_inicio                     as  fecha_inicio, 
@@ -381,51 +367,48 @@ class citas {
                 $id_programa = "false";
                 $id_terapia = "false";
                 $nombre_terapia = "No está asociada";
+                $id_ptt = "false";
             }
             else{
                 $nombre_programa = $resultados[$i]["nombre_programa"];
                 $id_programa = $resultados[$i]["id_programa"];
                 $id_terapia =  $resultados[$i]["id_terapia"];
                 $nombre_terapia = $resultados[$i]["nombre_t"];
+                $id_ptt = $resultados[$i]["ptt_id"];
             }
             $json[$i]['Terapia'] = strtoupper($nombre_terapia);
             $json[$i]['Estado'] = strtoupper($resultados[$i]["estado_ep"]);
             //$json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
             $json[$i]['N'] = ($i+1);           
-            
-            /*$str_brn= "
-                <button title=\"Validar cita\" 
-                    class=\"btn btn-sm btn-success\"  
-                    onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)\"
-                    ";
-            if ($resultados[$i]["estado_rm"]=="2"){
-                //echo $resultados[$i]["estado_rm"];
-                $str_brn.=" disabled";
+            $estado_cita = $resultados[$i]["estado_rm"];
+            //Agregar el boton de validar cuando la cita esté pendiente o pagada
+            //echo "ESTADO :$estado_cita ++ $validar <br>";
+            $str_brn="";
+            if ($validar && ($estado_cita == 2 || $estado_cita == 1)){//BOTON VALIDAR
+                $str_brn.= "
+                    <a title=\"Validar cita\" 
+                        class=\"btn btn-sm btn-success\"  
+                        onclick =\"validar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia, $id_ptt)\"
+                        >
+                <i class=\"fa fa-check\"></i>
+                    </a>
+                ";
             }
-            ">
-            <i class=\"fa fa-check\"></i>
-                </button>*/
-            $str_brn="<a title=\"Detalle\" 
-                    class=\"btn btn-sm btn-info\"  
-                    href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."";
-            if ($resultados[$i]["estado_rm"]=="2"){
-                //echo $resultados[$i]["estado_rm"];
-                //$str_brn.="&finalizado=true";
-            }            
-            $str_brn.="\" >
-                    <i class=\"fa fa-eye\"></i>
-                </a>
-                <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
-                <button title='Cancelar' class='btn btn-sm btn-danger eliminar' cod='".$resultados[$i]["id_rm"]."' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia, ". ($i+1).")'";
-
-            if ($resultados[$i]["estado_rm"]=="2"){
-                //echo $resultados[$i]["estado_rm"];
-                //$str_brn.=" disabled";
+            //BOTON DETALLE
+            $str_brn.="<a title=\"Detalle\" 
+                            class=\"btn btn-sm btn-info\"  
+                            href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."\" >
+                            <i class=\"fa fa-eye\"></i>
+                        </a>";
+            //BOTON CANCELAR
+            if (($estado != 5)&&($estado != 6)&&($estado != 2)){
+            $str_brn.="<button title='Cancelar' class='btn btn-sm btn-danger eliminar' cod='".$resultados[$i]["id_rm"]."' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia, ". ($i+1).")'>
+                            <i class=\"fa fa-times-circle\"></i>
+                        </button>";
             }
-            $str_brn.=">
-                    <i class=\"fa fa-times-circle\"></i>
-                </button>
-                <a title=\"Ver Reporte\" 
+            //BOTON INVOICE
+            $str_brn.="                    
+                    <a title=\"Ver Reporte\" 
                         class=\"btn btn-sm btn-success\"
                         onclick=\"generar_invoice_individual(".$resultados[$i]["id_rm"].")\">
                         <i class=\"fa fa-file\"></i>

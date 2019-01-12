@@ -418,10 +418,11 @@ else if ($id_operacion == 11){//VALIDAR UNA CITA INDIVIDUAL, SIN PROGRAMA
     $id_cita = $_POST["id_cita"];
     $id_programa = $_POST["id_programa"];
     $id_terapia = $_POST["id_terapia"];
+    $id_ptt = $_POST["id_ptt"];
     $json;
     if (citas::validar_cita($id_cita)){        
         if ($id_programa!=false){
-            if (terapias::validar_terapia($id_programa, $id_terapia)){
+            if (terapias::validar_terapia($id_ptt)){
                 $json[0]["estado"]=1;
                 $json[0]["str_debug"]="Cita validad con exito";
             }
