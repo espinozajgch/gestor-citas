@@ -346,7 +346,7 @@ if(isset($_GET["rut_paciente"])){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
-                            var check = 0;
+                            //Verificar que tiene programa
                             $("#name").val(json[0].nombre.toUpperCase());
                             $("#last_name").val(json[0].apellidop.toUpperCase()); 
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
@@ -357,68 +357,72 @@ if(isset($_GET["rut_paciente"])){
                             $("#referencia").val(json[0].referencia_1);
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
-                            if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){                                                                
-                                if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
-                                    $("#metodo_pago").prop("disabled","true");
-                                    $("#referencia").prop("disabled","true");                                    
-                                    check++;
-                                }                                
-                                if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
-                                    
-                                    $("#metodo_pago_2").prop("disabled","true");
-                                    $("#referencia_2").prop("disabled","true");                                                                        
-                                    check++;
-                                }           
-                                if (json[0].tipo_pago == 4){
-                                    check++;
-                                    $("#contenedor_metodo_pago_1").show();
-                                    $("#contenedor_ref_pago_1").show();
-                                    $("#contenedor_descuento").show();
+                            if (json[0].programa){
+                                //alert ("Si programa");
+                                var check = 0;       
+                                //alert (check+"-"+json[0].tipo_pago);
+                                if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){
+                                    if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
+                                        $("#metodo_pago").prop("disabled","true");
+                                        $("#referencia").prop("disabled","true");                                    
+                                        check++;
+                                    }                                
+                                    if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
+
+                                        $("#metodo_pago_2").prop("disabled","true");
+                                        $("#referencia_2").prop("disabled","true");                                                                        
+                                        check++;
+                                    }           
+                                    if (json[0].tipo_pago == 4){
+                                        check++;
+                                        $("#contenedor_metodo_pago_1").show();
+                                        $("#contenedor_ref_pago_1").show();
+                                        $("#contenedor_descuento").show();
+                                    }
+                                    else if (json[0].tipo_pago == 3){
+                                        $("#contenedor_metodo_pago_1").show();
+                                        $("#contenedor_ref_pago_1").show();
+                                        $("#contenedor_metodo_pago_2").show();
+                                        $("#contenedor_ref_pago_2").show();
+                                    }                                    
+                                    if (check>=2){
+                                        $("#btnguardar_pago").prop("disabled","true");    
+                                        $("#descuento_aplicado").prop("disabled","true");   
+                                        $("#estado_pago").prop("disabled","true");
+                                    }                                
+                                    if (check >= 1 && (json[0].tipo_pago != 4 || json[0].metodo_1 != null)){
+                                        $("#terapias_individual").attr("disabled","true");
+                                        $("#btnguardar").prop("disabled","true");    
+                                        //alert ("a");
+                                    }
+                                    else{
+                                        $("#terapias_individual").prop('disabled', false);
+                                        $("#cantidad").prop('disabled', false);
+                                        $("#btnguardar").prop('disabled', false);
+                                    }
+                                    //alert (check);
+                                    $("#contenedor_boton_pago").show();
                                 }
-                                else if (json[0].tipo_pago == 3){
-                                    $("#contenedor_metodo_pago_1").show();
-                                    $("#contenedor_ref_pago_1").show();
-                                    $("#contenedor_metodo_pago_2").show();
-                                    $("#contenedor_ref_pago_2").show();
+                                else{//Es individual
+                                    $("#terapias_individual").prop('disabled', false);
+                                    $("#cantidad").prop('disabled', false);
+                                    $("#btnguardar").prop('disabled', false);
                                 }
-                                else if (json[0].tipo_pago == 7){
-                                    
-                                }
-                                //alert (check);
-                                if (check>=2){
-                                    $("#btnguardar_pago").prop("disabled","true");    
-                                    $("#descuento_aplicado").prop("disabled","true");   
-                                    $("#estado_pago").prop("disabled","true");
-                                }                                
-                                $("#contenedor_boton_pago").show();
+                                //Verificar si el paciente ya tiene terapias asignadas                             
+                                $("#tabla_paciente").DataTable().destroy();
+                                agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
+                                cargar_tabla_terapias(1);                            
+                                $("#contenedor_nombre_programa").show();                            
+                                $("#btnguardar").show();  
                             }
-                            
-                            //Verificar si el paciente ya tiene terapias asignadas 
-                            //alert ($("#id_oculto").val());
-                            $("#tabla_paciente").DataTable().destroy();
-                            agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
-                            cargar_tabla_terapias(1);
-                            //operacion = 11;
-                            $("#contenedor_nombre_programa").show();
-                            //$("#contenedor_descuento").show();
-                            //$("#contenedor_estado_pago").show();
-                            //$("#contenedor_metodo_pago_1").show();
-                            //$("#contenedor_ref_pago_1").show();
-                            //$("#contenedor_metodo_pago_2").show();
-                            //$("#contenedor_ref_pago_2").show();
-                            //$("#contenedor_boton_pago").show();
-                            //$("#alerta").prop("class","alert-success alert-dismissable");
-                            //$("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
-                            //$("#advertencia_general").fadeIn(100).fadeOut(5000);
-                            $("#btnguardar").show();
-                            //$("#btn_invoice").show();
-                            //$("#btn_cancelar").show();
-
-                            
-
-                            $("#terapias_individual").prop('disabled', false);
-                            $("#cantidad").prop('disabled', false);
-                            $("#btnguardar").prop('disabled', false);
+                            else{        
+                                //alert ("No programa");
+                                $("#terapias_individual").prop('disabled', false);
+                                $("#cantidad").prop('disabled', false);
+                                $("#btnguardar").prop('disabled', false)
+                                $("#contenedor_nombre_programa").show();                            
+                                $("#btnguardar").show();  
+                            }                                                     
                         }
                         else{
                             $("#terapias_individual").prop('disabled', true);

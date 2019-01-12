@@ -745,7 +745,7 @@ class terapias {
             WHERE id_programa_tiene_terapia = ".$id_programa;
         $pdo = $bd->prepare($sql);       
         //echo $sql;
-        return $pdo->execute(array("atendida"));
+        return $pdo->execute(array("6"));
     }
     
     public static function validar_programa($id_programa){

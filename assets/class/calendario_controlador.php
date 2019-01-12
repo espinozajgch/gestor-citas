@@ -77,12 +77,12 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         
     }
     else if (($_POST["id_operacion"]==6)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==6))){
-        //Devolver eventos para medicos para formato de tabla        
-        $estado_cita = 1;
-        if (isset($_GET["estado"])){
-            $estado_cita = $_GET["estado"];
-        }
-        $json_temp = json_decode(citas::tabla_dias_citas($estado_cita));        
+        //Devolver eventos para medicos para formato de tabla                
+        $estado_cita    = isset($_GET["estado"]) ? $_GET["estado"] : false;
+        $fecha_inicio   = isset($_GET["fecha_inicio"]) && $_GET["fecha_inicio"]!="false" ? $_GET["fecha_inicio"] : false;
+        $fecha_fin      = isset($_GET["fecha_fin"]) && $_GET["fecha_fin"]!="false" ? $_GET["fecha_fin"] : false;
+        $validar        = isset($_GET["validar"]) && $_GET["validar"]!="false" ? true : false;
+        $json_temp = json_decode(citas::tabla_dias_citas($estado_cita, $fecha_inicio, $fecha_fin, $validar));        
         //print_r($json_temp);
         $json_final["data"]=$json_temp;
         $json_listo= json_encode($json_final);        

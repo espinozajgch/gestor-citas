@@ -61,15 +61,7 @@ $id_rol = "";
 
     <?php include_once("../assets/includes/menu.php") ?>
 
-        <div id="page-wrapper">
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Notificaciones</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+        
             <div class="row">
                 <div class="col-lg-12 mx-4">
                 <br>
@@ -82,9 +74,28 @@ $id_rol = "";
 
             </div>
             <!-- /.row -->
-        </div>
-        <!-- /#page-wrapper -->
+        
+<div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
 
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>    
 
 
 
@@ -117,15 +128,19 @@ $id_rol = "";
 
 
     <script>        
-        document.addEventListener('DOMContentLoaded', function() { // page is now ready...
-            cargar_tabla_notificaciones ();
+    document.addEventListener('DOMContentLoaded', function() { // page is now ready...
+            cargar_tabla_dinamica ();
     });
     
-    function cargar_tabla_notificaciones(){        
-        
-        $('#tabla_notificaciones').DataTable({  
+    function cargar_tabla_dinamica(){
+        $("#tabla_dinamica").DataTable().destroy();        
+        var fecha_inicio = false, fecha_fin = false, fecha_aux = new Date();
+        fecha_inicio = fecha_aux.getFullYear()+"-"+(fecha_aux.getMonth()+1)+"-"+fecha_aux.getDate();
+        fecha_aux.setDate(fecha_aux.getDate()+2);
+        fecha_fin = fecha_aux.getFullYear()+"-"+(fecha_aux.getMonth()+1)+"-"+fecha_aux.getDate();
+        $('#tabla_dinamica').DataTable({  
                 responsive: true,
-                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
+                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&fecha_inicio="+fecha_inicio+"&fecha_fin="+fecha_fin+"&validar=true",
                 "columns": [
                     {"data": "N"},
                     /*{"data": "Creacion"},*/
@@ -134,7 +149,7 @@ $id_rol = "";
                     {"data": "Paciente"},
                     {"data": "Medico"},    
                     {"data": "Terapia"},                    
-                    {"data": "Estado"},                    
+                    //{"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]
             });
@@ -142,6 +157,66 @@ $id_rol = "";
         $("#tabla_dinamica").fadeIn(150);
     }
         
+    function validar_cita(id_cita, id_programa, id_terapia, id_ptt){
+        $.post("citas/citas_controlador.php",
+        {
+            id_operacion: 11,
+            id_cita: id_cita,
+            id_programa: id_programa,
+            id_terapia: id_terapia,
+            id_ptt: id_ptt
+        },function (result){
+            var respuesta = JSON.parse(result);
+            if (respuesta[0].estado == 1){
+                //Validado con exito
+                alert ("Validado con exito");
+                window.location = "index.php";
+            }
+            else{
+                alert ("Ocurrio un error");
+            }
+        });
+    }
+    
+    function cancelar_cita(id_citas, id_programas, id_terapias, i){
+            $('#modal_trash').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+
+            id_cita = id_citas;
+            id_programa = id_programas;
+            id_terapia = id_terapias;
+            $('#modal_trash').find(".modal-body").html("<strong>Rol N# "+ i+"</strong>");
+            
+        }  
+
+        $('#erase').click(function(e){
+            //eliminar(id);
+            console.log(id_cita);
+
+            $.post("citas/citas_controlador.php",
+            {
+                id_operacion: 12,
+                id_cita: id_cita,
+                id_programa: id_programa,
+                id_terapia: id_terapia
+            },function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado == 1){
+                    //Validado con exito
+                    //alert ("La cita fue cancelada");
+                    window.location = "index.php";
+                }
+                else{
+                    alert ("Ocurrio un error");
+                }
+            });/**/
+        });
+        
+        function generar_invoice_individual(id_reserva){
+        window.open("terapias/terapias_controlador.php?id_operacion=15&individual=true&reserva="+id_reserva, "_newtab");
+    }
     </script>
 </body>
 

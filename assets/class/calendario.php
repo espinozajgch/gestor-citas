@@ -237,13 +237,28 @@ class calendario {
         //echo $longitud;        
         if ($longitud<1){
             $json[0]['Descripcion'] = "";
+            $json[0]['Descripcion'] = "";
             $json[0]['Fecha'] = "";
             $json[0]['N'] = "No hay información que mostrar";
         }
-        for ($i=0; $i<$longitud; $i++){
+        for ($i=0; $i<$longitud; $i++){            
             $json[$i]['Descripcion'] = $resultados[$i]["descripcion_feriados"];
             $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_feriados"]);
-            $json[$i]['N'] = "<a href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\">".($i+1)."</a>";
+            $json[$i]['N'] = ($i+1);
+            $str_btn=" <a title=\"Modificar Fecha\" 
+                            class=\"btn btn-sm btn-info\"  
+                            href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\"
+                        >
+                        <i class=\"fa fa-edit\"></i>
+                        </a>
+                        <button title='Cancelar'
+                            class='btn btn-sm btn-danger eliminar'
+                            onclick ='eliminar_dia(".$resultados[$i]["id_feriados"].")'>
+                            <i class=\"fa fa-times-circle\"></i>
+                        </button>
+                        ";
+            $json[$i]['Acciones'] = $str_btn;
+            
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin
