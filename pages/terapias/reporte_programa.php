@@ -385,28 +385,7 @@ while (!$fin){
     }
 }
 
-
-/*$pdf->SetFont('Arial','',10);
-// Número de página
-$pdf->SetXY(10, $y+30);
-$pdf->Cell(0,10,'CENTRO DE TERAPIAS ALTERNATIVAS SALUD INTEGRAL',0,0,'L');
-
-$pdf->SetXY(10, $y+34);
-$pdf->Cell(0,10,'Santa Lucia 118 - Santiago',0,0,'L');
-
-$pdf->SetXY(10, $y+38);
-$pdf->Cell(0,10,'http://www.saludintegralcentro.cl',0,0,'L');
-
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+30);
-$pdf->Cell(0,10,'Fono: 226328948',0,0,'R');
-
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+34);
-$pdf->Cell(0,10,'Call Center:226328960',0,0,'R');
-
-$pdf->SetXY($pdf->GetPageWidth()-25, $y+38);
-$pdf->Cell(0,10,'saludintegralcentro@gmail.com',0,0,'R');*/
-
-$y+=26;        
+$y+=25;        
 $pdf->Line(10, $y, $pdf->GetPageWidth()-10, $y);
 $pdf->Line(10, $pdf->GetPageHeight()-10, $pdf->GetPageWidth()-10, $pdf->GetPageHeight()-10);
 

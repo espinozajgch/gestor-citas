@@ -125,6 +125,14 @@ function mostrar_calendario(){
                 },
         navLinks: true,
         selectable: true,
+        businessHours:{
+            daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
+            startTime: '8:00',
+            endTime: '17:00'
+        },
+        minTime: "8:00",
+        maxTime: "17:00",
+        hiddenDays: [0],
         navLinkDayClick: function (date, jsEvent){
                     
                     var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
@@ -162,8 +170,9 @@ function guardar_dia(){
        }, function(result){
            //alert (result);
            if (result=="1"){
-                $("#msg_ok").show(1000);
-                $("#msg_ok").fadeOut(5000);
+                $("#msg_ok").fadeIn(150);
+                $("#msg_ok").fadeOut(100);
+                setTimeout(function(){window.location ="calendarios.php?opcion=2"},300);setTimeout(functio)
            }
            else{
                $("#msgerror_danger").show(1000);

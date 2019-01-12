@@ -61,15 +61,7 @@ $id_rol = "";
 
     <?php include_once("../assets/includes/menu.php") ?>
 
-        <div id="page-wrapper">
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Notificaciones</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+        
             <div class="row">
                 <div class="col-lg-12 mx-4">
                 <br>
@@ -82,8 +74,7 @@ $id_rol = "";
 
             </div>
             <!-- /.row -->
-        </div>
-        <!-- /#page-wrapper -->
+        
 
 
 
@@ -117,15 +108,16 @@ $id_rol = "";
 
 
     <script>        
-        document.addEventListener('DOMContentLoaded', function() { // page is now ready...
-            cargar_tabla_notificaciones ();
+    document.addEventListener('DOMContentLoaded', function() { // page is now ready...
+            cargar_tabla_dinamica ();
     });
     
-    function cargar_tabla_notificaciones(){        
-        
-        $('#tabla_notificaciones').DataTable({  
+    function cargar_tabla_dinamica(){
+        $("#tabla_dinamica").DataTable().destroy();        
+        var fecha_inicio = false, fecha_fin = false;
+        $('#tabla_dinamica').DataTable({  
                 responsive: true,
-                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
+                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&fecha_inicio="+fecha_inicio+"&fecha_fin="+fecha_fin,
                 "columns": [
                     {"data": "N"},
                     /*{"data": "Creacion"},*/
@@ -134,7 +126,7 @@ $id_rol = "";
                     {"data": "Paciente"},
                     {"data": "Medico"},    
                     {"data": "Terapia"},                    
-                    {"data": "Estado"},                    
+                    //{"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]
             });

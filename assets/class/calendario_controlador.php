@@ -82,6 +82,8 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         if (isset($_GET["estado"])){
             $estado_cita = $_GET["estado"];
         }
+        $fecha_inicio = isset($_GET["fecha_inicio"]) && $_GET["fecha_inicio"]!=false ? $_GET["fecha_inicio"] : false;
+        $fecha_inicio = isset($_GET["fecha_inicio"]) && $_GET["fecha_inicio"]!=false ? $_GET["fecha_inicio"] : false;
         $json_temp = json_decode(citas::tabla_dias_citas($estado_cita));        
         //print_r($json_temp);
         $json_final["data"]=$json_temp;

@@ -1321,9 +1321,12 @@ function validar_inputs(input, div_error){
                 },   
                 businessHours:{
                     daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
-                    start: '8:00',
-                    end: '18:00'
+                    startTime: '8:00',
+                    endTime: '17:00'
                 },
+                hiddenDays: [0],
+                minTime: "8:00",
+                maxTime: "17:00",
                 //editable: true,
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){
@@ -1336,16 +1339,13 @@ function validar_inputs(input, div_error){
                 events: {
                     url: url,
                     method: 'GET'
-                },
-                minTime: "8:00",
-                maxTime: "18:00",
+                },                
                 nowIndicator: true,
                 //defaultView: 'agendaDay',                
                 locale : "es",
                 responsive: true,
                 contentHeight: 500,
-                selectable: true,
-                hiddenDays: [0],
+                selectable: true,                
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial

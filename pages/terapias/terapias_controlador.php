@@ -394,24 +394,25 @@ else if ($id_operacion == 20){ // Establecer el tipo de pago de un programa
     $json;
     if ($tipo_pago == 3){//Pago parcial
         if (terapias::establecer_modo_pago($id_programa, $tipo_pago)){
+            
             terapias::establecer_descuento_programa_terapeutico($id_programa, 0);
-            if ($metodo_pago1 != ""){
-                if (terapias::establecer_metodo_pago($metodo_pago1, $referencia1, $id_programa)){
-                    if ($metodo_pago2 != ""){
-                        if (terapias::agregar_pago_parcial($id_programa, $referencia2, $metodo_pago2)){
-                            $json[0]["estado"] = 1;
-                        }
-                        else{
-                            $json[0]["estado"] = 0;
-                        }
+            if ($metodo_pago1 != "" || $metodo_pago2 != ""){
+                if ($metodo_pago1 != ""){
+                    if (!terapias::establecer_metodo_pago($metodo_pago1, $referencia1, $id_programa)){
+                        $json[0]["estado"] = 0;
                     }
                     else{
                         $json[0]["estado"] = 1;
                     }
                 }
-                else{
-                    $json[0]["estado"] = 0;
-                }
+                if ($metodo_pago2 != ""){
+                    if (terapias::agregar_pago_parcial($id_programa, $referencia2, $metodo_pago2)){
+                        $json[0]["estado"] = 1;
+                    }
+                    else{
+                        $json[0]["estado"] = 0;
+                    }
+                }                
             }
             else{
                 $json[0]["estado"] = 1;
@@ -419,7 +420,7 @@ else if ($id_operacion == 20){ // Establecer el tipo de pago de un programa
         }
         else{
             $json[0]["estado"] = 0;
-        }  
+        }            
     }
     else if ($tipo_pago == 4){//Pago total
         if (!terapias::establecer_descuento_programa_terapeutico($id_programa, $descuento)){

@@ -47,6 +47,12 @@ require_once '../assets/class/calendario.php';
                 eventClick: function (info){
                     //alert ("ID:"+info.event.id);                    
                 },navLinks: true,
+                businessHours:{
+                    daysOfWeek: [1,2,3,4,5,6],
+                    startTime: '8:00',
+                    endTime: '17:00'
+                },        
+                hiddenDays: [0],
                 navLinkDayClick: function (date, jsEvent){
                     
                     var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  

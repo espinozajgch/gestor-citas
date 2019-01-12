@@ -315,10 +315,12 @@ class citas {
             }
         } //FIN FUNCION OBTENER_NOMBRE_USUARIO
         
-        public static function tabla_dias_citas($estado = 1){
+        public static function tabla_dias_citas($estado = false, $fecha_inicio=false, $fecha_fin=false){
         //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
-
+        $condicion_estado = !$estado ? $condicion_estado = "<> 0" : $condicion_estado = "= $estado";
+        $condicion_estado.= $fecha_inicio ? " AND fecha_inicio > $fecha_inicio " : "";
+        $condicion_estado.= $fecha_inicio ? " AND fecha_inicio < $fecha_fin " : "";
         $sql ='SELECT 
             rm.id_rm                            as  id_rm,
             rm.fecha_inicio                     as  fecha_inicio, 
@@ -345,9 +347,10 @@ class citas {
             LEFT  JOIN programa_tiene_terapia   ptt     ON ptt.reserva_medica_id_rm                         =   rm.id_rm
             LEFT  JOIN programa_terapeutico     pt      ON ptt.programa_terapeutico_id_programa_terapeutico =   pt.id_programa_terapeutico
             INNER JOIN terapia                  t       ON t.id_terapia                                     =   ptt.terapia_id_terapia
-            WHERE rm.estado = '.$estado.'
+            WHERE rm.estado  '.$condicion_estado.'
             GROUP BY rm.id_rm
             order by fecha_inicio DESC, hora_inicio DESC';
+        //echo $sql;
         $pdo = $bd->prepare($sql);
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos
