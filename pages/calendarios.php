@@ -146,7 +146,28 @@ $bd;
 
 
     <script>
-        
+        function eliminar_dia(dia){
+        if (confirm("¿Está seguro? Esta operación no se puede revertir")){
+
+            $.post("../assets/class/calendario_controlador.php",
+            {
+                id_operacion: 8,
+                dia : dia
+            },
+            function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado==1){
+                    alert ("Exito");
+                    window.location = "calendarios.php?opcion=2";
+                }
+                else{
+                    alert (respuesta[0].debug_string);
+                }
+            }
+            );
+
+        }
+    }
     </script>
 </body>
 

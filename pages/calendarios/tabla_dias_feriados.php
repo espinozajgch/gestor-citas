@@ -27,7 +27,8 @@ if (!isset($_SESSION["pagina"])){
                             <tr>
                                 <th>N°</th>
                                 <th>Fecha</th>
-                                <th>Descripcion</th>                
+                                <th>Descripcion</th>     
+                                <th>Acciones</th>                                     
                             </tr>
                         </thead>                        
                         <tbody > 
@@ -55,7 +56,8 @@ if (!isset($_SESSION["pagina"])){
                 "columns": [
                     {"data": "N"},
                     {"data": "Fecha"},
-                    {"data": "Descripcion"}
+                    {"data": "Descripcion"},
+                    {"data": "Acciones"}
                 ]
             });
     });
