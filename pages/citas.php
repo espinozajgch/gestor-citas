@@ -341,19 +341,20 @@ $usuario  = "";
         $("#tabla_dinamica").fadeIn(150);
     }
     
-    function validar_cita(id_cita, id_programa, id_terapia){
+    function validar_cita(id_cita, id_programa, id_terapia, id_ptt){
         $.post("citas/citas_controlador.php",
         {
             id_operacion: 11,
             id_cita: id_cita,
             id_programa: id_programa,
-            id_terapia: id_terapia
+            id_terapia: id_terapia,
+            id_ptt: id_ptt
         },function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){
                 //Validado con exito
                 alert ("Validado con exito");
-                window.location = "citas.php?opcion=1";
+                window.location = "index.php";
             }
             else{
                 alert ("Ocurrio un error");
