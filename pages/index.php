@@ -136,7 +136,7 @@ $id_rol = "";
         $("#tabla_dinamica").DataTable().destroy();        
         var fecha_inicio = false, fecha_fin = false, fecha_aux = new Date();
         fecha_inicio = fecha_aux.getFullYear()+"-"+(fecha_aux.getMonth()+1)+"-"+fecha_aux.getDate();
-        fecha_aux.setDate(fecha_aux.getDate()+2);
+        fecha_aux.setDate(fecha_aux.getDate()+7);
         fecha_fin = fecha_aux.getFullYear()+"-"+(fecha_aux.getMonth()+1)+"-"+fecha_aux.getDate();
         $('#tabla_dinamica').DataTable({  
                 responsive: true,

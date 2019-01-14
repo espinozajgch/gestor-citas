@@ -126,20 +126,20 @@ while (!$fin){
     $y_actual+=10;
     $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
     $y_actual+=5;
-    $pdf->agregar_texto("PACIENTE: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $pdf->agregar_texto("Nombre: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 23;
     $pdf->agregar_texto(strtoupper($resultado[0]["nombre_p"]." ".$resultado[0]["apellido_p"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 82;
-    $pdf->agregar_texto("RUT: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $pdf->agregar_texto("RUT: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 10;
     $pdf->agregar_texto(strtoupper($resultado[0]["rut"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual = $x_inicio;
     $y_actual+=5;
-    $pdf->agregar_texto("TELÉFONO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $pdf->agregar_texto("Teléfono: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 25;
     $pdf->agregar_texto($resultado[0]["celular_p"], "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 80;
-    $pdf->agregar_texto("EMAIL: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+    $pdf->agregar_texto("Email: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $x_actual += 15;
     $pdf->agregar_texto(strtoupper($resultado[0]["email_p"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     $y_actual+=5;
@@ -154,30 +154,30 @@ while (!$fin){
     $especial = $resultado[0]["especial"];
     if ($especial==0){
         $estatus_pago = $resultado[0]["estatus_pago_p"];
-        $pdf->agregar_texto("PROGRAMA TERAPEUTICO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+        $pdf->agregar_texto("Programa Terapeutico: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
         $x_actual += 55;
         $pdf->agregar_texto(strtoupper($desc_programa), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
         $y_actual+=5;
         $x_actual = $x_inicio;
 
         if ($estatus_pago == 4){//TOTAL            
-            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Pago: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=15;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $x_actual+=40;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Metodo: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=20;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_mp"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $x_actual+=45;
-            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Referencia: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=30;
             $pdf->agregar_texto(strtoupper($resultado[0]["referencia_pt"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
         }
         else if ($estatus_pago == 3){//Parcial
             
-            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Pago: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=15;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             if ($resultado[0]["nombre_mp"]==""){
@@ -190,18 +190,18 @@ while (!$fin){
                 $check_pago_par++;
             } 
             $x_actual+=40;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Metodo: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=20;
             $pdf->agregar_texto(strtoupper($nombre_mp), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $x_actual+=45;
-            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Referencia: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=30;
             $pdf->agregar_texto(strtoupper($referencia), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $y_actual+=6;
             $x_actual=65;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Metodo: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=20;
             if ($resultado[0]["nombre_mp_2"]==""){
                 $nombre_mp = "NO DEFINIDO";
@@ -215,18 +215,18 @@ while (!$fin){
             $pdf->agregar_texto(strtoupper($nombre_mp), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             $x_actual+=45;
-            $pdf->agregar_texto("REFERENCIA: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Referencia: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=30;
             $pdf->agregar_texto(strtoupper($referencia), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
         }
         else{
-            $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+            $pdf->agregar_texto("Pago: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             $x_actual+=15;
             $pdf->agregar_texto(strtoupper($resultado[0]["nombre_ep"]), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
             
             /*$x_actual+=40;
-            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);//*/
+            $pdf->agregar_texto("METODO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);//*/
         }
     }
     else{
@@ -236,7 +236,7 @@ while (!$fin){
             $estatus_pago = $resultado[0]["rm_estado"];
             $estado_pago = $resultado[0]["nombre_ep"];
         }        
-        $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "B", 0, 1);
+        $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
         $x_actual+=15;
         //$estado_pago = $resultado[0]["nombre_ep_aux"];
         $pdf->agregar_texto(strtoupper($estado_pago), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
@@ -245,15 +245,15 @@ while (!$fin){
 
     $y = 120;
 
-    $cols=array( "FECHA TERAPIA"    => 45,
-                 "DESCRIPCION"  => 88,
-                 "P. UNITARIO"=> 26,
-                 "SUB TOTAL" => 31);
+    $cols=array( "Fecha / Hora"    => 45,
+                 "Descripcion"  => 88,
+                 "P. Unitario"=> 26,
+                 "Sub Total" => 31);
     $pdf->addCols( $cols);
-    $cols=array( "FECHA TERAPIA"    => "L",
-                 "DESCRIPCION"  => "L",
-                 "P. UNITARIO"      => "R",
-                 "SUB TOTAL" => "R");
+    $cols=array( "Fecha / Hora"    => "L",
+                 "Descripcion"  => "L",
+                 "P. Unitario"      => "R",
+                 "Sub Total" => "R");
     $pdf->addLineFormat( $cols);
     //$pdf->addLineFormat($cols);
 
@@ -264,10 +264,10 @@ while (!$fin){
         //$json[0]["estado"] = 1;
         $str="";
         if ($longitud<1){
-            $line = array( "FECHA TERAPIA"    => "-",
-                       "DESCRIPCION"  => "-",
-                       "P. UNITARIO"      => "-",
-                       "SUB TOTAL" => "-");
+            $line = array( "Fecha / Hora"    => "-",
+                       "Descripcion"  => "-",
+                       "P. Unitario"      => "-",
+                       "Sub Total" => "-");
             $size = $pdf->addLine( $y, $line );
             $y   += $size + 3;
         }
@@ -276,7 +276,7 @@ while (!$fin){
         while (($i < $longitud) && ($y<200)){
         //for ($i = 0; $i<$longitud; $i++){
             $nombre_programa        = utf8_decode($resultado[$i]["desc_p"]);
-            $descripcion_terapia    = utf8_decode($resultado[$i]["nombre_t"]);
+            $Descripcion_terapia    = utf8_decode($resultado[$i]["nombre_t"]);
             $precio_terapia         = utf8_decode($resultado[$i]["precio_t"]);
             $fecha_t                = $resultado[$i]["fecha_c"];
             $hora_i                 = $resultado[$i]["hora_inicio"];
@@ -290,10 +290,10 @@ while (!$fin){
                 $fecha_t = calendario::formatear_fecha(1, $fecha_t);
             }
             $subtotal += $precio_terapia;        
-                $line = array( "FECHA TERAPIA"    => $fecha_t . " - " .$hora_i,
-                       "DESCRIPCION"  => "$descripcion_terapia",
-                       "P. UNITARIO"      => "$".number_format($precio_terapia,"0",",",".")."",
-                       "SUB TOTAL" => "$".number_format($subtotal,"0",",",".")."");
+                $line = array( "Fecha / Hora"    => $fecha_t . " - " .$hora_i,
+                       "Descripcion"  => "$Descripcion_terapia",
+                       "P. Unitario"      => "$".number_format($precio_terapia,"0",",",".")."",
+                       "Sub Total" => "$".number_format($subtotal,"0",",",".")."");
 
 
             $size = $pdf->addLine( $y, $line );
@@ -303,10 +303,10 @@ while (!$fin){
         if ($i>=$longitud){
             $max_altura = $pdf->GetPageHeight();
             $y = $max_altura - 80;
-            $line = array( "FECHA TERAPIA"    => " ",
-                           "DESCRIPCION"  => "SUB TOTAL",
-                           "P. UNITARIO"  =>" ",
-                           "SUB TOTAL" =>"$".number_format($subtotal,"0",",","."));
+            $line = array( "Fecha / Hora"    => " ",
+                           "Descripcion"  => "Sub Total",
+                           "P. Unitario"  =>" ",
+                           "Sub Total" =>"$".number_format($subtotal,"0",",","."));
             $size = $pdf->addLine( $y, $line );
             $y   += $size+3;     
             $total = $subtotal;
@@ -319,16 +319,16 @@ while (!$fin){
                     $descuento = ($resultado[0]["descuento_p"]/100)*$subtotal;
                     $descuento_nominal = $resultado[0]["descuento_p"];
                 }
-                $line = array( "FECHA TERAPIA"    => " ",
-                               "DESCRIPCION"  => "DESCUENTO AL PAGO DE CONTADO",
-                               "P. UNITARIO"  =>number_format($descuento_nominal,"0",",",".")."%",
-                               "SUB TOTAL" =>" - $".number_format(($descuento),"0",",","."));
+                $line = array( "Fecha / Hora"    => " ",
+                               "Descripcion"  => "Descuento al pago decontado",
+                               "P. Unitario"  =>number_format($descuento_nominal,"0",",",".")."%",
+                               "Sub Total" =>" - $".number_format(($descuento),"0",",","."));
                 $size = $pdf->addLine( $y, $line );
                 $y   += $size + 3;
-                $line = array( "FECHA TERAPIA"    => " ",
-                               "DESCRIPCION"  => "TOTAL CON DESCUENTO",
-                               "P. UNITARIO"  =>" ",
-                               "SUB TOTAL" =>"$".number_format($subtotal-$descuento,"0",",",".")."");
+                $line = array( "Fecha / Hora"    => " ",
+                               "Descripcion"  => "Total con descuento",
+                               "P. Unitario"  =>" ",
+                               "Sub Total" =>"$".number_format($subtotal-$descuento,"0",",",".")."");
                 $size = $pdf->addLine( $y, $line );
                 $y   += $size + 3;
                 $total -= $descuento;
@@ -336,16 +336,16 @@ while (!$fin){
             else if ($estatus_pago == 3){//Parcial
                 if ($check_pago_par>0){
                     $amortizacion = (($total/2)*$check_pago_par);
-                    $line = array( "FECHA TERAPIA"    => " ",
-                                   "DESCRIPCION"  => "PAGO PARCIAL: $check_pago_par/2",
-                                   "P. UNITARIO"  =>"$".number_format($amortizacion,"0",",",".")."",
-                                   "SUB TOTAL" =>" - $".number_format(($amortizacion),"0",",","."));
+                    $line = array( "Fecha / Hora"    => " ",
+                                   "Descripcion"  => "Pago Parcial: $check_pago_par/2",
+                                   "P. Unitario"  =>"$".number_format($amortizacion,"0",",",".")."",
+                                   "Sub Total" =>" - $".number_format(($amortizacion),"0",",","."));
                     $size = $pdf->addLine( $y, $line );
                     $y   += $size + 3;
-                    $line = array( "FECHA TERAPIA"    => " ",
-                                   "DESCRIPCION"  => "SUBTOTAL CON PAGO PARCIAL",
-                                   "P. UNITARIO"  =>" ",
-                                   "SUB TOTAL" =>"$".number_format($total-$amortizacion,"0",",",".")."");
+                    $line = array( "Fecha / Hora"    => " ",
+                                   "Descripcion"  => "Subtotal con pago parcial",
+                                   "P. Unitario"  =>" ",
+                                   "Sub Total" =>"$".number_format($total-$amortizacion,"0",",",".")."");
                     $size = $pdf->addLine( $y, $line );
                     $total-=$amortizacion;
                 }
@@ -355,26 +355,26 @@ while (!$fin){
             else if ($estatus_pago == 7){//INDIVIDUAL
                 
                     $amortizacion = $sub_total_pagadas;
-                    $line = array( "FECHA TERAPIA"    => " ",
-                                   "DESCRIPCION"  => "TERAPIAS PAGADAS",
-                                   "P. UNITARIO"  =>"$terapias_pagadas/$numero_terapias",
-                                   "SUB TOTAL" =>" - $".number_format(($amortizacion),"0",",","."));
+                    $line = array( "Fecha / Hora"    => " ",
+                                   "Descripcion"  => "Terapias Pagadas",
+                                   "P. Unitario"  =>"$terapias_pagadas/$numero_terapias",
+                                   "Sub Total" =>" - $".number_format(($amortizacion),"0",",","."));
                     $size = $pdf->addLine( $y, $line );
                     $y   += $size + 3;
-                    $line = array( "FECHA TERAPIA"    => " ",
-                                   "DESCRIPCION"  => "SUBTOTAL",
-                                   "P. UNITARIO"  =>" ",
-                                   "SUB TOTAL" =>"$".number_format($total-$amortizacion,"0",",",".")."");
+                    $line = array( "Fecha / Hora"    => " ",
+                                   "Descripcion"  => "Subtotal",
+                                   "P. Unitario"  =>" ",
+                                   "Sub Total" =>"$".number_format($total-$amortizacion,"0",",",".")."");
                     $size = $pdf->addLine( $y, $line );
                     $total-=$amortizacion;
                 
                 
                 $y   += $size + 3;
             }
-            $line = array( "FECHA TERAPIA"    => " ",
-                           "DESCRIPCION"  => "TOTAL RESTANTE:",
-                           "P. UNITARIO"      => " ",
-                           "SUB TOTAL" => "$".number_format($total,"0",",",".")."");
+            $line = array( "Fecha / Hora"    => " ",
+                           "Descripcion"  => "Total Restante:",
+                           "P. Unitario"      => " ",
+                           "Sub Total" => "$".number_format($total,"0",",",".")."");
             $size = $pdf->addLine( $y, $line );
             $fin = true;
         }        
