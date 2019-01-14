@@ -372,7 +372,7 @@ while (!$fin){
                 $y   += $size + 3;
             }
             $line = array( "Fecha / Hora"    => " ",
-                           "Descripcion"  => "Total Restante:",
+                           "Descripcion"  => "Saldo:",
                            "P. Unitario"      => " ",
                            "Sub Total" => "$".number_format($total,"0",",",".")."");
             $size = $pdf->addLine( $y, $line );

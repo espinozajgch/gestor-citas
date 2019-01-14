@@ -1322,11 +1322,11 @@ function validar_inputs(input, div_error){
                 businessHours:{
                     daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
                     startTime: '8:00',
-                    endTime: '17:00'
+                    endTime: '20:00'
                 },
                 hiddenDays: [0],
                 minTime: "8:00",
-                maxTime: "17:00",
+                maxTime: "20:00",
                 //editable: true,
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){

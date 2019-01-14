@@ -105,15 +105,15 @@ $pdf->SetFont('Arial','',11);
 //$pdf->Cell(10,100,$id_paciente,0,0,'C');
 
 $pdf->SetXY(147,12);
-$pdf->Cell(40,10,strtoupper("Fecha y Hora"),0,0,'C');
+$pdf->Cell(40,10,"Fecha y Hora",0,0,'C');
 
 $pdf->SetXY(145,19);
 $pdf->Cell(41,10,$fecha,0,0,'R');
 
 $pdf->SetXY(15,45);	
-$pdf->Cell(40,10,strtoupper("Paciente:"),0,0,'L');
+$pdf->Cell(40,10,"Nombre:",0,0,'L');
 
-$pdf->SetXY(37,45);
+$pdf->SetXY(31,45);
 $pdf->Cell(0,10,strtoupper($paciente),0,0,'L');
 //$pdf->Line(53, 58, 190, 58);
 
@@ -125,17 +125,17 @@ $pdf->Cell(15,10,$rut,0,0,'L');
 //$pdf->Line(30, 68, 65, 68);
 
 
-$pdf->SetXY(70,52);
-$pdf->Cell(20,10,strtoupper("Telefonos:"),0,0,'L');
+$pdf->SetXY(15,60);
+$pdf->Cell(20,10,"Telefonos:",0,0,'L');
 
-$pdf->SetXY(96,52);
+$pdf->SetXY(35,60);
 $pdf->Cell(20,10,$telefonos,0,0,'L');
 //$pdf->Line(93, 68, 190, 68);
 
-$pdf->SetXY(15,60);
-$pdf->Cell(15,10,"EMAIL:",0,0,'L');
+$pdf->SetXY(15,68);
+$pdf->Cell(15,10,"Email:",0,0,'L');
 
-$pdf->SetXY(31,60);
+$pdf->SetXY(31,68);
 $pdf->Cell(15,10,$email,0,0,'L');
 //$pdf->Line(32, 78, 100, 78);
 
@@ -143,7 +143,7 @@ $pdf->SetXY(15,80);
 $pdf->SetFont('Arial','',12);
 $pdf->SetFillColor(229, 229, 229); //Gris tenue de cada fila
 $pdf->SetTextColor(3, 3, 3); //Color del texto: Negro
-$pdf->Cell(180,10,strtoupper($texto),0,0,'C',true);
+$pdf->Cell(180,10,$texto,0,0,'C',true);
 //s$pdf->Line(90, 68, 180, 68);
 
 $pdf->SetFont('Arial','',10);
@@ -153,7 +153,7 @@ $pdf->MultiCell(180,6,strtoupper($historia),0,'J');
 if($id==3){
 	$pdf->SetXY(120,230);
 	$pdf->SetFont('Arial','',12);
-	$pdf->Cell(60,10,strtoupper('Firma Profesional'),0,0,'C',false);
+	$pdf->Cell(60,10,'Firma Profesional',0,0,'C',false);
 	$pdf->Line(120, 230, 180, 230);
 }
 

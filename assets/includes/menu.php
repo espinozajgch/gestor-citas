@@ -36,9 +36,9 @@
                 </li>
                 <li><a href="http://buscahogar.com.ar:2082" target="_blank"><i class="fa fa-gear fa-fw"></i> Cpanel</a>
                 </li-->
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Editar Perfil</a>
+                <!--li><a href="#"><i class="fa fa-gear fa-fw"></i> Editar Perfil</a>
                 </li>
-                <li class="divider"></li>
+                <li class="divider"></li-->
                 <li><a href="../assets/class/logout.php"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
                 </li>
             </ul>
