@@ -111,7 +111,7 @@ if(isset($_GET["rut_paciente"])){
             </div>
         </div>
         
-        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago">
+        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago" onchange="establecer_tipo_pago()">
             <small><strong><label for="estado_pago">Tipo de Pago</label></strong></small>
             <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="">
                  <option value="7">INDIVIDUAL</option>
@@ -385,14 +385,16 @@ if(isset($_GET["rut_paciente"])){
                                         $("#contenedor_metodo_pago_2").show();
                                         $("#contenedor_ref_pago_2").show();
                                     }                                    
-                                    if (check>=2){
+                                    if (check>=2){//Se han guardado todos los pagos que se pueden guardar
                                         $("#btnguardar_pago").prop("disabled","true");    
                                         $("#descuento_aplicado").prop("disabled","true");   
                                         $("#estado_pago").prop("disabled","true");
                                     }                                
-                                    if (check >= 1 && (json[0].tipo_pago != 4 || json[0].metodo_1 != null)){
+                                    if (check >= 1 && (json[0].tipo_pago != 4 || json[0].metodo_1 != null)){//Se ha guardado al menos un pago
                                         $("#terapias_individual").attr("disabled","true");
                                         $("#btnguardar").prop("disabled","true");    
+                                        $("#name_programa").prop('disabled', "true");
+                                        $("#estado_pago").prop('disabled', true);
                                         //alert ("a");
                                     }
                                     else{

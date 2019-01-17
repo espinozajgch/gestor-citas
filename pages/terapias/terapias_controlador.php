@@ -451,6 +451,11 @@ else if ($id_operacion == 20){ // Establecer el tipo de pago de un programa
             $json[0]["estado"] = 0;
         }
     }
+    else if ($tipo_pago == 7){//Individual
+        terapias::establecer_modo_pago($id_programa, $tipo_pago);
+        terapias::establecer_descuento_programa_terapeutico($id_programa, $descuento);
+        $json[0]["estado"] = 1;
+    }
     else{
         $json[0]["estado"] = 0;
     }

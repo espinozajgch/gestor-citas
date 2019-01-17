@@ -50,7 +50,7 @@ require_once '../assets/class/calendario.php';
                 businessHours:{
                     daysOfWeek: [1,2,3,4,5,6],
                     startTime: '8:00',
-                    endTime: '17:00'
+                    endTime: '20:00'
                 },        
                 hiddenDays: [0],
                 navLinkDayClick: function (date, jsEvent){

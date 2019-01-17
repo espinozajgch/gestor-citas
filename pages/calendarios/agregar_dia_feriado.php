@@ -128,10 +128,10 @@ function mostrar_calendario(){
         businessHours:{
             daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
             startTime: '8:00',
-            endTime: '17:00'
+            endTime: '20:00'
         },
         minTime: "8:00",
-        maxTime: "17:00",
+        maxTime: "20:00",
         hiddenDays: [0],
         navLinkDayClick: function (date, jsEvent){
                     
