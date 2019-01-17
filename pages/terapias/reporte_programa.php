@@ -102,6 +102,7 @@ while (!$fin){
     $x_actual       = $x_inicio;
     $y_actual       = $y_inicio;
     $check_pago_par = 0;
+    $sub_total_array;
     
 
     //Agregamos una página nueva
@@ -293,7 +294,8 @@ while (!$fin){
                 $sub_total_pagadas+=$precio_terapia;
                 $fecha_t = calendario::formatear_fecha(1, $fecha_t);
             }
-            $subtotal += $precio_terapia;        
+            $subtotal += $precio_terapia;    
+            $sub_total_array[$i] = $subtotal;
                 $line = array( "Fecha / Hora"    => $fecha_t . " - " .$hora_i,
                        "Descripcion"  => "$Descripcion_terapia",
                        "P. Unitario"      => "$".number_format($precio_terapia,"0",",",".")."",
@@ -340,9 +342,10 @@ while (!$fin){
             else if ($estatus_pago == 3){//Parcial
                 if ($numero_terapias>1){
                     if ($check_pago_par>0){
-                        $amortizacion = (($total/2)*$check_pago_par);
+                        $terapias_cobradas = round($numero_terapias/2);
+                        $amortizacion = ($sub_total_array[$terapias_cobradas-1]);
                         $line = array( "Fecha / Hora"    => " ",
-                                       "Descripcion"  => "Pago Parcial",
+                                       "Descripcion"  => "Terapias a pagar: $terapias_cobradas/$numero_terapias",
                                        "P. Unitario"  =>"$".number_format($amortizacion,"0",",",".")."",
                                        "Sub Total" =>" - $".number_format(($amortizacion),"0",",","."));
                         $size = $pdf->addLine( $y, $line );
@@ -355,9 +358,7 @@ while (!$fin){
                         $total-=$amortizacion;
                     }
                 }
-                else{
-                    
-                }                
+                            
                 
                 $y   += $size + 3;
             }
@@ -382,13 +383,13 @@ while (!$fin){
                 $y   += $size + 3;
             }
             if ($estatus_pago == 4){
-                $descripcion = " TOTAL:";
+                $descripcion = "TOTAL:";
             }
             else if ($estatus_pago == 3 && $numero_terapias >1){
-                $descripcion = " Restante:";
+                $descripcion = "RESTANTE:";
             }
             else if ($estatus_pago == 7){
-                $descripcion = "Saldo restante:";
+                $descripcion = "SALDO RESTANTE:";
             }
             else{
                 $descripcion = " TOTAL:";
