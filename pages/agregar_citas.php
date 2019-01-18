@@ -402,12 +402,12 @@ input:checked + .slider:before {
                                         <small><strong><label for=name_>Presiona </label></strong></small><br>
                                         <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('b')"><i class="fa fa-calendar fa-bg"></i></a>
                                     </div>-->
-                                    
-                                    <div id="contenedor_calendario" class="col-sm-12 col-md-12 my-3" > 
-                                        <div id="calendario">
-                                        </div>
-                                    </div>                                    
-                                    
+                                    <div class="form-group col-sm-12 col-md-12 my-3">
+                                        <div id="contenedor_calendario"> 
+                                            <div id="calendario">
+                                            </div>
+                                        </div>                                    
+                                    </div>
 
                                 </div>
 

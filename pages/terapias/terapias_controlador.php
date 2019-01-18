@@ -206,8 +206,9 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     if ($descuento == ""){
         $descuento = 0;
     }
-    //print_r($lista_terapias);
-    $count_array =count($terapia);
+    //print_r($lista_terapias);    
+        
+    $count_array =  is_array($terapia) ? count($terapia) : 1;
     for ($i=0; $i<$cantidad; $i++){
         $lista_terapias[$i]=$terapia;
     }
