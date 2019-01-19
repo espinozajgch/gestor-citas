@@ -87,6 +87,7 @@ require_once '../assets/class/calendario.php';
                 locale : "es-es",
                 responsive: true,
                 navLinks: true,
+                longPressDelay: true,
                 selectable: true
             });        
             calendar.render();

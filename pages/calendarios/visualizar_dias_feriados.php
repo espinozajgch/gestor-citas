@@ -53,6 +53,7 @@ require_once '../assets/class/calendario.php';
                     endTime: '20:00'
                 },        
                 hiddenDays: [0],
+                longPressDelay: true,
                 navLinkDayClick: function (date, jsEvent){
                     
                     var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  

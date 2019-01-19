@@ -116,7 +116,8 @@ class terapias {
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE programa_tiene_terapia
         SET estado=?
-            WHERE programa_terapeutico_id_programa_terapeutico = ".$id_programa;
+            WHERE programa_terapeutico_id_programa_terapeutico = ".$id_programa."
+                AND estado NOT LIKE \"pagado\" AND estado NOT LIKE \"atendido\"";
         $pdo = $bd->prepare($sql);        
         return $pdo->execute(array("cancelado"));
     }
@@ -137,8 +138,9 @@ class terapias {
                 $id_cita = $resultado[$i]["id_r"];                
                 $sql = "UPDATE reserva_medica
                     SET estado=?
-                    WHERE id_rm = ".$id_cita;
+                    WHERE id_rm = ".$id_cita." AND estado <> 2 AND estado <> 6";
                 $pdo_ = $bd->prepare($sql);
+                
                 //echo $sql;
                 $res_aux = $pdo_->execute(array("5"));                              
             }                 

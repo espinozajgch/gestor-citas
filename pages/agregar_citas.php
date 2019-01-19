@@ -1345,7 +1345,8 @@ function validar_inputs(input, div_error){
                 locale : "es",
                 responsive: true,
                 contentHeight: 500,
-                selectable: true,                
+                selectable: true, 
+                longPressDelay: true,
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
