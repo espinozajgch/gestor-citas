@@ -111,7 +111,7 @@ if(isset($_GET["rut_paciente"])){
             </div>
         </div>
         
-        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago" onchange="establecer_tipo_pago()">
+        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago" onchange="guardar_pago()">
             <small><strong><label for="estado_pago">Tipo de Pago</label></strong></small>
             <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="">
                  <option value="7">INDIVIDUAL</option>
