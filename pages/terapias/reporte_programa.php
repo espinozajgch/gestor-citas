@@ -154,6 +154,7 @@ while (!$fin){
     $y_actual+=5;
     $desc_programa = $resultado[0]["desc_p"];
     $especial = $resultado[0]["especial"];
+
     if ($especial==0){
         $estatus_pago = $resultado[0]["estatus_pago_p"];
         $pdf->agregar_texto("Programa Terapeutico: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
@@ -235,16 +236,18 @@ while (!$fin){
         }
     }
     else{
-        $estatus_pago = $resultado[0]["estatus_p_rm"];
-        $estado_pago =$resultado[0]["nombre_ep_aux"];
-        if ($estatus_pago == null){
+        //$estatus_pago = $resultado[0]["estatus_p_rm"];
+        //$estado_pago =$resultado[0]["nombre_ep_aux"];
+        //if ($estatus_pago == null){
             $estatus_pago = $resultado[0]["rm_estado"];
             $estado_pago = $resultado[0]["nombre_ep"];
-        }        
+
+
+        //}        
         $pdf->agregar_texto("PAGO: ", "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
         $x_actual+=15;
         //$estado_pago = $resultado[0]["nombre_ep_aux"];
-        $pdf->agregar_texto(strtoupper($estado_pago), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
+        $pdf->agregar_texto(strtoupper(terapias::obtener_nombre_ep($estatus_pago)), "ARIAL", 11, $x_actual, $y_actual, "L", "", 0, 1);
     }
     
 
@@ -316,6 +319,7 @@ while (!$fin){
             $size = $pdf->addLine( $y, $line );
             $y   += $size+3;     
             $total = $subtotal;
+
             if ($estatus_pago == 4){//TOTAL
                 if(isset($_GET["descuento"])){
                     $descuento = ($_GET["descuento"]/100)*$subtotal;
@@ -373,7 +377,7 @@ while (!$fin){
                     $y   += $size + 3;
                 }   
                     $line = array( "Fecha / Hora"    => " ",
-                                   "Descripcion"  => "Subtotal",
+                                   "Descripcion"  => "Sub Total",
                                    "P. Unitario"  =>" ",
                                    "Sub Total" =>"$".number_format($total-$amortizacion,"0",",",".")."");
                     $size = $pdf->addLine( $y, $line );
@@ -383,17 +387,18 @@ while (!$fin){
                 $y   += $size + 3;
             }
             if ($estatus_pago == 4){
-                $descripcion = "TOTAL:";
+                $descripcion = "Total:";
             }
             else if ($estatus_pago == 3 && $numero_terapias >1){
-                $descripcion = "RESTANTE:";
+                $descripcion = "Saldo:";
             }
             else if ($estatus_pago == 7){
-                $descripcion = "SALDO RESTANTE:";
+                $descripcion = "Saldo: ";
             }
             else{
-                $descripcion = " TOTAL:";
+                $descripcion = "Total:";
             }
+
             $line = array( "Fecha / Hora"    => " ",
                            "Descripcion"  => "$descripcion",
                            "P. Unitario"      => " ",

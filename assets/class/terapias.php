@@ -367,6 +367,23 @@ class terapias {
             return false;
         }
     }
+
+    public static function obtener_nombre_ep ($id_ep){
+        $sql = "SELECT * FROM `estatus_pago` 
+            WHERE `id_ep`=$id_ep";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["nombre"];
+        }
+        else{            
+            return false;
+        }
+    }
+
     public static function obtener_metodo_pago_parcial ($id_programa){
         $sql = "SELECT * FROM `pagos_parciales` 
             WHERE `programa_terapeutico_id_programa_terapeutico`=$id_programa";

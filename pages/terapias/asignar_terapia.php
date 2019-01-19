@@ -227,7 +227,7 @@ if(isset($_GET["rut_paciente"])){
         </div>        
         <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <small><strong><label for="medico">Cantidad</label></strong></small>
-            <input type="text" class="form-control" id="cantidad" value="1" disabled>
+            <input type="number" class="form-control" id="cantidad" value="1" disabled>
         </div>
 
         
