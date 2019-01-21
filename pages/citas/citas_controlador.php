@@ -354,6 +354,24 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     }
     echo json_encode($json_retorno);
 }
+else if ($id_operacion==8.1){//Eliminar una cita
+    $id_cita = $_POST["id_cita"];
+    $id_ptt= $_POST["id_ptt"];
+    $json_retorno[0]["estado"]=1;
+    //Primero eliminamos la reserva medica
+    if (!citas::remover_cita($id_cita)){
+        $json_retorno[0]["estado"]=0;
+    }
+    else{
+        if (!terapias::desvincular_cita($id_ptt)){
+            $json_retorno[0]["estado"]=0;
+        }
+        else{
+            $json_retorno[0]["estado"]=1;
+        }
+    }  
+    echo json_encode($json_retorno);
+}
 else if ($id_operacion == 9){ //TODO, LISTA DE EVENTOS EN BITACORA, mover a un controlador de bitacora
     $id_paciente = $_GET["id_paciente"];
     $sql = "SELECT entrada_historico.fecha_entrada as fecha_ent, entrada_historico.tipo_entrada as tipo_ent, entrada_historico.descripcion_entrada as descp_ent \n"

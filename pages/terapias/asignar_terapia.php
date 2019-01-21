@@ -284,6 +284,7 @@ if(isset($_GET["rut_paciente"])){
                 <tr>
                     <th>N</th>
                     <th>Terapias</th>
+                    <th>Fecha</th>
                     <th>Precio</th>                                
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -357,33 +358,36 @@ if(isset($_GET["rut_paciente"])){
                             $("#referencia").val(json[0].referencia_1);
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
-                            if (json[0].programa){
+                            if (json[0].programa){//En caso de tener programa terapeutico activo
                                 //alert ("Si programa");
                                 var check = 0;       
                                 //alert (check+"-"+json[0].tipo_pago);
-                                if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){
-                                    if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){
+                                if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){//Si el tipo es distinto de individual y tiene un tipo de pago asignado
+                                    if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){//Si el metodo 1 fue establecido
                                         $("#metodo_pago").prop("disabled","true");
-                                        $("#referencia").prop("disabled","true");                                    
+                                        $("#referencia").prop("disabled","true");          
+                                        //Mostramos los inputs del metodo de pago 2, pero el tipo de pago debe de ser distinto a 4
+                                        if (json[0].tipo_pago != 4){
+                                            $("#contenedor_metodo_pago_2").show();
+                                            $("#contenedor_ref_pago_2").show();    
+                                        }                                        
                                         check++;
                                     }                                
-                                    if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){
+                                    if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){//Si el metodo 2 fue establecido
 
                                         $("#metodo_pago_2").prop("disabled","true");
                                         $("#referencia_2").prop("disabled","true");                                                                        
                                         check++;
                                     }           
-                                    if (json[0].tipo_pago == 4){
+                                    if (json[0].tipo_pago == 4){//Si el tipo de pago es total
                                         check++;
                                         $("#contenedor_metodo_pago_1").show();
                                         $("#contenedor_ref_pago_1").show();
                                         $("#contenedor_descuento").show();
                                     }
-                                    else if (json[0].tipo_pago == 3){
+                                    else if (json[0].tipo_pago == 3){//Si el tipo de pago es parcial
                                         $("#contenedor_metodo_pago_1").show();
                                         $("#contenedor_ref_pago_1").show();
-                                        $("#contenedor_metodo_pago_2").show();
-                                        $("#contenedor_ref_pago_2").show();
                                     }                                    
                                     if (check>=2){//Se han guardado todos los pagos que se pueden guardar
                                         $("#btnguardar_pago").prop("disabled","true");    
@@ -397,7 +401,7 @@ if(isset($_GET["rut_paciente"])){
                                         $("#estado_pago").prop('disabled', true);
                                         //alert ("a");
                                     }
-                                    else{
+                                    else{//No se han guardado pagos
                                         $("#terapias_individual").prop('disabled', false);
                                         $("#cantidad").prop('disabled', false);
                                         $("#btnguardar").prop('disabled', false);

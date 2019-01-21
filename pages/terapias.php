@@ -400,6 +400,7 @@ $usuario  = "";
                 "columns": [
                     {"data": "N"},
                     {"data": "Terapias"},                    
+                    {"data": "Fecha"},                    
                     {"data": "Precio"},                    
                     {"data": "Estado"}
                     <?php 
@@ -500,6 +501,25 @@ $usuario  = "";
                 alert ("Programa validado con exito");
             }
         });
+    }
+    
+    function eliminar_cita_terapia(id_cita,id_ptt){
+        if (confirm("¿Está seguro? Esta operación es irreversible")){
+            $.post("citas/citas_controlador.php",
+            {
+                id_operacion: 8.1,
+                id_cita: id_cita,
+                id_ptt: id_ptt
+            }, function(result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado == 1){
+                    alert ("Cita eliminada");
+                }
+                else{
+                    alert ("ERROR");
+                }
+            });
+        }
     }
 </script>
 

@@ -1,5 +1,6 @@
 <?php
 //include_once '../citas.php';
+//include_once '../class/calendario.php';
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -575,6 +576,7 @@ class terapias {
     public static function lista_terapias_programa($id_programa, $id_referer = false){
         $sql = "SELECT programa_tiene_terapia.id_programa_tiene_terapia as ptt_id,
             rm.id_rm                                        as id_rm, 
+            rm.fecha_inicio                                 as fecha_t,
             terapia.id_terapia                              as id_terapia, 
             programa_tiene_terapia.estado                   as estado_t, 
             terapia.nombre_terapia                          as nombre_t, 
@@ -647,6 +649,7 @@ class terapias {
             if ($longitud<1){
                 $json[0]['N'] = "No hay información que mostrar";
                 $json[0]['Terapias'] = "";
+                $json[0]['Fecha'] = "";
                 $json[0]['Precio'] = "";
                 $json[0]['Estado'] = "";
                 $json[0]['Acciones']   = "";
@@ -660,8 +663,14 @@ class terapias {
                     $str_btn = "
                     <a title=\"Reservar\" 
                         class=\"btn btn-info\"  
-                        onclick = \"seleccionar_terapia($id_ptt, 2)\">
-                        <i class=\"fa fa-calendar\"></i>
+                        onclick = \"seleccionar_terapia($id_ptt, 2)\"";
+                    if($resultado[$i]["tipo_pago"]==3&&($i>=$longitud/2)){
+                        $str_btn.=" disabled ";
+                        
+                    }
+                    $str_btn.=">
+                        <i class=\"fa fa-calendar\"               
+                    ></i>
                     </a>";
                     if ($id_referer==1){//Agregar boton de eliminar terapia
                     $str_btn .= "
@@ -684,6 +693,12 @@ class terapias {
                         <i class=\"fa fa-edit\"></i>
                     </a>
                     
+                    <a title=\"Eliminar cita\" 
+                        class=\"btn btn-danger\"
+                        onclick=\"eliminar_cita_terapia(".$resultado[$i]["id_rm"].",".$resultado[$i]["ptt_id"].")\">
+                        <i class=\"fa fa-trash\"></i>
+                    </a>
+
                     <a title=\"Ver Reporte\" 
                         class=\"btn btn-success\"
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
@@ -721,6 +736,12 @@ class terapias {
                 $json[$i]['Terapias']   = strtoupper($resultado[$i]["nombre_t"]);
                 $json[$i]['Precio']     = number_format($resultado[$i]["precio_t"],"0",",",".");
                 $json[$i]['Estado']     = strtoupper($resultado[$i]["estado_t"]);                
+                if ($resultado[$i]['fecha_t']== ""){
+                    $json[$i]['Fecha']     = strtoupper("PENDIENTE");                    
+                }
+                else{
+                    $json[$i]['Fecha']     = strtoupper(calendario::formatear_fecha(1,$resultado[$i]["fecha_t"]));  
+                }                
                 $json[$i]['Acciones']   = $str_btn;
 
             }   
@@ -870,6 +891,15 @@ class terapias {
             $json[0]["estado"] = 1;
             return $json;
         }
+    }
+    
+    public static function desvincular_cita($id_ptt){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_tiene_terapia
+        SET estado=?, reserva_medica_id_rm=?
+            WHERE id_programa_tiene_terapia = ".$id_ptt;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array("pendiente",NULL));
     }
     
     public static function cancelar_terapia($id_terapia){

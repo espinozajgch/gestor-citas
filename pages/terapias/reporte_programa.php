@@ -108,7 +108,7 @@ while (!$fin){
     //Agregamos una página nueva
     $pdf->AddPage();
     if (isset($_GET["temporal"])){
-        $pdf->temporaire(utf8_decode("NO VÁLIDA"));
+        $pdf->temporaire(utf8_decode("VÁLIDA SOLO PARA COTIZACIÓN"));
     }
     else{
         //$pdf->temporaire(utf8_decode("NO VÁLIDA"));

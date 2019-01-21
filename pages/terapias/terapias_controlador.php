@@ -9,6 +9,7 @@ require_once('../../assets/bin/connection.php');
 require_once '../../assets/class/terapias.php';
 require_once '../../assets/class/historico.php';
 require_once '../../assets/class/citas.php';
+require_once '../../assets/class/calendario.php';
 
 $id_operacion = -1;
 if (isset($_POST["id_operacion"])){
@@ -196,7 +197,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $id_paciente            =   $_POST["id_paciente"];
     $nombre_programa        =   $_POST["nombre_programa"];
     //$lista_terapias         =   $_POST["terapias_previas"];        
-    $lista_terapias;         
+    $lista_terapias = array();         
     $json[0]["estado"]      =   1;
     $str_debug              =   "Inicio ";
     $terapia = $_POST["terapias_individual"];
@@ -216,7 +217,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     //Actualizar información basica
     if (terapias::actualizar_programa_terapeutico_basico($id_programa,$nombre_programa, $descuento, $tipo_pago)){        
-        if(count($lista_terapias>0)){
+        if($cantidad>0){
             if (terapias::asignar_terapias_programa($lista_terapias, $id_programa)){
                 //echo json_encode($json);
                 $str_debug.="Procesado con exito";
@@ -257,6 +258,7 @@ else if ($id_operacion == 12){
     else{
         $json_temp[0]['N'] = "";
         $json_temp[0]['Terapias'] = "";
+        $json_temp[0]['Fecha'] = "";
         $json_temp[0]['Precio'] = "";
         $json_temp[0]['Estado'] = "";
         $json_temp[0]['Acciones']   = "";
