@@ -327,20 +327,25 @@ input:checked + .slider:before {
                 <div class="col-lg-6">
                     <h1 class="page-header"><?php echo $etiqueta;?></h1>
                 </div>
-                
-                <div class="col-lg-10">
+                <div id="notificacion_programa" class="col-lg-9 col-md-9 col-xs-9 col-sm-9" hidden="true">
+                    <div id="programa_notificacion">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
+                     </div>                    
+                </div>
+            </div>    
+            <div class="row">    
+                <div class="col-lg-3">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                    <!--button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button-->                   
                 </div>
-                <div class="col-lg-2" id="chequeo" style="display: none" disabled>
+<!--                <div class="col-lg-2" id="chequeo" style="display: none" disabled>
                     <label class="switch" title="Alternar chequeo">                        
                         <input type="checkbox" id="check_slider" onclick="ocultar_campos()">
                         <span class="slider round"></span>
                     </label>
-                </div>
-                <!-- /.col-lg-12 -->
+                </div>-->                
             </div>
-            <!-- /.row -->
             
             <div class="row ">
             <br>
@@ -450,12 +455,7 @@ input:checked + .slider:before {
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
-                                    <div id="notificacion_programa" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
-                                        <div id="programa_notificacion">
-                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
-                                         </div>                    
-                                    </div>
+                                    
                                     <div class="form-group col-6 col-sm-12 col-md-12">
                                         <small><strong><label for="inmobiliaria">Direccion</label></strong></small>
                                         <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" disabled><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
@@ -837,18 +837,11 @@ function validar_inputs(input, div_error){
                             msj="";
                             if (json[0].programa!=false){                                   
                                 clase = "alert alert-success alert-dismissable";
-                                msj = "El paciente <strong>tiene</strong> programa terapéutico activo";
-                            }
-                            else{
-                                clase = "alert alert-warning alert-dismissable";
-                                msj = "El paciente <strong>no tiene</strong> programa terapéutico activo";
-                                
-                                
-                            }
-                            //$("#programa_notificacion").prop("class",clase);
-                            //$("#texto_notificacion_programa").html(msj);                    
-                            //$("#notificacion_programa").fadeIn(100);  
-                            //alert (json[0].tipo_pago );
+                                msj = "Esta cita pertenece al programa terapéutico <strong>"+json[0].nombre_programa+"</strong>";
+                                $("#programa_notificacion").prop("class",clase);
+                                $("#texto_notificacion_programa").html(msj);                    
+                                $("#notificacion_programa").fadeIn(100);  
+                            }                         
                             if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
                                 $("#pago").hide();
                                 $("#contenedor_referencia").hide();

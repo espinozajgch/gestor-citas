@@ -44,6 +44,7 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         if ($resultado[0]["programa"]!=false){
             $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+            $resultado[0]["nombre_programa"] = terapias::obtener_nombre_programa($resultado[0]["programa"]);
             $resultado[0]["id_t"] = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
             $resultado[0]["tipo_pago"] = terapias::obtener_id_tipo_pago($resultado[0]["programa"]);
             $estado_programa = terapias::obtener_estado_programa($resultado[0]["programa"]);

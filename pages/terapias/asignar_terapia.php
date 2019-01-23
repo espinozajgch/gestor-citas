@@ -41,9 +41,10 @@ if(isset($_GET["rut_paciente"])){
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
             <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
-            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="habilitar_programa()"><i class="fa fa-check"></i></button>
+            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="habilitar_programa()"><i class="fa fa-check"></i></button>            
             <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
         </div>   
+        
         <div class="form-group col-4 col-sm-4 col-md-4">
             <!--small><strong><label for="medico">Estatus Pago</label></strong></small-->
             
@@ -52,6 +53,9 @@ if(isset($_GET["rut_paciente"])){
            <a class="btn btn-sm btn-success shared" href="terapias.php?opcion=3" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
         </div-->
         <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12" id="botones_dinamicos"></div> 
     </div>
 
     <div class="row">
@@ -131,8 +135,6 @@ if(isset($_GET["rut_paciente"])){
             <div id="error_estado_pago" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
-                                    
-            <!--div id="botones_dinamicos"></div--> 
         </div> 
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " id="contenedor_descuento" style="display: none;">
@@ -443,6 +445,8 @@ if(isset($_GET["rut_paciente"])){
                                     $("#referencia_2").prop("disabled", true);
                                     $("#btnguardar").prop("disabled", true);
                                     $("#cantidad").prop("disabled", true);
+                                    $("#estado_pago").prop("disabled", true);
+                                    $("#descuento_aplicado").prop("disabled", true);
                                     $("#terapias_individual").prop("disabled", true);
                                     $("#tabla_paciente").find('a').prop("disabled", true);
                                     $("#btn_cancelar").show();                                    
@@ -651,7 +655,9 @@ if(isset($_GET["rut_paciente"])){
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
                                     
-                                    $("#btn_invoice").show();
+                                    if (json[0].estado_programa){
+                                        $("#btn_invoice").show();
+                                    }
                                     $("#btn_previsualizar").show();
                                     //$("#contenedor_descuento").show();
                                     $("#contenedor_estado_pago").show();
@@ -717,7 +723,7 @@ if(isset($_GET["rut_paciente"])){
                     operacion = 11;                            
                     if(json[0].estado == 1){   
                         //alert ("Procesado con exito");
-                        window.location = "terapias.php?opcion=1";
+                        setTimeout(function(){window.location.reload(),1500});
                     }
                     else{
                         alert ("Ocurrió un error");
@@ -788,6 +794,23 @@ if(isset($_GET["rut_paciente"])){
             })            
         }
         
+        function habilitar_programa(){
+            $.post("terapias/terapias_controlador.php",
+            {
+                id_operacion: 21,
+                id_programa : $("#id_programa_oculto").val()
+            },function (result){
+                var json = JSON.parse(result);       
+                if (json[0]["estado"]==1){//EXITO
+                    setTimeout(function(){window.location.reload(),1500});
+                }
+                else{
+                    alert ("OCURRIO UN ERROR INESPERADO");
+                }
+                
+            }
+            );
+        }
         /*$("#btn_guardar_pago").click(function(e){
                 id = $(this).attr("cod");
                 //console.log("dd"+id);

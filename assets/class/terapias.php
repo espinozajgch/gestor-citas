@@ -384,6 +384,22 @@ class terapias {
             return false;
         }
     }
+    
+        public static function obtener_nombre_programa ($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["descripcion_programa_terapeutico"];
+        }
+        else{            
+            return false;
+        }
+    }
 
     public static function obtener_nombre_ep ($id_ep){
         $sql = "SELECT * FROM `estatus_pago` 
@@ -690,13 +706,13 @@ class terapias {
                     ></i>
                     </a>";
                     if ($id_referer==1){//Agregar boton de eliminar terapia
-                    $str_btn .= "
-                    <a title=\"Eliminar terapia\" 
-                        class=\"btn btn-danger\"
-                        onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\">
-                        <i class=\"fa fa-times-circle\"></i>
-                    </a>";
-                }
+                        $str_btn .= "
+                        <a title=\"Eliminar terapia\" 
+                            class=\"btn btn-danger\"
+                            onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\">
+                            <i class=\"fa fa-times-circle\"></i>
+                        </a>";
+                    }
                     $bandera_validar_programa = false;
                 }
                 else if($resultado[$i]["estado_t"]=="pagado"){
@@ -737,7 +753,7 @@ class terapias {
                     </a>";
                     //$bandera_validar_programa = false;
                 }
-                else if ($resultado[$i]["estado_t"]=="atendida") {
+                else if ($resultado[$i]["estado_t"]=="atendida" || $resultado[$i]["estado_t"]==6) {
                     $str_btn = "
                     <a title=\"Ver Reporte\" 
                         class=\"btn btn-success\"
@@ -764,29 +780,18 @@ class terapias {
                 }
                 else{
                     $json[$i]['Acciones']   = $str_btn;    
+                    if ($bandera_validar_programa ){//Creamos un boton para validar el programa completo
+                    $str_btn_validar ="<a title=\"Validar programa completo\" 
+                            class=\"btn btn-success\"
+                            onclick=\"validar_programa(".$resultado[0]["prt_id"].")\">
+                            <i class=\"fa fa-check\"></i>
+                        </a>";
+                    $json[0]["btn_validar_prg"]=$str_btn_validar;
+                }                        
                 }                
 
             }   
-            if ($bandera_validar_programa){//Creamos un boton para validar el programa completo
-                $str_btn_validar ="<a title=\"Validar programa completo\" 
-                        class=\"btn btn-success\"
-                        onclick=\"validar_programa(".$resultado[0]["prt_id"].")\">
-                        <i class=\"fa fa-check\"></i>
-                    </a>                    
-";
-                $json[0]["btn_validar_prg"]=$str_btn_validar;
-            }
-            $otros_botones="<a title=\"Establecer pago completo\" 
-                        class=\"btn btn-info\"
-                        onclick=\"establecer_pago(".$resultado[0]["prt_id"].",2)\">
-                        <i class=\"fa fa-list-alt\"></i></a>
-                    <a title=\"Establecer pago parcial\" 
-                        class=\"btn btn-warning\"
-                        onclick=\"establecer_pago(".$resultado[0]["prt_id"].",3)\">
-                        <i class=\"fa fa-list-alt\"></i>
-                    </a>
-                ";
-            $json[0]["otros_botones"]=$otros_botones;
+            
             //$json[1]['html'] = $str;
             return $json;
         }
@@ -823,15 +828,21 @@ class terapias {
     public static function terapias_paciente ($id_paciente, $format = 'JSON', $solo_activas = false, $especial = false){
         $bd = connection::getInstance()->getDb();
         
-        $sql = "SELECT pt.id_programa_terapeutico as id_programa, pt.descripcion_programa_terapeutico as desc_pt, t.id_terapia as id_t, t.nombre_terapia as nombre_t FROM paciente p\n"
-    . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
-    . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
-    . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE (pt.estado LIKE \"%activo%\" OR pt.estado LIKE \"%deshabilitado%\")
-        AND p.id_paciente = ".$id_paciente." 
-            AND pt.especial <> true ";
+        $sql = "SELECT 
+            pt.id_programa_terapeutico              as id_programa, 
+            pt.descripcion_programa_terapeutico     as desc_pt, 
+            t.id_terapia                            as id_t, 
+            t.nombre_terapia                        as nombre_t, 
+            pt.estado                               as estado_pt
+            FROM paciente p
+                INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente
+                INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico
+                INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia
+                WHERE (pt.estado LIKE \"%activo%\" OR pt.estado LIKE \"%deshabilitado%\")
+                        AND p.id_paciente = ".$id_paciente." 
+                        AND pt.especial <> true ";
         if ($solo_activas){
-            $sql.= " AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
+            $sql.= "    AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
         }
         $pdo = $bd->prepare($sql);        
         //echo $sql;
@@ -843,6 +854,7 @@ class terapias {
         $json_retorno[0]['estado']=0;
         $json_retorno[0]['sql']=$sql;
         $json_retorno[0]['filas']=$longitud;
+        $json_retorno[0]['estado_programa'] = $resultados[0]["estado_pt"] == "deshabilitado" ? 0 : 1 ;
         if ($longitud>0) 
         {
             $json_retorno[0]['estado']          =   1;
@@ -960,6 +972,15 @@ class terapias {
             WHERE id_terapia = ".$id_terapia;
         $pdo = $bd->prepare($sql);        
         return $pdo->execute(array("activa"));
+    }
+    
+    public static function habilitar_programa($id_programa){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET estado=?
+            WHERE id_programa_terapeutico= ".$id_programa;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array("activo"));
     }
     
     public static function establecer_metodo_pago ($metodo, $referencia, $id_programa){

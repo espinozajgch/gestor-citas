@@ -163,8 +163,7 @@ else if ($id_operacion == 6){
     echo $json_listo;
 }
 else if ($id_operacion == 7){//Cargar opciones previas
-    $id_paciente = $_POST["paciente"];    
-    //echo "a";
+    $id_paciente = $_POST["paciente"];        
     echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false,false));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
@@ -206,9 +205,7 @@ else if ($id_operacion == 11){//Actualizar programa terapeutico
     $tipo_pago = $_POST["tipo_pago"];
     if ($descuento == ""){
         $descuento = 0;
-    }
-    //print_r($lista_terapias);    
-        
+    }   
     $count_array =  is_array($terapia) ? count($terapia) : 1;
     for ($i=0; $i<$cantidad; $i++){
         $lista_terapias[$i]=$terapia;
@@ -486,4 +483,10 @@ else if ($id_operacion == 20){ // Establecer el tipo de pago de un programa
     }
               
     echo json_encode($json);
+}
+else if ($id_operacion == 21){//Habilitar programa terapeutico
+    $id_programa = $_POST["id_programa"];
+    $json;
+    $json[0]["estado"] = terapias::habilitar_programa($id_programa) ? 1:0;
+    echo json_encode($json);    
 }
