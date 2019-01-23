@@ -299,24 +299,46 @@ else if ($id_operacion == 13){//Modificar terapias
 }
 else if ($id_operacion == 14){//Cancelar un programa terapeutico
     $id_programa = $_POST["id_programa"];
-    //Colocar el programa como cancelado
+    //Verificar el estado del programa
+    $estado_programa = terapias::obtener_estado_programa($id_programa);
+    //Si el estado es "ACTIVO", se coloca en deshabilitado.
+    //Si el estado es "CANCELADO", el programa se elimina y las citas que se dejarán solo serán las que tengan fecha de reserva
     $json;
     $json[0]["estado"]="1";
-    if (terapias::cancelar_programa_terapeutico($id_programa)){
-        //Colocar las instancias de terapias como canceladas
-        if (terapias::cancelar_terapias_programa($id_programa)){
-            //Colocar las citas relacionadas con el programa como canceladas
-           if (!terapias::cancelar_citas_programa($id_programa)){
-               $json[0]["estado"]="0";
-           }           
+    $json[0]["str_debug"] = "";
+    if ($estado_programa == "activo"){//Coloca el programa como deshabilitado
+        if (!terapias::dehabilitar_programa($id_programa)){
+            $json[0]["estado"]=0;
+            $json[0]["str_debug"].="Error al deshabilitar el programa";
+        }    
+    }
+    else if ($estado_programa == "deshabilitado"){//Se elimina el programa, se mantienen las citas que ya tengan fecha.
+        if (terapias::cancelar_programa_terapeutico($id_programa)){
+            //Colocar las instancias de terapias como canceladas
+            if (terapias::cancelar_terapias_programa($id_programa)){
+                //Colocar las citas relacionadas con el programa como canceladas
+               if (!terapias::cancelar_citas_programa($id_programa)){
+                   $json[0]["estado"]="0";
+                   $json[0]["str_debug"].="...ERROR AL CANCELAR CITAS";
+               }           
+            }
+            else{
+                $json[0]["estado"]="0";
+                $json[0]["str_debug"].="...ERROR AL CANCELAR TERAPIA";
+            }
         }
         else{
             $json[0]["estado"]="0";
+            $json[0]["str_debug"].="...ERROR AL CANCELAR PROGRAMA";
         }
     }
-    else{
-        $json[0]["estado"]="0";
+    else{//CONDICION DE ERROR
+        $json[0]["estado"]=0;
+        $json[0]["str_debug"].="...ERROR GENERAL";
     }
+    //Colocar el programa como cancelado
+    
+    
     echo json_encode($json);
     
     //Colocar las reservas como canceladas

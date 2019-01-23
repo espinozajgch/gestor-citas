@@ -236,7 +236,7 @@ class calendario {
         $longitud = count($resultados);
         //echo $longitud;        
         if ($longitud<1){
-            $json[0]['Descripcion'] = "";
+            $json[0]['Acciones'] = "";
             $json[0]['Descripcion'] = "";
             $json[0]['Fecha'] = "";
             $json[0]['N'] = "No hay información que mostrar";

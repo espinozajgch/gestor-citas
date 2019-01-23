@@ -368,6 +368,22 @@ class terapias {
             return false;
         }
     }
+    
+    public static function obtener_estado_programa ($id_programa){
+        $sql = "SELECT * FROM `programa_terapeutico` 
+            WHERE `id_programa_terapeutico`=$id_programa";
+        $bd = connection::getInstance()->getDb();
+        $pdo = $bd->prepare($sql);
+        //echo $sql;
+        $pdo->execute();
+        $resultado = $pdo->fetchAll(PDO::FETCH_ASSOC);        
+        if ($resultado){
+            return $resultado[0]["estado"];
+        }
+        else{            
+            return false;
+        }
+    }
 
     public static function obtener_nombre_ep ($id_ep){
         $sql = "SELECT * FROM `estatus_pago` 
@@ -589,7 +605,8 @@ class terapias {
             mp.nombre                                       as nombre_mp,
             prt.referencia                                  as referencia_pt,
             pp.metodos_pago_id_mp                           as id_mp_pp,
-            pp.referencia                                   as referencia_pp
+            pp.referencia                                   as referencia_pp,
+            prt.estado                                      as estado_pr
             FROM terapia            
             INNER JOIN programa_tiene_terapia       ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
             INNER JOIN programa_terapeutico     prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
@@ -742,7 +759,12 @@ class terapias {
                 else{
                     $json[$i]['Fecha']     = strtoupper(calendario::formatear_fecha(1,$resultado[$i]["fecha_t"]));  
                 }                
-                $json[$i]['Acciones']   = $str_btn;
+                if ($resultado[0]["estado_pr"] == "deshabilitado"){
+                    $json[$i]['Acciones']   = "No disponible";    
+                }
+                else{
+                    $json[$i]['Acciones']   = $str_btn;    
+                }                
 
             }   
             if ($bandera_validar_programa){//Creamos un boton para validar el programa completo
@@ -805,7 +827,9 @@ class terapias {
     . "INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente\n"
     . "INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico\n"
     . "INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia\n"
-    . "WHERE pt.estado LIKE \"%activo%\" AND p.id_paciente = ".$id_paciente." AND pt.especial <> true ";
+    . "WHERE (pt.estado LIKE \"%activo%\" OR pt.estado LIKE \"%deshabilitado%\")
+        AND p.id_paciente = ".$id_paciente." 
+            AND pt.especial <> true ";
         if ($solo_activas){
             $sql.= " AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
         }
@@ -900,6 +924,15 @@ class terapias {
             WHERE id_programa_tiene_terapia = ".$id_ptt;
         $pdo = $bd->prepare($sql);        
         return $pdo->execute(array("pendiente",NULL));
+    }
+    
+    public static function dehabilitar_programa($id_pt){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET estado=?
+            WHERE id_programa_terapeutico = ".$id_pt;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array("deshabilitado"));
     }
     
     public static function cancelar_terapia($id_terapia){

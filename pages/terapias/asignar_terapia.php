@@ -41,6 +41,7 @@ if(isset($_GET["rut_paciente"])){
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
             <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="habilitar_programa()"><i class="fa fa-check"></i></button>
             <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
         </div>   
         <div class="form-group col-4 col-sm-4 col-md-4">
@@ -54,7 +55,13 @@ if(isset($_GET["rut_paciente"])){
     </div>
 
     <div class="row">
-             
+        <div id="notificacion_programa" class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div id="programa_notificacion">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
+             </div>                    
+        </div>
+        
         <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
             <small><strong><label for=name_>RUT</label></strong></small>
             <div class="input-group col-3 col-sm-3 col-md-3">
@@ -72,6 +79,8 @@ if(isset($_GET["rut_paciente"])){
             <input id="id_oculto" type="text" hidden="">
             <input id="id_programa_oculto" type="text" hidden="">
         </div>
+        
+        
         
         <div id="advertencia_general" class="col-lg-12 col-md-12 col-xs-12 col-sm-12" hidden="true">
             <div id="alerta">
@@ -420,6 +429,33 @@ if(isset($_GET["rut_paciente"])){
                                 cargar_tabla_terapias(1);                            
                                 $("#contenedor_nombre_programa").show();                            
                                 $("#btnguardar").show();  
+                                //Si el programa está deshabilitado, todos los botones quedan deshabilitados, excepto la barra de botones superior
+                                if (json[0].estado_programa == 1){
+                                    $("#rut_paciente").prop("disabled", true);
+                                    $("#btn_buscar").prop("disabled", true);
+                                    $("#name").prop("disabled", true);
+                                    $("#last_name").prop("disabled", true);
+                                    $("#second_name").prop("disabled", true);
+                                    $("#name_programa").prop("disabled", true);
+                                    $("#metodo_pago").prop("disabled", true);
+                                    $("#referencia").prop("disabled", true);
+                                    $("#metodo_pago_2").prop("disabled", true);
+                                    $("#referencia_2").prop("disabled", true);
+                                    $("#btnguardar").prop("disabled", true);
+                                    $("#cantidad").prop("disabled", true);
+                                    $("#terapias_individual").prop("disabled", true);
+                                    $("#tabla_paciente").find('a').prop("disabled", true);
+                                    $("#btn_cancelar").show();                                    
+                                    $("#btn_previsualizar").show();                                                                   
+                                    $("#btn_habilitar").show();                                                                   
+                                    clase = "alert alert-warning alert-dismissable";
+                                    msj = "Este programa se encuentra <strong>deshabilitado</strong>";
+                            
+                                    $("#programa_notificacion").prop("class",clase);
+                                    $("#texto_notificacion_programa").html(msj);                    
+                                    $("#notificacion_programa").fadeIn(100);  
+                                    //alert (json[0].tipo_pago );
+                                }
                             }
                             else{        
                                 //alert ("No programa");
@@ -427,7 +463,9 @@ if(isset($_GET["rut_paciente"])){
                                 $("#cantidad").prop('disabled', false);
                                 $("#btnguardar").prop('disabled', false)
                                 $("#contenedor_nombre_programa").show();                            
-                                $("#btnguardar").show();  
+                                $("#btnguardar").show(); 
+                                $("#tabla_paciente").hide();
+                                
                             }                                                     
                         }
                         else{
@@ -612,6 +650,7 @@ if(isset($_GET["rut_paciente"])){
                                     
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
+                                    
                                     $("#btn_invoice").show();
                                     $("#btn_previsualizar").show();
                                     //$("#contenedor_descuento").show();
