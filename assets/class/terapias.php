@@ -509,8 +509,14 @@ class terapias {
          //Establecer la conexion con la base de datos
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
-        $sql = "SELECT pt.estado,p.id_paciente as id_p, pt.id_programa_terapeutico as programa,
-            p.nombre as nombre, p.apellidop, p.apellidom ,
+        $sql = "SELECT 
+            pt.estado,
+            p.id_paciente               as id_p,
+            pt.id_programa_terapeutico  as programa,
+            p.nombre                    as nombre, 
+            p.apellidop, 
+            p.apellidom,
+            pt.id_programa_terapeutico  as id_pt,
             COUNT(t.id_terapia) Terapias 
             FROM paciente p 
             INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
@@ -538,6 +544,7 @@ class terapias {
                 $json[0]['N'] = "No hay información que mostrar";
                 $json[0]['Paciente'] = "";
                 $json[0]['Terapias'] = "";
+                $json[0]['Estado'] = "";
                 $json[0]['Acciones'] = "";
 
             }
@@ -545,6 +552,7 @@ class terapias {
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
                 $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
+                $json[$i]['Estado'] = $resultados[$i]["estado"];
                 $json[$i]['Acciones'] = "
                         <a title=\"Ver Reporte\" id=\"btn_reserva\" 
                             class=\"btn btn-info\"  
@@ -555,7 +563,13 @@ class terapias {
                             class=\"btn btn-info\"  
                             href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."\">
                             <i class=\"fa fa-eye\"></i>
-                        </a>";
+                        </a>
+                        <a title=\"Cancelar programa\" 
+                            class=\"btn btn-danger\"  
+                            onclick =\"cancelar_programa(".$resultados[$i]["id_pt"].")\">
+                            <i class=\"fa fa-times\"></i>
+                        </a>
+                        ";
 
             }        //FORMATO de json
         }
@@ -564,6 +578,7 @@ class terapias {
             $json[0]['Paciente'] = "";
             $json[0]['Terapias'] = "";
             $json[0]['Acciones'] = "";
+            $json[0]['Estado'] = "";
         }
         
         //descripcion, fecha inicio, fecha fin

@@ -41,7 +41,7 @@ if(isset($_GET["rut_paciente"])){
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
             <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
             <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
-            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="habilitar_programa()"><i class="fa fa-check"></i></button>            
+            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="cancelar_programa()"><i class="fa fa-check"></i></button>            
             <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
         </div>   
         

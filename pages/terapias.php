@@ -372,6 +372,7 @@ $usuario  = "";
                     {"data": "N"},
                     {"data": "Paciente"},                    
                     {"data": "Terapias"},
+                    {"data": "Estado"},
                     {"data": "Acciones"}
                 ]
             });

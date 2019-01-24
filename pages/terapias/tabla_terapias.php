@@ -17,7 +17,7 @@ require_once '../assets/class/calendario.php';
             <input type="hidden" id="hash" name="hash" value="<?php echo $hash ?>">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Programas Terepeuticos por paciente</h1>
+                    <h1 class="page-header">Programas Terapeúticos por paciente</h1>
 
                 </div>
                 <!--div class="col-lg-1 text-right pull-right">
@@ -35,6 +35,7 @@ require_once '../assets/class/calendario.php';
                                 <th>N</th>
                                 <th>Paciente</th>
                                 <th>Terapias</th>                                
+                                <th>Estado</th>                                
                                 <th>Acciones</th>      
                             </tr>
                         </thead>                                            
@@ -49,5 +50,29 @@ require_once '../assets/class/calendario.php';
             <div class="row">
 
             </div>
+            
+            <script type="text/javascript">
+                function cancelar_programa(id_programa){
+            $.post("terapias/terapias_controlador.php",
+            {
+                id_operacion: 14,
+                id_programa : id_programa
+            },function (result){
+                var json = JSON.parse(result);       
+                //alert (result);
+                if (json!=null){
+                    operacion = 11;                            
+                    if(json[0].estado == 1){   
+                        //alert ("Procesado con exito");
+                        setTimeout(function(){window.location.reload(),1500});
+                    }
+                    else{
+                        alert ("Ocurrió un error");
+                    }
+                }
+            }
+            );
+        }
+            </script>
             <!-- /.row -->
   
