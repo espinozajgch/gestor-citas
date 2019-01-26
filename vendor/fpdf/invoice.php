@@ -164,9 +164,9 @@ function addSociete( $nom, $adresse )
 	//$this->MultiCell($length, 4, $adresse);
 }
 function agregar_rectangulo_circular_texto ($x, $y, $ancho, $alto, $r, $g, $b, $texto, $txt_r = 0, $txt_g = 0, $txt_b = 0, $multilinea = false){
-    $this->SetLineWidth(0.1);
+    //$this->SetLineWidth(0.1);
     //$this->SetFillColor($r,$g,$b);
-    $this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');    
+    //$this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');    
     
     $this->SetXY(($x), ($y));
     $this->SetFont( "Arial", "", 10);

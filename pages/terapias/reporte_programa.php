@@ -148,6 +148,7 @@ while (!$fin){
     $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);
     $y_actual+=5;
     $x_actual = $x_inicio;
+    //$pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 15, 255, 50, 50, "AVISO: Aquellas horas previamente agendadas y pagadas serán consideradas como realizadas en el caso de no asistir\n sin dar previo aviso, por lo cual recomendamos en el caso de no poder asistir, reagendar su hora al fono: 226328948 al menos con 12 horas de anticipación.", 255, 255, 255, true);
     $pdf->agregar_rectangulo_circular_texto($x_actual, $y_actual, $x_fin, 15, 255, 50, 50, "AVISO: Aquellas horas previamente agendadas y pagadas serán consideradas como realizadas en el caso de no asistir\n sin dar previo aviso, por lo cual recomendamos en el caso de no poder asistir, reagendar su hora al fono: 226328948 al menos con 12 horas de anticipación.", 255, 255, 255, true);
     $y_actual+=20;
     $pdf->Line($x_inicio, $y_actual, $x_fin+10, $y_actual);

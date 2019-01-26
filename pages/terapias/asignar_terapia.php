@@ -267,27 +267,7 @@ if(isset($_GET["rut_paciente"])){
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
-
-          </div>
-          <div id="body_trash" class="modal-body">
-            <input type="hidden" id="code">
-            
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
         <hr>
        <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_paciente">
@@ -315,7 +295,7 @@ if(isset($_GET["rut_paciente"])){
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-              <h5 class="modal-title" id="modal_trash">¿Está seguro de proceder con esta operación? <small>Esta operación es irreversible</small></h5>
+              <h5 class="modal-title" id="modal_trash">¿Está seguro de querer cancelar el programa? Esta operación es irreversible</small></h5>
 
           </div>
           <div id="body_trash" class="modal-body">
@@ -324,11 +304,35 @@ if(isset($_GET["rut_paciente"])){
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button id="guardar_pago" type="button" onclick="cancelar_programa()" class="btn btn-danger">Confirmar</button>
+            <button id="cancelar_programa" type="button" onclick="cancelar_programa()" class="btn btn-danger">Confirmar</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal Pago -->
+    <div class="modal fade" id="modal_pago" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h5 class="modal-title" id="modal_trash">ADVERTENCIA <small></small></h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <p class="modal-title"> ¿Está seguro de proceder con esta operación? Esta operación es irreversible</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="guardar_pago" type="button" onclick="guardar_pago()" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal Generico-->
     <div class="modal fade" id="modal_generico" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -337,15 +341,37 @@ if(isset($_GET["rut_paciente"])){
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-              <h3 class="modal-title">ADVERTENCIA</h3>
+              <h5 class="modal-title">ADVERTENCIA</h5>
           </div>
           <div id="body_trash" class="modal-body">
             <input type="hidden" id="code">
-            <h4 class="modal-title" id="texto_modal"></h4>
+            <p class="modal-title" id="texto_modal"></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
           </div>
         </div>
       </div>
@@ -748,7 +774,9 @@ if(isset($_GET["rut_paciente"])){
             $('#modal_pago').modal({
                 backdrop: 'static',
                 keyboard: false
-            })            
+            }) /**/
+
+            //console.log("asdas");           
         }
         
         

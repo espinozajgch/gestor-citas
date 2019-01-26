@@ -205,8 +205,7 @@ class terapias {
     
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
-            WHERE `paciente_id_paciente`=".$id_paciente." 
-                AND (estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
+            WHERE `paciente_id_paciente`=".$id_paciente."";
         if (!$especial){
             $sql.=" AND especial <> true";
         }
@@ -522,12 +521,13 @@ class terapias {
             INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
             LEFT  JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
-            WHERE pt.estado NOT LIKE '%culminado%' 
-            AND pt.estado NOT LIKE '%cancelado%' 
+            WHERE pt.estado NOT LIKE '%cancelado%' 
             AND pt.especial <> true
             GROUP BY pt.id_programa_terapeutico";
         $pdo = $bd->prepare($sql);
         //echo $sql;
+
+        //pt.estado NOT LIKE '%culminado%' 
         
         $pdo->execute();
         //Creamos el arreglo asociativo con el cual trabajaremos
