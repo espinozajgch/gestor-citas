@@ -163,7 +163,8 @@ else if ($id_operacion == 6){
     echo $json_listo;
 }
 else if ($id_operacion == 7){//Cargar opciones previas
-    $id_paciente = $_POST["paciente"];        
+    $id_paciente = $_POST["paciente"];       
+    //echo "ad";
     echo json_encode(terapias::terapias_paciente($id_paciente,'JSON',false,false));
 }
 else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
@@ -178,7 +179,7 @@ else if ($id_operacion == 8){//CARGA PROGRAMAS TERAPEUTICOS
     }
 }
 else if ($id_operacion == 9){//CARGA TERAPIAS POR PROGRAMA
-    $id_programa = $_POST["id_pt"];
+    $id_programa = $_POST["id_pt"];    
     $json = terapias::lista_terapias_programa($id_programa);
     echo json_encode($json);
 }

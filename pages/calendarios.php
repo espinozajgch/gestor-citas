@@ -146,9 +146,16 @@ $bd;
 
 
     <script>
-        function eliminar_dia(dia){
-        if (confirm("¿Está seguro? Esta operación no se puede revertir")){
-
+        function eliminar_dia_modal(dia){
+            $("#texto_modal").html("¿Está seguro de querer eliminar el día feriado seleccionado? Esta operación es irreversible");
+            $("#boton_modal").attr("onclick","eliminar_dia("+dia+")");
+            $('#modal_generico').modal({
+                    backdrop: 'static',
+                    keyboard: false
+            })
+        }
+        
+        function eliminar_dia(dia){        
             $.post("../assets/class/calendario_controlador.php",
             {
                 id_operacion: 8,
@@ -165,8 +172,6 @@ $bd;
                 }
             }
             );
-
-        }
     }
     </script>
 </body>

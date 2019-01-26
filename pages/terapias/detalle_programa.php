@@ -1,5 +1,5 @@
 <?php
-$etiqueta = "Reporte Programa Terepeutico";
+$etiqueta = "Reporte Programa Terapéutico";
 $id_programa;
 if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a modificar    
     $id_terapia = $_GET["id_paciente"];
@@ -75,6 +75,7 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
                 <tr>
                     <th>N</th>
                     <th>Terapias</th>
+                    <th>Fecha</th>
                     <th>Precio</th>                                
                     <th>Estado</th>
                     <?php if (!isset($_GET["id_paciente"])){

@@ -206,7 +206,7 @@ class terapias {
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente." 
-                AND estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\"";
+                AND (estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
         if (!$especial){
             $sql.=" AND especial <> true";
         }
@@ -520,12 +520,12 @@ class terapias {
             COUNT(t.id_terapia) Terapias 
             FROM paciente p 
             INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
-            INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
-            INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
+            LEFT JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
+            LEFT  JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
             WHERE pt.estado NOT LIKE '%culminado%' 
             AND pt.estado NOT LIKE '%cancelado%' 
             AND pt.especial <> true
-            GROUP BY p.nombre";
+            GROUP BY pt.id_programa_terapeutico";
         $pdo = $bd->prepare($sql);
         //echo $sql;
         
@@ -566,7 +566,7 @@ class terapias {
                         </a>
                         <a title=\"Cancelar programa\" 
                             class=\"btn btn-danger\"  
-                            onclick =\"cancelar_programa(".$resultados[$i]["id_pt"].")\">
+                            onclick =\"modal_cancelar_programa(".$resultados[$i]["id_pt"].")\">
                             <i class=\"fa fa-times\"></i>
                         </a>
                         ";
@@ -743,7 +743,7 @@ class terapias {
                     
                     <a title=\"Eliminar cita\" 
                         class=\"btn btn-danger\"
-                        onclick=\"eliminar_cita_terapia(".$resultado[$i]["id_rm"].",".$resultado[$i]["ptt_id"].")\">
+                        onclick=\"modal_cita_terapia(".$resultado[$i]["id_rm"].",".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-trash\"></i>
                     </a>
 
@@ -812,11 +812,12 @@ class terapias {
         }
         else{
             //$json[0]["estado"] = 1;
-            $json[0]['N']           = "";
-            $json[0]['Terapias']    = "";
-            $json[0]['Precio']      = "";
-            $json[0]['Estado']      = "";
-            $json[0]['Acciones']    = "";
+            $json[0]['N']           = "No se han agregado citas";
+            $json[0]['Terapias']    = " ";
+            $json[0]['Fecha']       = " ";
+            $json[0]['Precio']      = " ";
+            $json[0]['Estado']      = " ";
+            $json[0]['Acciones']    = " ";
             return $json;
         }
     }
@@ -853,7 +854,7 @@ class terapias {
                 INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente
                 INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico
                 INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia
-                WHERE (pt.estado LIKE \"%activo%\" OR pt.estado LIKE \"%deshabilitado%\")
+                WHERE (pt.estado LIKE \"%activo%\" OR pt.estado)
                         AND p.id_paciente = ".$id_paciente." 
                         AND pt.especial <> true ";
         if ($solo_activas){
@@ -869,9 +870,10 @@ class terapias {
         $json_retorno[0]['estado']=0;
         $json_retorno[0]['sql']=$sql;
         $json_retorno[0]['filas']=$longitud;
-        $json_retorno[0]['estado_programa'] = $resultados[0]["estado_pt"] == "deshabilitado" ? 0 : 1 ;
+        
         if ($longitud>0) 
         {
+            $json_retorno[0]['estado_programa'] = $resultados[0]["estado_pt"] == "deshabilitado" ? 0 : 1 ;
             $json_retorno[0]['estado']          =   1;
             $json_retorno[0]['cantidad']        =   $longitud;
             $json_retorno[0]['desc_pt']         =   $resultados[0]["desc_pt"];
@@ -886,13 +888,13 @@ class terapias {
                 return $json_retorno;
             }
             else{
-                $json_retorno[0]["eatado"] = 1;
-                return json_encode($json_retorno);
+                $json_retorno[0]["estado"] = 1;                
             }
         }
         else{
             $json_retorno[0]['estado']=0;
         }
+        return $json_retorno;
     }
     
     public static function lista_terapias_configurar(){

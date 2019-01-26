@@ -43,20 +43,20 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
         $resultado[0]['estado'] = true;
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         if ($resultado[0]["programa"]!=false){
-            $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
-            $resultado[0]["nombre_programa"] = terapias::obtener_nombre_programa($resultado[0]["programa"]);
-            $resultado[0]["id_t"] = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
-            $resultado[0]["tipo_pago"] = terapias::obtener_id_tipo_pago($resultado[0]["programa"]);
-            $estado_programa = terapias::obtener_estado_programa($resultado[0]["programa"]);
-            $resultado[0]["estado_programa"] = $estado_programa == "deshabilitado" ? 1:0;
+            $resultado[0]["descuento"]              = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+            $resultado[0]["nombre_programa"]        = terapias::obtener_nombre_programa($resultado[0]["programa"]);
+            $resultado[0]["id_t"]                   = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
+            $resultado[0]["tipo_pago"]              = terapias::obtener_id_tipo_pago($resultado[0]["programa"]);
+            $estado_programa                        = terapias::obtener_estado_programa($resultado[0]["programa"]);
+            $resultado[0]["estado_programa"]        = $estado_programa == "deshabilitado" ? 1:0;
             
             if ($resultado[0]["tipo_pago"] != false){
-                $resultado[0]["metodo_1"] = terapias::obtener_id_metodo_pago($resultado[0]["programa"]);
-                $resultado[0]["referencia_1"] = terapias::obtener_referencia_pago($resultado[0]["programa"]);
-                $aux = terapias::obtener_metodo_pago_parcial($resultado[0]["programa"]);
-                $resultado[0]["metodo_2"] = $aux ? $aux : " ";
-                $aux = terapias::obtener_referencia_pago_parcial($resultado[0]["programa"]);
-                $resultado[0]["referencia_2"] = $aux ? $aux : " " ;
+                $resultado[0]["metodo_1"]           = terapias::obtener_id_metodo_pago($resultado[0]["programa"]);
+                $resultado[0]["referencia_1"]       = terapias::obtener_referencia_pago($resultado[0]["programa"]);
+                $aux                                = terapias::obtener_metodo_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["metodo_2"]           = $aux ? $aux : " ";
+                $aux                                = terapias::obtener_referencia_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["referencia_2"]       = $aux ? $aux : " " ;
             }
           //  $resultado[0]["nombre_t"] = terapias::obtener_nombre_terapia_cita($resultado[0]["programa"]);
             

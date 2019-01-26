@@ -253,7 +253,7 @@ class calendario {
                         </a>
                         <button title='Cancelar'
                             class='btn btn-sm btn-danger eliminar'
-                            onclick ='eliminar_dia(".$resultados[$i]["id_feriados"].")'>
+                            onclick ='eliminar_dia_modal(".$resultados[$i]["id_feriados"].")'>
                             <i class=\"fa fa-times-circle\"></i>
                         </button>
                         ";

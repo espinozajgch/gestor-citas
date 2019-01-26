@@ -503,9 +503,41 @@ $usuario  = "";
             }
         });
     }
+//    function modal_cancelar(){
+//            $('#modal_cancelar').modal({
+//                backdrop: 'static',
+//                keyboard: false
+//            })
+//        }
+        
+    function modal_cita_terapia(id_cita,id_ptt){
+        $("#texto_modal").html("¿Está seguro de querer eliminar la cita? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","eliminar_cita_terapia("+id_cita+","+id_ptt+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
     
-    function eliminar_cita_terapia(id_cita,id_ptt){
-        if (confirm("¿Está seguro? Esta operación es irreversible")){
+    function modal_cancelar(){
+        $("#texto_modal").html("¿Está seguro de querer cancelar el programa? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","cancelar_programa()");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function modal_cancelar_programa(id_pt){
+        $("#texto_modal").html("¿Está seguro de querer cancelar el programa? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","cancelar_programa("+id_pt+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function eliminar_cita_terapia(id_cita,id_ptt){        
             $.post("citas/citas_controlador.php",
             {
                 id_operacion: 8.1,
@@ -514,13 +546,12 @@ $usuario  = "";
             }, function(result){
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
-                    alert ("Cita eliminada");
+                    //alert ("Cita eliminada");
                 }
                 else{
                     alert ("ERROR");
                 }
-            });
-        }
+            });        
     }
 </script>
 

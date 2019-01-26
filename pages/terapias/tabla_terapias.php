@@ -17,7 +17,7 @@ require_once '../assets/class/calendario.php';
             <input type="hidden" id="hash" name="hash" value="<?php echo $hash ?>">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Programas Terapeúticos por paciente</h1>
+                    <h1 class="page-header">Programas Terapéuticos por Paciente</h1>
 
                 </div>
                 <!--div class="col-lg-1 text-right pull-right">
@@ -48,7 +48,27 @@ require_once '../assets/class/calendario.php';
 
             <!-- /.row -->
             <div class="row">
-
+<!-- Modal Generico-->
+    <div class="modal fade" id="modal_generico" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h3 class="modal-title">ADVERTENCIA</h3>
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <h4 class="modal-title" id="texto_modal"></h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
             </div>
             
             <script type="text/javascript">

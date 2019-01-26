@@ -1,5 +1,5 @@
 <?php
-$etiqueta = "Programas terapeuticos";
+$etiqueta = "Programas terapéuticos";
 $id_terapia;
 if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a modificar
     $etiqueta = "Programas terapéutico";
@@ -39,9 +39,9 @@ if(isset($_GET["rut_paciente"])){
     <div class="row">
         <div class="col-lg-12 ">
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
-            <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
+            <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="modal_cancelar()"><i class="fa fa-trash fa-bg"></i></button>
             <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
-            <button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="cancelar_programa()"><i class="fa fa-check"></i></button>            
+            <!--<button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="cancelar_programa()"><i class="fa fa-check"></i></button>-->            
             <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
         </div>   
         
@@ -308,14 +308,14 @@ if(isset($_GET["rut_paciente"])){
     </div>
 
     <!-- Modal Eliminar -->
-    <div class="modal fade" id="modal_pago" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+    <div class="modal fade" id="modal_cancelar" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h5 class="modal-title" id="modal_trash">Esta seguro de establecer el pago seleccionado?</h5>
+              <h5 class="modal-title" id="modal_trash">¿Está seguro de proceder con esta operación? <small>Esta operación es irreversible</small></h5>
 
           </div>
           <div id="body_trash" class="modal-body">
@@ -324,7 +324,28 @@ if(isset($_GET["rut_paciente"])){
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button id="guardar_pago" type="button" onclick="guardar_pago()" class="btn btn-danger">Confirmar</button>
+            <button id="guardar_pago" type="button" onclick="cancelar_programa()" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Generico-->
+    <div class="modal fade" id="modal_generico" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h3 class="modal-title">ADVERTENCIA</h3>
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <h4 class="modal-title" id="texto_modal"></h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
           </div>
         </div>
       </div>
@@ -370,7 +391,7 @@ if(isset($_GET["rut_paciente"])){
                             $("#metodo_pago_2").val(json[0].metodo_2);
                             $("#referencia_2").val(json[0].referencia_2);
                             if (json[0].programa){//En caso de tener programa terapeutico activo
-                                //alert ("Si programa");
+                                //alert ("Si programa");                                
                                 var check = 0;       
                                 //alert (check+"-"+json[0].tipo_pago);
                                 if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){//Si el tipo es distinto de individual y tiene un tipo de pago asignado
@@ -425,6 +446,9 @@ if(isset($_GET["rut_paciente"])){
                                     $("#cantidad").prop('disabled', false);
                                     $("#btnguardar").prop('disabled', false);
                                 }
+                                
+                                $("#name_programa").val(json[0].nombre_programa);
+                                
                                 //Verificar si el paciente ya tiene terapias asignadas                             
                                 $("#tabla_paciente").DataTable().destroy();
                                 agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
@@ -450,7 +474,7 @@ if(isset($_GET["rut_paciente"])){
                                     $("#terapias_individual").prop("disabled", true);
                                     $("#tabla_paciente").find('a').prop("disabled", true);
                                     $("#btn_cancelar").show();                                    
-                                    $("#btn_previsualizar").show();                                                                   
+                                    $("#btn_previsualizar").show();
                                     $("#btn_habilitar").show();                                                                   
                                     clase = "alert alert-warning alert-dismissable";
                                     msj = "Este programa se encuentra <strong>deshabilitado</strong>";
@@ -458,8 +482,10 @@ if(isset($_GET["rut_paciente"])){
                                     $("#programa_notificacion").prop("class",clase);
                                     $("#texto_notificacion_programa").html(msj);                    
                                     $("#notificacion_programa").fadeIn(100);  
-                                    //alert (json[0].tipo_pago );
+                                    //alert (json[0].tipo_pago );                                    
                                 }
+                                $("#btn_cancelar").show();                                    
+                                    //$("#btn_previsualizar").show();
                             }
                             else{        
                                 //alert ("No programa");
@@ -650,13 +676,20 @@ if(isset($_GET["rut_paciente"])){
                                     }                            
                                     $("#terapias").trigger('change');
                                     preseleccion = $("#terapias").val();
-                                    $("#name_programa").val(json[0].desc_pt);
+                                    //$("#name_programa").val(json[0].desc_pt);
                                     
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
-                                    
+                                    //alert ("a"+json[0].estado_programa);
                                     if (json[0].estado_programa){
                                         $("#btn_invoice").show();
+                                        
+                                    }
+                                    else{
+                                        if (<?php if (isset($_GET["crear"])){ echo "true";} else {echo "false";}?>){
+                                            cancelar_programa();
+                                        }
+                                        //alert ("b");
                                     }
                                     $("#btn_previsualizar").show();
                                     //$("#contenedor_descuento").show();
@@ -710,6 +743,15 @@ if(isset($_GET["rut_paciente"])){
                 //alert ("Procedimiento inválido");
             }
         }
+        
+        function establecer_tipo_pago(){
+            $('#modal_pago').modal({
+                backdrop: 'static',
+                keyboard: false
+            })            
+        }
+        
+        
         
         function cancelar_programa(){
             $.post("terapias/terapias_controlador.php",
@@ -787,12 +829,7 @@ if(isset($_GET["rut_paciente"])){
             
         }
 
-        function establecer_tipo_pago(){
-            $('#modal_pago').modal({
-                backdrop: 'static',
-                keyboard: false
-            })            
-        }
+        
         
         function habilitar_programa(){
             $.post("terapias/terapias_controlador.php",
