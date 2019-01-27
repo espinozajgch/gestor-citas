@@ -65,7 +65,7 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
     </div>  
     <div class="form-group col-12 col-sm-12 col-md-12">
         <!--div id="botones_dinamicos"></div-->
-        <button class="btn btn-sm btn-info shared" id="btn_invoice" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+        <button class="btn btn-sm btn-info shared" id="btn_invoice" title="Ver Factura" onclick="generar_invoice_programa_()"><i class="fa fa-file-text-o"></i></button>
     </div>  
      
     <div id="tabla" class="form-group col-12 col-sm-12 col-md-12">
@@ -174,10 +174,15 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
            window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val()+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
         }
     }
-    function generar_invoice_programa(){
+    function generar_invoice_programa_(){
             id_paciente = $("#id_oculto").val();
+            var programa = "<?php if (isset($_GET["id_programa"])){echo $_GET["id_programa"];}else echo "false";?>";        
+            var str_prog="";
+            if (programa){
+                str_prog = "&id_programa="+programa;
+            }
             if (id_paciente){
-                window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
+                window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente+""+str_prog, "_newtab");
             }
             else{
                 //alert ("Procedimiento inválido");

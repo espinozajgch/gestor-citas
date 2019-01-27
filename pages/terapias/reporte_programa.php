@@ -13,7 +13,11 @@ $estatus_pago;
 $terapias_pagadas = 0;
 $numero_terapias = 0;
 $sub_total_pagadas = 0;
-if (isset($_GET["id_paciente"])){
+if (isset($_GET["id_programa"])){
+    $id_programa = $_GET["id_programa"];
+    $condicion = "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;
+}
+else if (isset($_GET["id_paciente"])){
     $id_paciente                =   $_GET["id_paciente"];   
     $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
     $condicion = "WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =".$id_programa;

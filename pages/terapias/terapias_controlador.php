@@ -249,7 +249,12 @@ else if ($id_operacion == 12){
         $id_referer = false;
     }
     //echo $id_paciente;
-    $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    if (isset($_GET["id_programa"])){
+        $id_programa = $_GET["id_programa"];
+    }
+    else{
+        $id_programa = terapias::obtener_id_programa_paciente($id_paciente);
+    }    
     if ($id_programa){
         $json_temp = (terapias::lista_terapias_programa($id_programa, $id_referer));
     }

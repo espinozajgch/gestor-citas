@@ -394,10 +394,14 @@ $usuario  = "";
     });
     
     function cargar_tabla_terapias(referer){
-        
+        var programa = <?php if (isset($_GET["id_programa"])){echo $_GET["id_programa"];}else echo "false";?>;        
+        var str_prog="";
+        if (programa){
+            str_prog = "&id_programa="+programa;
+        }        
         $('#tabla_paciente').DataTable({  
                 responsive: true,
-                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer,
+                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer+""+str_prog,
                 "columns": [
                     {"data": "N"},
                     {"data": "Terapias"},                    
@@ -464,7 +468,6 @@ $usuario  = "";
     function generar_invoice(id_paciente){
         window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
     }
-    
     function generar_invoice_individual(id_reserva){
         window.open("terapias/terapias_controlador.php?id_operacion=15&reserva="+id_reserva, "_newtab");
     }

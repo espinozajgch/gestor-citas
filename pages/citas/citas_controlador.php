@@ -41,6 +41,7 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $longitud = count ($resultado);
     if ($resultado){
         $resultado[0]['estado'] = true;
+        //Si el identificador de la cita fue pasado, asegurar que la cita esté dentro de ese programa
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         if ($resultado[0]["programa"]!=false){
             $resultado[0]["descuento"]              = terapias::obtener_descuento_programa($resultado[0]["programa"]);

@@ -93,6 +93,10 @@ require_once '../assets/class/calendario.php';
             }
             );
         }
+        
+        function generar_invoice_programa(id_programa){                
+            window.open("terapias/terapias_controlador.php?id_operacion=15&id_programa="+id_programa, "_newtab");
+        }
             </script>
             <!-- /.row -->
   

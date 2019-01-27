@@ -350,7 +350,7 @@ input:checked + .slider:before {
             <div class="row ">
             <br>
                 <div class="col-md-12">  
-                    <form>
+                    <div>
                         <div class="row">
 
 
@@ -396,7 +396,7 @@ input:checked + .slider:before {
 
                                     <div class="form-group col-2 col-sm-2 col-md-2">
                                         <small><strong><label for=name_>Mostrar</label></strong></small><br>
-                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
+                                        <button class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></button>
                                     </div>
 
 
@@ -629,7 +629,7 @@ input:checked + .slider:before {
                             <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="enviar_formulario_v2()">Guardar</button>
                         </div>
 
-                    </form>
+                    </div>
                 </div>    
             
 
@@ -835,7 +835,7 @@ function validar_inputs(input, div_error){
                             bandera_email_disponible = true;
                             //$("#error_mail").hide();
                             msj="";
-                            if (json[0].programa!=false){                                   
+                            if ((json[0].programa!=false) && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//Si la cita pertenece a un programa, pero no es nueva. Se hace para prevenir que se agregue una cita individual a un paciente que tenga un programa activo
                                 clase = "alert alert-success alert-dismissable";
                                 msj = "Esta cita pertenece al programa terapéutico <strong>"+json[0].nombre_programa+"</strong>";
                                 $("#programa_notificacion").prop("class",clase);
@@ -912,9 +912,12 @@ function validar_inputs(input, div_error){
         }
         
         function verificar_fecha_regex (campo){
-            var regex   = /(0?[1-9]|[12][0-9]|3[01])$-(0?[1-9]|1[012])\-^\d{4}\\/;
+            //var campo_2 = "20010";
+            //var regex_   = /(0?[1-9]|[12][0-9]|3[01])$-(0?[1-9]|1[012])\-^\d{4}\\/;
+            var regex   = /0?[1-9]\-0?[1-9]\-\d{4}/;
             var res     = regex.test($("#"+campo).val());
-            //alert ("Campo: "+campo+", resp: "+res);
+            //var res     = regex.test(campo_2);
+            //alert ("Campo: "+$("#"+campo).val()+", resp: "+res);
             return res;
         }
         
@@ -932,7 +935,7 @@ function validar_inputs(input, div_error){
         function verificar_campos_inputs(){
             var bandera = true;
             //Verificar la fecha
-           /* if (!verificar_fecha_regex("fecha_a")){
+            if (!verificar_fecha_regex("fecha_a")){
                 bandera = false;
             }//*/
             //Verficar el rut
@@ -1410,13 +1413,16 @@ function validar_inputs(input, div_error){
         if ($("#medicos").val()!=""){
             $("#calendario").html(" ");
             inicializar_calendario();
-            $("#dc").attr('disabled', false);
+            $("#dc").attr('disabled', false);            
             //alert ("a");
         }
         else{
             $("#calendario").html(" ");
             inicializar_calendario();
             $("#dc").attr('disabled', true);
+            $("#fecha_a").val("");
+            $("#hora_a").val("");
+            $("#hora_b").val("");
             //alert ("b");
         }
         

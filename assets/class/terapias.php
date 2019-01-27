@@ -205,7 +205,8 @@ class terapias {
     
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
-            WHERE `paciente_id_paciente`=".$id_paciente."";
+            WHERE `paciente_id_paciente`=".$id_paciente."
+                 AND (estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
         if (!$especial){
             $sql.=" AND especial <> true";
         }
@@ -521,8 +522,7 @@ class terapias {
             INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
             LEFT  JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
-            WHERE pt.estado NOT LIKE '%cancelado%' 
-            AND pt.especial <> true
+            WHERE pt.especial <> true
             GROUP BY pt.id_programa_terapeutico";
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -552,16 +552,17 @@ class terapias {
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
                 $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
-                $json[$i]['Estado'] = $resultados[$i]["estado"];
+                $estado = $resultados[$i]["estado"] == "deshabilitado" ? "cancelado":$resultados[$i]["estado"];
+                $json[$i]['Estado'] = strtoupper($estado);
                 $json[$i]['Acciones'] = "
                         <a title=\"Ver Reporte\" id=\"btn_reserva\" 
                             class=\"btn btn-info\"  
-                            onclick = \"generar_invoice(".$resultados[$i]["id_p"].")\">
+                            onclick = \"generar_invoice_programa(".$resultados[$i]["programa"].")\">
                             <i class=\"fa fa-file-text-o\"></i>
                         </a>
                         <a title=\"Detalle programa\" 
                             class=\"btn btn-info\"  
-                            href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."\">
+                            href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."&id_programa=".$resultados[$i]["programa"]."\">
                             <i class=\"fa fa-eye\"></i>
                         </a>
                         <a title=\"Cancelar programa\" 
@@ -657,6 +658,7 @@ class terapias {
         if ($resultado){
             $longitud = count($resultado);
             $bandera_validar_programa = true;
+            $bandera_programa_bloqueado = false;
             //echo $longitud;
             $json[0]["estado"] = 1;
             //Nombre del programa
@@ -678,6 +680,7 @@ class terapias {
                 }
                 else{
                     $str_metodo = "METODO: $metodo_1, REFERENCIA: $referencia_1";
+                    $bandera_programa_bloqueado = true;
                 }
                 $str_metodos_pago.= $str_metodo;
                 $metodo_2 = terapias::obtener_metodo_pago_parcial($resultado[0]["prt_id"]);
@@ -687,6 +690,7 @@ class terapias {
                 }
                 else{
                     $str_metodo_2 = "METODO: $metodo_2, REFERENCIA: $referencia_2";
+                    $bandera_programa_bloqueado = true;
                 }
                 $str_metodos_pago.=", ".$str_metodo_2;
             }
@@ -709,24 +713,30 @@ class terapias {
                 //echo $resultado[$i]["estado_t"]." - estado";
                 if ($resultado[$i]["estado_t"]=="pendiente"){//Se puede reservar la cita                    
                     $str_btn = "
-                    <a title=\"Reservar\" 
+                    <button title=\"Reservar\" 
                         class=\"btn btn-info\"  
                         onclick = \"seleccionar_terapia($id_ptt, 2)\"";
-                    if($resultado[$i]["tipo_pago"]==3&&($i>=$longitud/2)){
-                        $str_btn.=" disabled ";
-                        
+                    if($resultado[$i]["tipo_pago"]==3&&(($i>=$longitud/2))){
+                        if ($metodo_2 == "" || $metodo_2 == null || $metodo_2 == false){
+                            $str_btn.=" disabled ";
+                        }
                     }
                     $str_btn.=">
                         <i class=\"fa fa-calendar\"               
                     ></i>
-                    </a>";
+                    </button>";
                     if ($id_referer==1){//Agregar boton de eliminar terapia
                         $str_btn .= "
-                        <a title=\"Eliminar terapia\" 
+                        <button title=\"Eliminar terapia\" 
                             class=\"btn btn-danger\"
-                            onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\">
+                            onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\"
+                                ";
+                        if ($bandera_programa_bloqueado){
+                            $str_btn.=" disabled ";
+                        }
+                        $str_btn.=">
                             <i class=\"fa fa-times-circle\"></i>
-                        </a>";
+                        </button>";
                     }
                     $bandera_validar_programa = false;
                 }
