@@ -399,12 +399,12 @@ class citas {
                             class=\"btn btn-sm btn-info\"  
                             href=\"agregar_citas.php?mod=true&cita=".$resultados[$i]["id_rm"]."\" >
                             <i class=\"fa fa-eye\"></i>
-                        </a>";
+                        </a> ";
             //BOTON CANCELAR
             if (($estado != 5)&&($estado != 6)&&($estado != 2)){
             $str_brn.="<button title='Cancelar' class='btn btn-sm btn-danger eliminar' cod='".$resultados[$i]["id_rm"]."' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia, ". ($i+1).")'>
                             <i class=\"fa fa-times-circle\"></i>
-                        </button>";
+                        </button> ";
             }
             //BOTON INVOICE
             $str_brn.="                    

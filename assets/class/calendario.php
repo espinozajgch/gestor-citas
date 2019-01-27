@@ -386,8 +386,9 @@ class calendario {
             }            
             $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
-                </a>
-                <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
+                </a> 
+                
+                
                 <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)'";
 
             if ($resultados[$i]["estado_rm"]=="2"){

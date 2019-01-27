@@ -349,7 +349,7 @@ while (!$fin){
                 $total -= $descuento;
             }
             else if ($estatus_pago == 3){//Parcial
-                if ($numero_terapias>1){
+                //if ($numero_terapias>1){
                     if ($check_pago_par>0){
                         $terapias_cobradas = round($numero_terapias/2);
                         $amortizacion = ($sub_total_array[$terapias_cobradas-1]);
@@ -366,7 +366,7 @@ while (!$fin){
                         $size = $pdf->addLine( $y, $line );
                         $total-=$amortizacion;
                     }
-                }
+                //}
                             
                 
                 $y   += $size + 3;
@@ -394,7 +394,7 @@ while (!$fin){
             if ($estatus_pago == 4){
                 $descripcion = "Total:";
             }
-            else if ($estatus_pago == 3 && $numero_terapias >1){
+            else if ($estatus_pago == 3){
                 $descripcion = "Saldo:";
             }
             else if ($estatus_pago == 7){
