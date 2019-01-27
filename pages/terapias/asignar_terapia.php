@@ -818,6 +818,7 @@ if(isset($_GET["rut_paciente"])){
                         operacion = 11;                            
                         if(json[0].estado == 1){   
                             //alert ("Procesado con exito");
+                            setTimeout(function(){window.location.reload(),1500});
                         }
                         else{
                             alert ("Ocurrió un error");

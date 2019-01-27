@@ -46,14 +46,14 @@ if (!isset($_SESSION["pagina"])){
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-              <h3 class="modal-title">ADVERTENCIA</h3>
+              <h5 class="modal-title">ADVERTENCIA</h5>
           </div>
           <div id="body_trash" class="modal-body">
             <input type="hidden" id="code">
-            <h4 class="modal-title" id="texto_modal"></h4>
+            <p class="modal-title" id="texto_modal"></p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button id="btn_sec" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
           </div>
         </div>

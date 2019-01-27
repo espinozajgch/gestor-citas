@@ -523,6 +523,15 @@ $usuario  = "";
         })
     }
     
+    function eliminar_terapia_modal(id_programa,id_terapia){
+        $("#texto_modal").html("¿Está seguro de querer eliminar la terapia seleccionada? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","eliminar_terapia("+id_programa+","+id_terapia+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
     function modal_cancelar(){
         $("#texto_modal").html("¿Está seguro de querer cancelar el programa? Esta operación es irreversible");
         $("#boton_modal").attr("onclick","cancelar_programa()");

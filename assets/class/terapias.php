@@ -715,9 +715,22 @@ class terapias {
                     $str_btn = "
                     <button title=\"Reservar\" 
                         class=\"btn btn-info\"  
-                        onclick = \"seleccionar_terapia($id_ptt, 2)\"";
-                    if($resultado[$i]["tipo_pago"]==3&&(($i>=$longitud/2))){
-                        if ($metodo_2 == "" || $metodo_2 == null || $metodo_2 == false){
+                        onclick = \"seleccionar_terapia($id_ptt, 2)\"";                    
+                    if($resultado[$i]["tipo_pago"]==3){//Si el tipo de pago es parcial
+                        //Si el pago uno no se ha establecido                        
+                        if ($i<$longitud/2){
+                            if ($metodo_1 == "" || $metodo_1 == null || $metodo_1 == false){
+                                $str_btn.=" disabled ";
+                            }
+                        }
+                        else{
+                            if ($metodo_2 == "" || $metodo_2 == null || $metodo_2 == false){
+                               $str_btn.=" disabled ";
+                            }
+                        }                        
+                    }
+                    else if ($resultado[$i]["tipo_pago"]==4){
+                        if ($metodo_1 == "" || $metodo_1 == null || $metodo_1 == false){
                             $str_btn.=" disabled ";
                         }
                     }
@@ -729,7 +742,7 @@ class terapias {
                         $str_btn .= "
                         <button title=\"Eliminar terapia\" 
                             class=\"btn btn-danger\"
-                            onclick=\"eliminar_terapia(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\"
+                            onclick=\"eliminar_terapia_modal(".$resultado[$i]["ptt_id"].",".$resultado[$i]["id_terapia"].")\"
                                 ";
                         if ($bandera_programa_bloqueado){
                             $str_btn.=" disabled ";
