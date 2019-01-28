@@ -149,7 +149,7 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
                         else{
                             $("#name").val("");
                             $("#last_name").val("");  
-                            console.log("Este paciente no existe");
+                            //console.log("Este paciente no existe");
                         }
                     }
                 );
@@ -168,7 +168,7 @@ if (isset($_GET["id_paciente"])){//Si existe la variable cita, es porque vamos a
         }     
         if ($("#terapias").val()==""){
             bandera = false;
-            console.log("Seleccione al menos un medico");
+            //console.log("Seleccione al menos un medico");
         }
         if (bandera){
            window.location = "agregar_citas.php?id_terapia="+terapia_seleccionada+"&rut="+$("#rut_paciente").val()+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();

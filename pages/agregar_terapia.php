@@ -172,7 +172,7 @@ $accion = 6;
 
             if(accion == 7){
                 id = $("#id_pregunta").val();
-                console.log(id);
+                //console.log(id);
             }
 
             $.ajax({
@@ -181,7 +181,7 @@ $accion = 6;
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
                     window.location.href="terapias.php";
@@ -189,7 +189,7 @@ $accion = 6;
                 error: function(data){
                     $("#msgerror_danger").show();
                     $("#msg_ok").hide();
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });

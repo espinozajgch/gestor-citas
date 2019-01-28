@@ -160,7 +160,7 @@ $usuario  = "";
 
         $('#erase').click(function(e){
             //eliminar(id);
-            console.log(id_cita);
+            //console.log(id_cita);
 
             $.post("citas/citas_controlador.php",
             {
@@ -236,7 +236,7 @@ $usuario  = "";
 
         function suspender(codigo,estado){
 
-            console.log(estado);
+            //console.log(estado);
             hash = $("#hash").val();
 
             $.ajax({
@@ -257,7 +257,7 @@ $usuario  = "";
                     }*/
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                     window.location.href="citas.php?success=no";
                 }
             });/**/
@@ -266,20 +266,20 @@ $usuario  = "";
         $('.ocultar').click(function() {
             codigo = $(this).attr("cod");
 
-            console.log(codigo);
+            //console.log(codigo);
             cambiar_estatus(codigo,0);
         });
 
         $('.restart').click(function() {
             codigo = $(this).attr("cod");
 
-            console.log(codigo);
+            //console.log(codigo);
             cambiar_estatus(codigo,1);
         });
 
         function cambiar_estatus(codigo,estado){
 
-            console.log(estado);
+            //console.log(estado);
             hash = $("#hash").val();
 
             $.ajax({
@@ -300,7 +300,7 @@ $usuario  = "";
                     }*/
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                     window.location.href="citas.php?success=no";
                 }
             });/**/

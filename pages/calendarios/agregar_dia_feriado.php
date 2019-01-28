@@ -136,7 +136,7 @@ function mostrar_calendario(){
         navLinkDayClick: function (date, jsEvent){
                     
                     var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
-                    console.log(fecha_seleccionada);
+                    //console.log(fecha_seleccionada);
                     //calendar.changeView('agendaWeek', fecha_seleccionada);
                 },
         locale: 'es-us'

@@ -57,7 +57,7 @@ require_once '../assets/class/calendario.php';
                 navLinkDayClick: function (date, jsEvent){
                     
                     var fecha_seleccionada      =   date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1);                  
-                    console.log(fecha_seleccionada);
+                    //console.log(fecha_seleccionada);
                     //calendar.changeView('agendaDay', fecha_seleccionada);
                 },
                         eventLimit: true,

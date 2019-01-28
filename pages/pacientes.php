@@ -188,7 +188,7 @@ $usuario  = "";
                     dataType: "json",
                     success:  function (data) {
                         //respuesta = JSON.stringify(data);
-                        console.log(data);
+                        //console.log(data);
                         //$("#modal_trash").modal('hide');
                         window.location.href="pacientes.php";
                     },

@@ -338,7 +338,7 @@ $estilo_par = "";
                     //dataType: "json",
                     success:  function (data) {
                         respuesta = JSON.stringify(data);
-                        console.log(data);
+                        //console.log(data);
                         //console.log(data.estado);
 
                         if(data.estado == 0){
@@ -353,7 +353,7 @@ $estilo_par = "";
                         }
                     },
                     error: function(data){
-                        console.log(data);
+                        //console.log(data);
                         $("#loader-wrapper").fadeOut("fast");
                         $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
                     }

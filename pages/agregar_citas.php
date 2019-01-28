@@ -728,7 +728,7 @@ function validar_inputs(input, div_error){
                     //dataType: "json",
                     success:  function (data) {
                         respuesta = JSON.parse(data);
-                        console.log(data);
+                        //console.log(data);
                         //alert (respuesta);
                         //console.log(data.estado);
                         $("#id_oculto").val(respuesta.mensaje);
@@ -749,7 +749,7 @@ function validar_inputs(input, div_error){
                         }
                     },
                     error: function(data){
-                        console.log(data);
+                        //console.log(data);
                         $("#loader-wrapper").fadeOut("fast");
                         $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
                         return false;
@@ -1048,7 +1048,7 @@ function validar_inputs(input, div_error){
                     type:  'post',                    
                     success:  function (data) {
                         respuesta = JSON.parse(data);
-                        console.log(data);                                                                     
+                        //console.log(data);                                                                     
                         if(respuesta.estado <1){//No hubo necesidad de agregar al paciente
                             if (respuesta.estado == 0.1){
                                 mensaje_final+= "Paciente registrado<br>";                                                                
@@ -1129,9 +1129,9 @@ function validar_inputs(input, div_error){
                                     id_terapia_programa = respuesta[0].id_pr_t_t;
                                     //alert (id_programa + " - " +id_terapia_programa);
                                 }
-                                console.log(respuesta[0].str_debug);
+                                //console.log(respuesta[0].str_debug);
                             }).fail(function() {
-                                console.log( "error" );
+                                //console.log( "error" );
                               })
                         ).then(function(){                                        
                                     mensaje_final+=procesar_informacion(id_terapia_programa);
@@ -1230,7 +1230,7 @@ function validar_inputs(input, div_error){
             tipo_pago       : $("#estado_pago").val()
             }, 
             function (result){
-                console.log(result)
+                //console.log(result)
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     mensaje_retorno+="La cita se guardó con éxito<br>";  

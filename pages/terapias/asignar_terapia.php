@@ -619,7 +619,7 @@ if(isset($_GET["rut_paciente"])){
                 else{
                     $("#alert_fail").show();            
                 }                
-                console.log(respuesta[0].str_debug);
+                //console.log(respuesta[0].str_debug);
             });
         }
     }

@@ -154,7 +154,7 @@ $usuario  = "";
 
         $("#estado_pago").change(function () {
             tipo_pago = $("#estado_pago").val();
-            console.log(tipo_pago);
+            //console.log(tipo_pago);
 
             if(tipo_pago == 3){
                 $("#contenedor_descuento").hide();
@@ -320,7 +320,7 @@ $usuario  = "";
                     }
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                    // window.location.href="cuenta.php?success=no";
                 }
             });/**/
@@ -345,10 +345,10 @@ $usuario  = "";
                 },
                 function(result){
                     if (result == "1"){
-                        console.log("Modificado con éxito");
+                        //console.log("Modificado con éxito");
                     }
                     else{
-                        console.log("Ha ocurrido un error");
+                        //console.log("Ha ocurrido un error");
                     }
                     window.location = "terapias.php?opcion=5";
                 });
@@ -436,10 +436,10 @@ $usuario  = "";
         }, function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){//Exito
-                console.log("Metodo de pago establecido");
+                //console.log("Metodo de pago establecido");
             }
             else{
-                console.log("Ocurrió un error, contacte al admin");
+                //console.log("Ocurrió un error, contacte al admin");
             }
         });
     }
@@ -482,13 +482,13 @@ $usuario  = "";
         },function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){//Exito
-                console.log("La cita ha sido validada");
-                console.log (respuesta[0].str_debug);
+                //console.log("La cita ha sido validada");
+                //console.log (respuesta[0].str_debug);
                 $("#btn_buscar").trigger("click");
             }
             else{
-                console.log("Ocurrió un error al validar la terapia");
-                console.log (respuesta[0].str_debug);
+                //console.log("Ocurrió un error al validar la terapia");
+                //console.log (respuesta[0].str_debug);
                 
             }
         });
@@ -502,7 +502,7 @@ $usuario  = "";
         }, function(result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){
-                console.log("Programa validado con exito");
+                //console.log("Programa validado con exito");
                 location.reload();
             }
         });
@@ -558,14 +558,14 @@ $usuario  = "";
                 id_ptt: id_ptt
             }, function(result){
                 var respuesta = JSON.parse(result);
-                console.log("Cita eliminada");
+                //console.log("Cita eliminada");
                 location.reload();
                 if (respuesta[0].estado == 1){
 
                     //console.log("Cita eliminada");
                 }
                 else{
-                    console.log("ERROR");
+                    //console.log("ERROR");
                 }
             });        
     }

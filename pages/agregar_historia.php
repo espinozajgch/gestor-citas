@@ -154,7 +154,7 @@ $terminos = "";
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
                     //window.location.href="listado_global.php";
@@ -162,7 +162,7 @@ $terminos = "";
                 error: function(data){
                     $("#msgerror_danger").show();
                     $("#msg_ok").hide();
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });
