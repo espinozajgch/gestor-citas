@@ -27,7 +27,7 @@
         <li class="dropdown">
 
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-               <?php echo $usuario; ?> <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+               <?php echo $usuario; ?> (Citas)<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <!--li><a href="https://buscahogar.com.ar/blog/wp-admin" target="_blank"><i class="fa fa-gear fa-fw"></i> Wordpress</a>
