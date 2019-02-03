@@ -522,7 +522,7 @@ class terapias {
             INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente 
             LEFT JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico 
             LEFT  JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia 
-            WHERE pt.especial <> true
+            WHERE pt.especial <> true AND pt.estado NOT LIKE \"%eliminado%\"
             GROUP BY pt.id_programa_terapeutico";
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -875,8 +875,8 @@ class terapias {
             pt.estado                               as estado_pt
             FROM paciente p
                 INNER JOIN programa_terapeutico pt ON pt.paciente_id_paciente=p.id_paciente
-                INNER JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico
-                INNER JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia
+                LEFT  JOIN programa_tiene_terapia ptt ON ptt.programa_terapeutico_id_programa_terapeutico=pt.id_programa_terapeutico
+                LEFT  JOIN terapia t ON ptt.terapia_id_terapia=t.id_terapia
                 WHERE (pt.estado LIKE \"%activo%\" OR pt.estado)
                         AND p.id_paciente = ".$id_paciente." 
                         AND pt.especial <> true ";
@@ -985,6 +985,15 @@ class terapias {
             WHERE id_programa_terapeutico = ".$id_pt;
         $pdo = $bd->prepare($sql);        
         return $pdo->execute(array("deshabilitado"));
+    }
+    
+    public static function eliminar_programa($id_pt){
+        $bd = connection::getInstance()->getDb();
+        $sql = "UPDATE programa_terapeutico
+        SET estado=?
+            WHERE id_programa_terapeutico = ".$id_pt;
+        $pdo = $bd->prepare($sql);        
+        return $pdo->execute(array("eliminado"));
     }
     
     public static function cancelar_terapia($id_terapia){

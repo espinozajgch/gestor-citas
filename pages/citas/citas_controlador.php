@@ -190,9 +190,10 @@ else if ($id_operacion == 2.5){//Agregar historico nuevo
     }
 }
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
-    $sql = "SELECT id_admin, nombre FROM admin WHERE (id_rol = 3 or id_rol = 4) AND id_eu > 0";
+    $condicion = isset($_GET["search"]) ? " AND nombre LIKE \"%".$_GET["search"]."%\"" : " ";
+    $sql = "SELECT id_admin, nombre FROM admin WHERE (id_rol = 3 or id_rol = 4) AND id_eu > 0 ".$condicion;
     $bd = connection::getInstance()->getDb();
-    
+    //echo $sql;
     $pdo = $bd->prepare($sql);
     $pdo->execute();
     $resultado = $pdo->fetchall(PDO::FETCH_ASSOC);

@@ -51,7 +51,11 @@ else if ($id_operacion == 3){//Actualizar información de terapia
     echo json_encode($json);
 }
 else if ($id_operacion == 4){//Obtener las terapias para el pillbox
-    $sql = "SELECT id_terapia, nombre_terapia FROM `terapia`";
+    if (isset($_GET["search"])){
+        $condicion = " WHERE nombre_terapia LIKE \"%".$_GET["search"]."%\"";
+    }
+    else $condicion = " ";
+    $sql = "SELECT id_terapia, nombre_terapia FROM `terapia` ".$condicion;
     $bd = connection::getInstance()->getDb();
     
     $pdo = $bd->prepare($sql);
@@ -333,6 +337,16 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
         else{
             $json[0]["estado"]="0";
             $json[0]["str_debug"].="...ERROR AL CANCELAR PROGRAMA";
+        }
+    }
+    else if ($estado_programa == "cancelado"){
+        if (!terapias::eliminar_programa($id_programa)){
+            $json[0]["estado"]=0;
+            $json[0]["str_debug"].="Error al eliminar el programa";
+        }    
+        else{
+            $json[0]["estado"]=1;
+            $json[0]["str_debug"].="Programa eliminado completamente";
         }
     }
     else{//CONDICION DE ERROR
