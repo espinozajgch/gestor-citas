@@ -552,7 +552,12 @@ class terapias {
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
                 $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
-                $estado = $resultados[$i]["estado"] == "deshabilitado" ? "anulado":$resultados[$i]["estado"];
+                if ($resultados[$i]["estado"] == "deshabilitado" || $resultados[$i]["estado"] == "cancelado"){
+                    $estado =  "anulado";
+                }
+                else{
+                    $estado = $resultados[$i]["estado"];
+                }
                 $json[$i]['Estado'] = strtoupper($estado);
                 $json[$i]['Acciones'] = "
                         <a title=\"Ver Reporte\" id=\"btn_reserva\" 
