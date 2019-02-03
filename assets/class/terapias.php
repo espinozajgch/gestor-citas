@@ -110,7 +110,7 @@ class terapias {
         SET estado=?
             WHERE id_programa_terapeutico = ".$id_programa;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array("cancelado"));
+        return $pdo->execute(array("anulado"));
     }
     
     public static function cancelar_terapias_programa($id_programa){
@@ -120,7 +120,7 @@ class terapias {
             WHERE programa_terapeutico_id_programa_terapeutico = ".$id_programa."
                 AND estado NOT LIKE \"pagado\" AND estado NOT LIKE \"atendido\"";
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array("cancelado"));
+        return $pdo->execute(array("anulado"));
     }
     
     public static function cancelar_citas_programa ($id_programa){
@@ -206,7 +206,7 @@ class terapias {
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente."
-                 AND (estado NOT LIKE \"cancelado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
+                 AND (estado NOT LIKE \"anulado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
         if (!$especial){
             $sql.=" AND especial <> true";
         }
@@ -552,7 +552,7 @@ class terapias {
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
                 $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
-                $estado = $resultados[$i]["estado"] == "deshabilitado" ? "cancelado":$resultados[$i]["estado"];
+                $estado = $resultados[$i]["estado"] == "deshabilitado" ? "anulado":$resultados[$i]["estado"];
                 $json[$i]['Estado'] = strtoupper($estado);
                 $json[$i]['Acciones'] = "
                         <a title=\"Ver Reporte\" id=\"btn_reserva\" 
@@ -783,7 +783,7 @@ class terapias {
                     </a>";
                     //$bandera_validar_programa = false;
                 }                
-                else if ($resultado[$i]["estado_t"]=="cancelado") {
+                else if ($resultado[$i]["estado_t"]=="anulado") {
                     $str_btn = "
                     <a title=\"CANCELADA, NO SE PUEDE MODIFICAR\" 
                         class=\"btn btn-danger\">
@@ -881,7 +881,7 @@ class terapias {
                         AND p.id_paciente = ".$id_paciente." 
                         AND pt.especial <> true ";
         if ($solo_activas){
-            $sql.= "    AND ptt.estado NOT LIKE \"cancelado\" AND ptt.estado NOT LIKE \"atendida\"";
+            $sql.= "    AND ptt.estado NOT LIKE \"anulado\" AND ptt.estado NOT LIKE \"atendida\"";
         }
         $pdo = $bd->prepare($sql);        
         //echo $sql;
@@ -1002,7 +1002,7 @@ class terapias {
         SET estado_terapia=?
             WHERE id_terapia = ".$id_terapia;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array("cancelado"));
+        return $pdo->execute(array("anulado"));
     }
     
     public static function cancelar_cita ($id_programa, $id_cita){

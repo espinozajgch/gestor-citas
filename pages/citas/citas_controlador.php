@@ -346,7 +346,7 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     $id_cita= $_POST["cita"];    
     $id_programa = terapias::obtener_id_programa_paciente($_POST["id_paciente"]);
     $json_retorno[0]["estado"]=1;
-    //Colocamos el estado de la cita en "CANCELADO"
+    //Colocamos el estado de la cita en "ANULADO"
     if (citas::cancelar_cita($id_cita)){
         if (terapias::cancelar_cita($id_programa, $id_cita)){
             //NADA

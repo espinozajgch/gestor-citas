@@ -496,7 +496,7 @@ input:checked + .slider:before {
                                             <option value="1">PENDIENTE</option>
                                             <option value="2">PAGADO</option>
                                             <option value="6">ATENDIDO</option>
-                                            <option value="5">CANCELADO</option>
+                                            <option value="5">ANULADO</option>
                                         </select>
                                         <div id="error_email" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
