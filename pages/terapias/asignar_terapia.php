@@ -581,9 +581,15 @@ if(isset($_GET["rut_paciente"])){
         if ($("#cantidad").val()==""){
             if ($("#descuento_aplicado").val()==""){
                 bandera = false;            
-                //alert ("Verifique los campos");
-            }
+                //alert ("Verifique los campos");                
+            }            
         }        
+        
+        if ($("#terapias_individual").val()== null){
+            bandera = false;
+            $("#error_terapias").show();
+            $("#error_terapias").fadeOut(5000);   
+        }
         
         if (bandera){
             $("#alert_ok").hide();

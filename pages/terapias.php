@@ -541,9 +541,9 @@ $usuario  = "";
         })
     }
     
-    function modal_cancelar_programa(id_pt){
-        $("#texto_modal").html("¿Está seguro de querer cancelar el programa? Esta operación es irreversible");
-        $("#boton_modal").attr("onclick","cancelar_programa("+id_pt+")");
+    function modal_cancelar_programa(id_pt, definitivo = false){
+        $("#texto_modal").html("¿Está seguro de querer eliminar el programa? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","cancelar_programa("+id_pt+","+definitivo+")");
         $('#modal_generico').modal({
                 backdrop: 'static',
                 keyboard: false

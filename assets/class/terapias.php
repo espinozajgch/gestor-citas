@@ -206,7 +206,7 @@ class terapias {
     public static function obtener_id_programa_paciente ($id_paciente, $especial = false){
         $sql = "SELECT * FROM `programa_terapeutico` 
             WHERE `paciente_id_paciente`=".$id_paciente."
-                 AND (estado NOT LIKE \"anulado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\")";
+                 AND (estado NOT LIKE \"anulado\" AND estado NOT LIKE \"culminado\" AND estado NOT LIKE \"deshabilitado\" AND estado NOT LIKE \"eliminado\")";
         if (!$especial){
             $sql.=" AND especial <> true";
         }
@@ -570,9 +570,9 @@ class terapias {
                             href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."&id_programa=".$resultados[$i]["programa"]."\">
                             <i class=\"fa fa-eye\"></i>
                         </a>
-                        <a title=\"Cancelar programa\" 
+                        <a title=\"Eliminar programa\" 
                             class=\"btn btn-danger\"  
-                            onclick =\"modal_cancelar_programa(".$resultados[$i]["id_pt"].")\">
+                            onclick =\"modal_cancelar_programa(".$resultados[$i]["id_pt"].", true)\">
                             <i class=\"fa fa-times\"></i>
                         </a>
                         ";

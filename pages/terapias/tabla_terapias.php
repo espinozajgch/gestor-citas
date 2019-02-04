@@ -72,11 +72,12 @@ require_once '../assets/class/calendario.php';
             </div>
             
             <script type="text/javascript">
-                function cancelar_programa(id_programa){
+                function cancelar_programa(id_programa, definitivo = false){
             $.post("terapias/terapias_controlador.php",
             {
                 id_operacion: 14,
-                id_programa : id_programa
+                id_programa : id_programa,
+                definitivo : definitivo
             },function (result){
                 var json = JSON.parse(result);       
                 //alert (result);

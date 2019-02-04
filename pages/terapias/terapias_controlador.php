@@ -308,6 +308,11 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
     $id_programa = $_POST["id_programa"];
     //Verificar el estado del programa
     $estado_programa = terapias::obtener_estado_programa($id_programa);
+    if (isset($_POST["definitivo"])){
+        if ($_POST["definitivo"] == true){
+            $estado_programa = "anulado";
+        }
+    }
     //Si el estado es "ACTIVO", se coloca en deshabilitado.
     //Si el estado es "ANULADO", el programa se elimina y las citas que se dejarán solo serán las que tengan fecha de reserva
     $json;
@@ -339,7 +344,9 @@ else if ($id_operacion == 14){//Cancelar un programa terapeutico
             $json[0]["str_debug"].="...ERROR AL CANCELAR PROGRAMA";
         }
     }
-    else if ($estado_programa == "anulado" || $estado_programa == "culminado"){
+    else if ($estado_programa == "anulado" || $estado_programa == "culminado"){        
+        terapias::cancelar_terapias_programa($id_programa);
+        terapias::cancelar_citas_programa($id_programa);
         if (!terapias::eliminar_programa($id_programa)){
             $json[0]["estado"]=0;
             $json[0]["str_debug"].="Error al eliminar el programa";
