@@ -376,15 +376,14 @@
 				" password,".
 				" hash,".
 				" id_eu,".
-				" estado,".
 				" id_rol)".
-				" VALUES(?,?,?,?,?,?,?)";
+				" VALUES(?,?,?,?,?,?)";
 
 		   try {
 
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
-				$resultado = $comando->execute(array($nombre, $email, $password, $hash, $estatus,"activo", $id_rol));
+				$resultado = $comando->execute(array($nombre, $email, $password, $hash, $estatus, $id_rol));
 				
 				return $resultado;
 
