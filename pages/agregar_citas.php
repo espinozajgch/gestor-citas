@@ -1472,7 +1472,9 @@ function validar_inputs(input, div_error){
                     //alert (n_opcion);
                     $("#terapias_individual").append(n_opcion);   //*/
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
-                    $("#terapias_individual").trigger('change').prop("disabled","true");
+                    if (respuesta[1].estado_pago != 1){
+                        $("#terapias_individual").trigger('change').prop("disabled","true");
+                    }                    
                     //$("#pago").hide();
                     set_terapia(false);
                     $("#chequeo").hide();
