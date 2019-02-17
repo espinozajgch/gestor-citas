@@ -245,16 +245,16 @@ class calendario {
             $json[$i]['Descripcion'] = $resultados[$i]["descripcion_feriados"];
             $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_feriados"]);
             $json[$i]['N'] = ($i+1);
-            $str_btn=" <a title=\"Modificar Fecha\" 
+            $str_btn=" <a title=\"Editar\" 
                             class=\"btn btn-sm btn-info\"  
                             href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\"
                         >
                         <i class=\"fa fa-edit\"></i>
                         </a>
-                        <button title='Cancelar'
+                        <button title='Eliminar'
                             class='btn btn-sm btn-danger eliminar'
                             onclick ='eliminar_dia_modal(".$resultados[$i]["id_feriados"].")'>
-                            <i class=\"fa fa-times-circle\"></i>
+                            <i class=\"fa fa-trash\"></i>
                         </button>
                         ";
             $json[$i]['Acciones'] = $str_btn;

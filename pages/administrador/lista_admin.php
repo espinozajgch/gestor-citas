@@ -41,10 +41,10 @@
                             <td>'. strtoupper($admin["email"]) .'</td>
                             <td>'. strtoupper($admin["rol"]) .'</td>
                             <td class="center text-center pull-center">
-                                <btn class="btn btn-sm btn-success button_on" cod="'.  $admin['id_admin'] .'" title="Deshabilitar" style="'. $hab .'"><i class="fa fa-eye"></i></btn>
-                                <btn class="btn btn-sm btn-danger button_off" cod="'.  $admin['id_admin'] .'" title="Habilitar" style="'. $des .'"><i class="fa fa-eye-slash"></i></btn>
+                                <btn class="btn btn-sm btn-warning button_on" cod="'.  $admin['id_admin'] .'" title="Deshabilitar" style="'. $hab .'"><i class="fa fa-ban"></i></btn>
+                                <btn class="btn btn-sm btn-success button_off" cod="'.  $admin['id_admin'] .'" title="Habilitar" style="'. $des .'"><i class="fa fa-check"></i></btn>
                                 <a class="btn btn-sm btn-info shared" href="agregar_administrador.php?id='.  $admin['hash'] .'" title="Editar"><i class="fa fa-edit"></i></a>
-                                <a class="btn btn-sm btn-danger eliminar_cod" cod="'.$admin['id_admin'].'" data-toggle="modal" data-target="#modal_trash" href="#" title="eliminar"><i class="fa fa-trash"></i></a>
+                                <a class="btn btn-sm btn-danger eliminar_cod" cod="'.$admin['id_admin'].'" data-toggle="modal" data-target="#modal_trash" href="#" title="Eliminar"><i class="fa fa-trash"></i></a>
                         </tr>';
 
 			}

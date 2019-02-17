@@ -565,15 +565,15 @@ class terapias {
                             onclick = \"generar_invoice_programa(".$resultados[$i]["programa"].")\">
                             <i class=\"fa fa-file-text-o\"></i>
                         </a>
-                        <a title=\"Detalle programa\" 
+                        <a title=\"Detalle\" 
                             class=\"btn btn-info\"  
                             href = \"terapias.php?opcion=6&id_paciente=".$resultados[$i]["id_p"]."&id_programa=".$resultados[$i]["programa"]."\">
                             <i class=\"fa fa-eye\"></i>
                         </a>
-                        <a title=\"Eliminar programa\" 
+                        <a title=\"Eliminar\" 
                             class=\"btn btn-danger\"  
                             onclick =\"modal_cancelar_programa(".$resultados[$i]["id_pt"].", true)\">
-                            <i class=\"fa fa-times\"></i>
+                            <i class=\"fa fa-trash\"></i>
                         </a>
                         ";
 
@@ -763,20 +763,20 @@ class terapias {
                     //Se puede modificar la cita que se habia reservado
                     $id_ptt =$resultado[$i]["ptt_id"];
                     $str_btn = "
-                    <a title=\"Modificar Reserva\" 
-                        class=\"btn btn-warning\"  
+                    <a title=\"Editar\" 
+                        class=\"btn btn-info\"  
                         onclick = \"seleccionar_terapia($id_cita, 2, true, $id_ptt)\">
                         <i class=\"fa fa-edit\"></i>
                     </a>
                     
-                    <a title=\"Eliminar cita\" 
+                    <a title=\"Eliminar\" 
                         class=\"btn btn-danger\"
                         onclick=\"modal_cita_terapia(".$resultado[$i]["id_rm"].",".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-trash\"></i>
                     </a>
 
                     <a title=\"Ver Reporte\" 
-                        class=\"btn btn-success\"
+                        class=\"btn btn-info\"
                         onclick=\"generar_invoice_individual(".$resultado[$i]["ptt_id"].")\">
                         <i class=\"fa fa-file\"></i>
                     </a>
@@ -948,7 +948,7 @@ class terapias {
             for ($i=0; $i<$longitud; $i++){
                 //echo $resultado[$i]["id_terapia"]." - terapia";
                 //if ($resultado[$i]["estado_terapia"] == "activa"){
-                    $str_btn = "<a title=\"Cancelar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",1)\" class=\"btn btn-danger\" href=#><i class=\"fa fa-trash\"></i></a>";
+                    $str_btn = "<a title=\"Eliminar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",1)\" class=\"btn btn-danger\" href=#><i class=\"fa fa-trash\"></i></a>";
                 //}
                 //else{
                 //    $str_btn = "<a title=\"Habilitar\" onclick=\"modificar_terapia(".$resultado[$i]["id_terapia"].",2)\" class=\"btn btn-success\" href=#><i class=\"fa fa-edit\"></i></a>";
