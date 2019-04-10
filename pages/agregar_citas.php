@@ -835,19 +835,19 @@ function validar_inputs(input, div_error){
                             bandera_email_disponible = true;
                             //$("#error_mail").hide();
                             msj="";
-                            if ((json[0].programa!=false) && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//Si la cita pertenece a un programa, pero no es nueva. Se hace para prevenir que se agregue una cita individual a un paciente que tenga un programa activo
+                            /*if ((json[0].programa!=false) && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//Si la cita pertenece a un programa, pero no es nueva. Se hace para prevenir que se agregue una cita individual a un paciente que tenga un programa activo
                                 clase = "alert alert-success alert-dismissable";
                                 msj = "Esta cita pertenece al programa terapéutico <strong>"+json[0].nombre_programa+"</strong>";
                                 $("#programa_notificacion").prop("class",clase);
                                 $("#texto_notificacion_programa").html(msj);                    
                                 $("#notificacion_programa").fadeIn(100);  
-                            }                         
-                            if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
+                            } /**/                        
+                            /*if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
                                 $("#pago").hide();
                                 $("#contenedor_referencia").hide();
                                 $("#contenedor_estatus").hide();
                                 $("#estado_pago").val(2);
-                            }
+                            }/**/
                         }
                         else{
                             $("#name").attr('disabled', false);
@@ -918,6 +918,7 @@ function validar_inputs(input, div_error){
             var res     = regex.test($("#"+campo).val());
             //var res     = regex.test(campo_2);
             //alert ("Campo: "+$("#"+campo).val()+", resp: "+res);
+            console.log($("#"+campo).val());
             return res;
         }
         
@@ -935,19 +936,23 @@ function validar_inputs(input, div_error){
         function verificar_campos_inputs(){
             var bandera = true;
             //Verificar la fecha
-            if (!verificar_fecha_regex("fecha_a")){
+            /*if (!verificar_fecha_regex("fecha_a")){
                 bandera = false;
             }//*/
+            //console.log(bandera);
             //Verficar el rut
-            if (!verificar_regex("name", "[a-zA-Z0-9]+")){
+           /* if (!verificar_regex("name", "[a-zA-Z0-9]+")){
                 bandera = false;
-            }
+            }/**/
+            //console.log(bandera);
             //Verificar lista de medicos
             if (verificar_normal("medicos","")){
                 bandera = false;
                 //console.log("no tiene medicos");
                 //$("#error_medicos").show();
             }
+
+            console.log(bandera);
 
             /*if (bandera_email_disponible == false){                
                 bandera = false;
@@ -959,6 +964,7 @@ function validar_inputs(input, div_error){
 
                  $("#error_terapias").show();
             }
+            console.log(bandera);
 
             //Verificar lista de medicos
             if ($("#medicos").val()==""){
@@ -968,16 +974,22 @@ function validar_inputs(input, div_error){
             else{
                 $("#error_medicos").fadeOut();
             }
+            console.log(bandera);
 
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
             if (validar_inputs("#name", "#error_name")) bandera = false;
             if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
             if (validar_inputs("#second_name", "#error_second_name")) bandera = false;
-            //if (validar_inputs("#email", "#error_email")) bandera = false;            
-            //if (validar_inputs("#celular", "#error_phone")) bandera = false;            
+            if (validar_inputs("#fecha_a", "#alerta")) bandera = false;            
+            if (validar_inputs("#name", "#alerta")) bandera = false;            
             //if (validar_inputs("#fijo", "#error_fijo")) bandera = false;            
-            //if (validar_inputs("#direccion", "#error_direccion")) bandera = false;                        
-            //console.log(bandera);
+            //if (validar_inputs("#direccion", "#error_direccion")) bandera = false;  
+
+            //11882427k
+            //20 de marzo de 10 a 11 con camilo rojas 
+            //evaluacion general cliente preferencial
+
+            console.log(bandera);
             return bandera;
         }
         
