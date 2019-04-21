@@ -780,6 +780,48 @@
 
 		}
 
+		/**
+		retorna 
+		*/
+		public static function obtener_fotos_prop($bd, $codigo, $ruta){
+
+			$consulta = "SELECT * FROM anexos WHERE id_hm = " . $codigo;
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute();
+				$row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+				$datos = "";
+
+				foreach ($row as $foto) {
+					/*$info = pathinfo($ruta.'prop/'.$codigo ."/". $foto["foto"] );
+				    $extension = $info['extension'];
+				    $file_name = $info['filename'];
+				    file_name="'.$file_name.'" ext="'.$extension.'" */
+
+					$datos .=  '<div id="'. $foto["id_anexos"] .'" file="'. $foto["imagen"] .'" class="col-sm-4 col-md-3 col-lg-3 divPhotoItem ">';
+					$datos .=  '<img class = " imgPhotoItem" cod="'.$codigo.'" src = "'.$ruta.'anexos/'.$codigo ."/". $foto["imagen"] .'" />';
+					$datos .=  '<a href ="#" class="cvf_delete_image" title="Eliminar"><img class = "delete-btn" src = "'.$ruta.'../../img/delete-btn.png" /></a>';
+					//$datos .=  '<img src="'. $foto["foto"] .'">';
+					//$datos .='<a href ="#" class="der_btn" title="Girar a la derecha"><img class = "der-btn" src = "img/der.png" /></a>';
+                    //$datos .='<a href ="#" class="izq_btn" title="Girar a la izquierda"><img class = "izq-btn" src = "img/izq.png" /></a>';
+                    //$datos .='<a href ="#" class="update_btn" title="Recargar"><img class = "update-btn" src = "img/update.png" /></a>';
+					//$datos .=  '<img class = "der-btn" src = "img/der.png" />';
+                    //$datos .=  '<img class = "izq-btn" src = "img/izq.png" />';
+					$datos .=  '</div>';
+				}
+
+				return $datos;
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+
+			}
+		} //FIN FUNCION 
+
+
 
 		public static function obtener_lista_mensajes_contacto($bd, $id_paciente){
 			//,p.id_tipo_prop, p.id_tipo_oper, p.id_barrio, p.calle, p.altura 

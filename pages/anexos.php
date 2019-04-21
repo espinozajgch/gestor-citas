@@ -26,7 +26,9 @@ $id_hm = "";
 
 
     if(isset($_GET["id_hm"])){
+        
         $id_hm = $_GET["id_hm"];
+        $_SESSION["id_hm"] = $id_hm;
         $diagnostico_general = strtoupper(pacientes::obtener_historia($bd,$id_hm));
         $diagnostico = strtoupper(pacientes::obtener_diagnostico($bd,$id_hm));
         $indicaciones = strtoupper(pacientes::obtener_indicaciones($bd, $id_hm));
@@ -155,7 +157,7 @@ $id_hm = "";
                                 <div class="col-lg-12">
                                     <div class="row cvf_uploaded_files">
                                         <input type="hidden" id="cvf_orders" value="">
-                                        <?php //echo Prop::obtener_fotos_prop($bd,$codigo,""); ?>
+                                        <?php echo Pacientes::obtener_fotos_prop($bd, $id_hm, "historia_medica/"); ?>
                                     </div>
                                     <div id="error_img" class="text-danger" style="display:none">
                                       <i class="fa fa-exclamation"></i>Las imagenes seleccionadas superan el limite establecido
