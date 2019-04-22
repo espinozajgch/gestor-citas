@@ -263,6 +263,9 @@ $id_hm = "";
             
             var file = $(this).parent().attr('file');
 
+            var id = $(this).parent().attr('file');
+            //var id = $(this).parent().find(".imgPhotoItem").attr("cod");
+            //console.log(codi);
             /*accion = $('#accion').val();
             if(accion == 3){
                 cod_prop = $('#codigo_nuevo').val();
@@ -276,16 +279,17 @@ $id_hm = "";
             storedFiles.push(file);
             //cant_fotos_total--;
             //$("#"+id).parent().empty();
-            /*ruta = cod_prop + "/" + file
+            cod_prop = $('#id_hm').val();
+            ruta = cod_prop + "/" + file
 
                 $.ajax({
-                    data:  {imagen : ruta},
-                    url:   'vendor/class/propiedad/delete.php',
+                    data:  {imagen : ruta, id: file},
+                    url:   '../assets/class/anexos/delete.php',
                     type:  'post',
                     //dataType: "json",
                     success:  function (data) {
                         //respuesta = JSON.stringify(data);
-                        //console.log(data);
+                        console.log(data);
 
                         if(data.estado == 0){
                         }
@@ -297,7 +301,7 @@ $id_hm = "";
                         console.log(data);
                        // window.location.href="cuenta.php?success=no";
                     }
-                });*/
+                });/**/
 
 
 
@@ -318,12 +322,12 @@ $id_hm = "";
             //console.log(limite);
             accion = $('#accion').val();
             if(accion == 3){
-                cod_prop = $('#id_paciente').val();
+                cod_prop = $('#id_hm').val();
                 //cod_ant = $('#codigo').val();
             }   
             else{
                 //cod_ant = "";
-                cod_prop = $('#id_paciente').val();
+                cod_prop = $('#id_hm').val();
             }
 
             if(cant_fotos > limite){

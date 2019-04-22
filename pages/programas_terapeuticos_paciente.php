@@ -20,12 +20,12 @@ $usuario  = "";
     }
 
     if(isset($_GET["id"])){
-        $id = $_GET["id"];
+        $id_paciente = $_GET["id"];
 
-        $rut = Pacientes::obtener_identificacion($bd,$id);
-        $nombre = Pacientes::obtener_nombre($bd,$id);
-        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id);
-        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id);
+        $rut = Pacientes::obtener_identificacion($bd,$id_paciente);
+        $nombre = Pacientes::obtener_nombre($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id_paciente);
         //$historia = pacientes::obtener_historia($bd,$id_hm);
         //$accion = 9;
 
@@ -94,6 +94,7 @@ $usuario  = "";
                 <br>
                 <div class="col-lg-12 mx-4">
                 <br>
+
                     <?php include_once("terapias/lista_programas_terapeuticos.php") ?>
                 </div>
             </div>

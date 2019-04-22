@@ -762,6 +762,25 @@
 
 		}
 
+		public static function obtener_lista_terapias_pacientes($bd, $id_paciente){
+
+			$consulta = "SELECT id_programa_terapeutico, descripcion_programa_terapeutico dpt, pt.estado, count(programa_terapeutico_id_programa_terapeutico) as cant FROM programa_terapeutico pt INNER JOIN programa_tiene_terapia ptt ON pt.id_programa_terapeutico = ptt.programa_terapeutico_id_programa_terapeutico WHERE pt.paciente_id_paciente = ". $id_paciente ."
+				GROUP BY (ptt.programa_terapeutico_id_programa_terapeutico) ORDER BY id_programa_terapeutico DESC";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute();
+	            $row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+	            return $row;
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+
+		}
+
 		public static function obtener_lista_pacientes($bd){
 
 			$consulta = "SELECT u.id_paciente, u.RUT, u.nombre, u.apellidop, u.apellidom, u.email, u.celular, u.id_paciente, estado_paciente FROM paciente u ORDER BY id_paciente DESC";
