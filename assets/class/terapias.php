@@ -550,10 +550,10 @@ class terapias {
             }
             for ($i=0; $i<$longitud; $i++){
                 $json[$i]['N'] = "<a href=\"terapias.php?opcion=1&terapia=".$resultados[$i]["id_p"]."\">".($i+1)."</a>";
-                $json[$i]['Paciente'] = $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"];
+                $json[$i]['Paciente'] = strtoupper( $resultados[$i]["nombre"] . " " . $resultados[$i]["apellidop"] . " " . $resultados[$i]["apellidom"]);
                 $json[$i]['Terapias'] = $resultados[$i]["Terapias"];
                 if ($resultados[$i]["estado"] == "deshabilitado" || $resultados[$i]["estado"] == "cancelado"){
-                    $estado =  "anulado";
+                    $estado =  "ANULADO";
                 }
                 else{
                     $estado = $resultados[$i]["estado"];
