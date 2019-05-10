@@ -53,11 +53,7 @@ $usuario  = "";
     <link href="../dist/css/preloader.css" rel="stylesheet">
     
     <style type="text/css">
-        .imgLogo{
-            min-width: 70%;
-            max-width: 100%;
-            height: 100%;
-        }
+
 
         .logo_panel{
             height: 60px;
@@ -192,7 +188,7 @@ $usuario  = "";
                     dataType: "json",
                     success:  function (data) {
                         //respuesta = JSON.stringify(data);
-                        console.log(data);
+                        //console.log(data);
                         //$("#modal_trash").modal('hide');
                         window.location.href="pacientes.php";
                     },

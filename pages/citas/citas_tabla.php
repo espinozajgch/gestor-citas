@@ -26,26 +26,49 @@ include_once("../assets/includes/menu.php") ?>
             <!-- /.row -->
 
             <div class="col-lg-12">
-                <br>
-                <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
-                        <thead>
-                            <tr>
-                                <th>N</th>
-                                <!--th>Creacion</th-->
-                                <th>Fecha</th>
-                                <th>Horario</th>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="pestagnas">
+                    <li id="pendientes">
+                        <a href="#" onclick="cargar_tabla_dinamica(1, $(this).parent().attr('id'))"> Pendientes</a>
+                    </li>
+                    <li id="pagadas">
+                        <a href="#" onclick="cargar_tabla_dinamica(2, $(this).parent().attr('id'))"> Pagadas </a>
+                    </li>
+                    <li id="atendidas">
+                        <a href="#" onclick="cargar_tabla_dinamica(6, $(this).parent().attr('id'))">Atendidas</a>
+                    </li>
+                    <li id="canceladas">
+                        <a href="#" onclick="cargar_tabla_dinamica(5, $(this).parent().attr('id'))">Canceladas</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active mx-4">
+                        <br>
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="tabla_dinamica">
+                            <thead>
+                                <tr>
+                                    <th>N</th>
+                                    <!--th>Creacion</th-->
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    
+                                    <th>Paciente</th>
+                                    <th>Medico</th>   
+                                    <th>Terapia</th> 
+                                    <!--<th>Estado</th>-->
+                                    <th>Acciones</th>  
+                                </tr>
+                            </thead>                                            
+                            <tbody >
                                 
-                                <th>Paciente</th>
-                                <th>Medico</th>   
-                                <th>Terapia</th> 
-                                <th>Estado</th>
-                                <th>Acciones</th>  
-                            </tr>
-                        </thead>                                            
-                        <tbody >
-                            
-                        </tbody>
-                       </table>
+                            </tbody>
+                            </table>
+                        <br>
+                    </div>                    
+                </div>
+
             </div>
 
 

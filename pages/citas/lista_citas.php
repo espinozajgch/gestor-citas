@@ -3,7 +3,7 @@
         <thead>
             <tr>
             	<th>#</th>
-                <th>Fecha</th>
+                <th style="width: 25%">Fecha</th>
                 <th>Hora</th>
                 <th>Paciente</th>
                 <th>Acciones</th>

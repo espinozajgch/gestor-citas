@@ -230,8 +230,8 @@ $visibilidad = "style='display:none';";
                     id_rol = $("#id_rol_nuevo").val();
                 }
 
-                console.log(strperfil);
-                console.log(id_rol);
+                //console.log(strperfil);
+                //console.log(id_rol);
 
                    $.ajax({
                         data:  {accion: accion, id : id_rol, rol: strperfil},
@@ -250,7 +250,7 @@ $visibilidad = "style='display:none';";
                             }/**/
                         },
                         error: function(data){
-                            console.log(data);
+                            //console.log(data);
                            // window.location.href="cuenta.php?success=no";
                         }
                     });/**/
@@ -283,7 +283,7 @@ $visibilidad = "style='display:none';";
                         }/**/
                     },
                     error: function(data){
-                        console.log(data);
+                        //console.log(data);
                        // window.location.href="cuenta.php?success=no";
                     }
                 });/**/
@@ -331,7 +331,7 @@ $visibilidad = "style='display:none';";
                     }
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                    // window.location.href="cuenta.php?success=no";
                 }
             });/**/

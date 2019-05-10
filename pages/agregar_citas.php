@@ -35,7 +35,7 @@ $rut_paciente = "";
             if (isset($_GET["ref"])){//Viene para reservar una cita nueva
                 $etiqueta = "Asignar cita para terapia";
                 $id_operacion = "2";
-            }
+            }            
             else{
                 $etiqueta = "Modificar Cita";
                 $id_operacion = "7";
@@ -123,15 +123,14 @@ $rut_paciente = "";
         //Eventos que se ejecutan cuando se cargue todo el contenido de la página
     document.addEventListener('DOMContentLoaded', function() { // page is now ready...   
         var calendarEl;
-        var calendar;
-        
+        var calendar;        
         
         //Iniciar el calendario de FULLCALENDAR
         inicializar_calendario();
         //Iniciar la pillbox donde se agregarán los médicos
         inicializar_lista_medicos();     
-        
-        
+        //$("#dc").prop("disabled", true);      
+        $("#dc").attr('disabled', true);
         if (<?php 
             $operacion = 2;
             if (isset($_GET["cita"])||(isset($_GET["ref"]))){
@@ -189,7 +188,8 @@ $rut_paciente = "";
                                 ?>){                                
                                 var id_ptt = <?php 
                                 if (isset($_GET["id_ptt"])){
-                                    echo $_GET["id_ptt"];
+                                    $aux = isset($_GET["id_alterno"]) ? $_GET["id_alterno"] : $_GET["id_ptt"];
+                                    echo $aux;
                                 }         
                                 else echo "false";
                                         ?>;
@@ -204,6 +204,7 @@ $rut_paciente = "";
                                             var n_opcion = new Option(respuesta[0].nombre_t, respuesta[0].id_t, true, true);
                                             $("#terapias_individual").append(n_opcion);   //*/                                
                                             $("#terapias_individual").trigger('change').prop("disabled","true");
+                                            set_terapia(false);
                                         }
                                         else{
                                             alert ("ERROR");
@@ -240,6 +241,7 @@ $rut_paciente = "";
             $("#contenedor_lista_terapias").prop("disabled", "true");
         }
         inicializar_lista_terapias("terapias_individual");
+        
     });
     </script>
 <style>
@@ -325,25 +327,30 @@ input:checked + .slider:before {
                 <div class="col-lg-6">
                     <h1 class="page-header"><?php echo $etiqueta;?></h1>
                 </div>
-                
-                <div class="col-lg-10">
+                <div id="notificacion_programa" class="col-lg-9 col-md-9 col-xs-9 col-sm-9" hidden="true">
+                    <div id="programa_notificacion">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
+                     </div>                    
+                </div>
+            </div>    
+            <div class="row">    
+                <div class="col-lg-3">
                    <a class="btn btn-sm btn-success shared" href="<?php echo $link ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                    <!--button class="btn btn-sm btn-danger shared" <?php if (!isset($_GET["cita"])){echo "style=\"display:none;\"";}?> title="Cancelar Cita" onclick="eliminar_cita()"><i class="fa fa-trash fa-bg"></i></button-->                   
                 </div>
-                <div class="col-lg-2" id="chequeo" style="display: none" disabled>
+<!--                <div class="col-lg-2" id="chequeo" style="display: none" disabled>
                     <label class="switch" title="Alternar chequeo">                        
                         <input type="checkbox" id="check_slider" onclick="ocultar_campos()">
                         <span class="slider round"></span>
                     </label>
-                </div>
-                <!-- /.col-lg-12 -->
+                </div>-->                
             </div>
-            <!-- /.row -->
             
             <div class="row ">
             <br>
                 <div class="col-md-12">  
-                    <form>
+                    <div>
                         <div class="row">
 
 
@@ -389,7 +396,7 @@ input:checked + .slider:before {
 
                                     <div class="form-group col-2 col-sm-2 col-md-2">
                                         <small><strong><label for=name_>Mostrar</label></strong></small><br>
-                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></a>
+                                        <button class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></button>
                                     </div>
 
 
@@ -400,12 +407,12 @@ input:checked + .slider:before {
                                         <small><strong><label for=name_>Presiona </label></strong></small><br>
                                         <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('b')"><i class="fa fa-calendar fa-bg"></i></a>
                                     </div>-->
-                                    
-                                    <div id="contenedor_calendario" class="col-sm-12 col-md-12 my-3" > 
-                                        <div id="calendario">
-                                        </div>
-                                    </div>                                    
-                                    
+                                    <div class="form-group col-sm-12 col-md-12 my-3">
+                                        <div id="contenedor_calendario"> 
+                                            <div id="calendario">
+                                            </div>
+                                        </div>                                    
+                                    </div>
 
                                 </div>
 
@@ -448,12 +455,7 @@ input:checked + .slider:before {
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
                                         </div>
                                     </div>
-                                    <div id="notificacion_programa" class="col-lg-6 col-md-6 col-xs-6 col-sm-6" hidden="true">
-                                        <div id="programa_notificacion">
-                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                            <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
-                                         </div>                    
-                                    </div>
+                                    
                                     <div class="form-group col-6 col-sm-12 col-md-12">
                                         <small><strong><label for="inmobiliaria">Direccion</label></strong></small>
                                         <textarea row="3" class="form-control" id="direccion" placeholder="Direccion" disabled><?php //echo Usuarios::obtener_direccion($bd,$hash); ?></textarea>
@@ -488,13 +490,13 @@ input:checked + .slider:before {
 
                                 <div class="form-row">    
                                     
-                                    <div class="form-group col-4 col-md-4">
+                                    <div class="form-group col-4 col-md-4" id="contenedor_estatus">
                                         <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
                                         <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
                                             <option value="1">PENDIENTE</option>
                                             <option value="2">PAGADO</option>
                                             <option value="6">ATENDIDO</option>
-                                            <option value="5">CANCELADO</option>
+                                            <option value="5">ANULADO</option>
                                         </select>
                                         <div id="error_email" class="text-danger" style="display:none">
                                             <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
@@ -530,7 +532,7 @@ input:checked + .slider:before {
                                             </div>
                                     </div>
 
-                                    <div class="form-group col-4 col-md-4">
+                                    <div class="form-group col-4 col-md-4" id="contenedor_referencia"> 
                                         <small><strong><label for="referencia">Referencia</label></strong></small>
                                         <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
                                         <div id="error_email" class="text-danger" style="display:none">
@@ -627,7 +629,7 @@ input:checked + .slider:before {
                             <button type="button" id="btnguardar" class="btn btn-info btn-cons" onclick="enviar_formulario_v2()">Guardar</button>
                         </div>
 
-                    </form>
+                    </div>
                 </div>    
             
 
@@ -726,7 +728,7 @@ function validar_inputs(input, div_error){
                     //dataType: "json",
                     success:  function (data) {
                         respuesta = JSON.parse(data);
-                        console.log(data);
+                        //console.log(data);
                         //alert (respuesta);
                         //console.log(data.estado);
                         $("#id_oculto").val(respuesta.mensaje);
@@ -747,7 +749,7 @@ function validar_inputs(input, div_error){
                         }
                     },
                     error: function(data){
-                        console.log(data);
+                        //console.log(data);
                         $("#loader-wrapper").fadeOut("fast");
                         $("#msgerror_danger").html('<i class="fa fa-thumbs-down"></i> <b>Atención:&nbsp;</b>  Ocurrio un error inesperado, verifica tu conexion de red e intenta nuevamente.');
                         return false;
@@ -833,19 +835,19 @@ function validar_inputs(input, div_error){
                             bandera_email_disponible = true;
                             //$("#error_mail").hide();
                             msj="";
-                            if (json[0].programa!=false){                                   
+                            /*if ((json[0].programa!=false) && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//Si la cita pertenece a un programa, pero no es nueva. Se hace para prevenir que se agregue una cita individual a un paciente que tenga un programa activo
                                 clase = "alert alert-success alert-dismissable";
-                                msj = "El paciente <strong>tiene</strong> programa terapéutico activo";
-                            }
-                            else{
-                                clase = "alert alert-warning alert-dismissable";
-                                msj = "El paciente <strong>no tiene</strong> programa terapéutico activo";
-                                
-                                
-                            }
-                            //$("#programa_notificacion").prop("class",clase);
-                            //$("#texto_notificacion_programa").html(msj);                    
-                            //$("#notificacion_programa").fadeIn(100);                           
+                                msj = "Esta cita pertenece al programa terapéutico <strong>"+json[0].nombre_programa+"</strong>";
+                                $("#programa_notificacion").prop("class",clase);
+                                $("#texto_notificacion_programa").html(msj);                    
+                                $("#notificacion_programa").fadeIn(100);  
+                            } /**/                        
+                            /*if (json[0].tipo_pago != 7 && (<?php if(!isset($_GET["nueva"])){echo "true";}else echo "false";?>)){//No es individual, ni nueva
+                                $("#pago").hide();
+                                $("#contenedor_referencia").hide();
+                                $("#contenedor_estatus").hide();
+                                $("#estado_pago").val(2);
+                            }/**/
                         }
                         else{
                             $("#name").attr('disabled', false);
@@ -910,9 +912,13 @@ function validar_inputs(input, div_error){
         }
         
         function verificar_fecha_regex (campo){
-            var regex   = /(0?[1-9]|[12][0-9]|3[01])$-(0?[1-9]|1[012])\-^\d{4}\\/;
+            //var campo_2 = "20010";
+            //var regex_   = /(0?[1-9]|[12][0-9]|3[01])$-(0?[1-9]|1[012])\-^\d{4}\\/;
+            var regex   = /0?[1-9]\-0?[1-9]\-\d{4}/;
             var res     = regex.test($("#"+campo).val());
-            //alert ("Campo: "+campo+", resp: "+res);
+            //var res     = regex.test(campo_2);
+            //alert ("Campo: "+$("#"+campo).val()+", resp: "+res);
+            console.log($("#"+campo).val());
             return res;
         }
         
@@ -930,19 +936,23 @@ function validar_inputs(input, div_error){
         function verificar_campos_inputs(){
             var bandera = true;
             //Verificar la fecha
-           /* if (!verificar_fecha_regex("fecha_a")){
+            /*if (!verificar_fecha_regex("fecha_a")){
                 bandera = false;
             }//*/
+            //console.log(bandera);
             //Verficar el rut
-            if (!verificar_regex("name", "[a-zA-Z0-9]+")){
+           /* if (!verificar_regex("name", "[a-zA-Z0-9]+")){
                 bandera = false;
-            }
+            }/**/
+            //console.log(bandera);
             //Verificar lista de medicos
             if (verificar_normal("medicos","")){
                 bandera = false;
                 //console.log("no tiene medicos");
                 //$("#error_medicos").show();
             }
+
+            console.log(bandera);
 
             /*if (bandera_email_disponible == false){                
                 bandera = false;
@@ -954,6 +964,7 @@ function validar_inputs(input, div_error){
 
                  $("#error_terapias").show();
             }
+            console.log(bandera);
 
             //Verificar lista de medicos
             if ($("#medicos").val()==""){
@@ -963,16 +974,22 @@ function validar_inputs(input, div_error){
             else{
                 $("#error_medicos").fadeOut();
             }
+            console.log(bandera);
 
             if (validar_inputs("#rut_paciente", "#error_doc")) bandera = false;
             if (validar_inputs("#name", "#error_name")) bandera = false;
             if (validar_inputs("#last_name", "#error_last_name")) bandera = false;
             if (validar_inputs("#second_name", "#error_second_name")) bandera = false;
-            //if (validar_inputs("#email", "#error_email")) bandera = false;            
-            //if (validar_inputs("#celular", "#error_phone")) bandera = false;            
+            if (validar_inputs("#fecha_a", "#alerta")) bandera = false;            
+            if (validar_inputs("#name", "#alerta")) bandera = false;            
             //if (validar_inputs("#fijo", "#error_fijo")) bandera = false;            
-            //if (validar_inputs("#direccion", "#error_direccion")) bandera = false;                        
-            //console.log(bandera);
+            //if (validar_inputs("#direccion", "#error_direccion")) bandera = false;  
+
+            //11882427k
+            //20 de marzo de 10 a 11 con camilo rojas 
+            //evaluacion general cliente preferencial
+
+            console.log(bandera);
             return bandera;
         }
         
@@ -1043,7 +1060,7 @@ function validar_inputs(input, div_error){
                     type:  'post',                    
                     success:  function (data) {
                         respuesta = JSON.parse(data);
-                        console.log(data);                                                                     
+                        //console.log(data);                                                                     
                         if(respuesta.estado <1){//No hubo necesidad de agregar al paciente
                             if (respuesta.estado == 0.1){
                                 mensaje_final+= "Paciente registrado<br>";                                                                
@@ -1077,7 +1094,7 @@ function validar_inputs(input, div_error){
                     if ($("#check_slider").prop("checked")||(terapia_seteada)){
                     //Si es un chequeo creamos un programa terapeutico o actualizamos, segun sea el caso
                         bandera = false;
-                        
+//                        alert (terapia_seteada + "CREAR PROGRAMA");
                         var terapias;
                         var terapias_individual;
                         var descripcion;
@@ -1110,6 +1127,7 @@ function validar_inputs(input, div_error){
                                 descripcion:        descripcion,
                                 id:                 $("#id_oculto").val(),
                                 nombre_programa:    nombre_programa,
+                                tipo_pago:               7,
                                 especial            : <?php if(isset($_GET["nueva"]))
                                                             {
                                                                 echo "true";                                                                
@@ -1123,9 +1141,9 @@ function validar_inputs(input, div_error){
                                     id_terapia_programa = respuesta[0].id_pr_t_t;
                                     //alert (id_programa + " - " +id_terapia_programa);
                                 }
-                                console.log(respuesta[0].str_debug);
+                                //console.log(respuesta[0].str_debug);
                             }).fail(function() {
-                                console.log( "error" );
+                                //console.log( "error" );
                               })
                         ).then(function(){                                        
                                     mensaje_final+=procesar_informacion(id_terapia_programa);
@@ -1144,7 +1162,9 @@ function validar_inputs(input, div_error){
                 var clase;
                 if (bandera_exito){                    
                     clase = "alert alert-success alert-dismissable";
-                    //setTimeout(function(){window.location = "<?php echo $link;?>"},1500);
+
+
+                    //setTimeout(function(){window.location = "<?php echo $link;?>"},200);
                 }
                 else{
                     clase = "alert alert-warning alert-dismissable";
@@ -1218,14 +1238,16 @@ function validar_inputs(input, div_error){
             observaciones   : $("#observaciones").val(),                            
             medicos         : bandera = $("#medicos").val(),
             estado_pago     : $("#estado_pago").val(),
-            referencia      : $("#referencia").val()
+            referencia      : $("#referencia").val(),
+            tipo_pago       : $("#estado_pago").val()
             }, 
             function (result){
-                console.log(result)
+                //console.log(result)
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     mensaje_retorno+="La cita se guardó con éxito<br>";  
-                    window.location="citas.php?opcion=1";              
+                    //window.location="citas.php?opcion=1";  
+                    setTimeout(function(){window.location = "<?php echo $link;?>"},200);            
                 }
                 else{
                     mensaje_retorno+="Hubo un error al guardar la cita, contacte al ADMIN<br>";
@@ -1300,7 +1322,7 @@ function validar_inputs(input, div_error){
         }
         function inicializar_calendario (){
             calendarEl = document.getElementById('calendario'); // grab element reference
-            var url = '../assets/class/calendario_controlador.php?id_operacion=5&medicos='+$("#medicos").val();
+            var url = '../assets/class/calendario_controlador.php?id_operacion=5&medicos='+$("#medicos").val()+"&feriados=true";
             //alert (url);
             calendar = new FullCalendar.Calendar(calendarEl, {      
                 header: {
@@ -1309,10 +1331,13 @@ function validar_inputs(input, div_error){
                     right: 'month,agendaWeek,agendaDay'
                 },   
                 businessHours:{
-                    dow: [1,2,3,4,5,6],
-                    start: '8:00',
-                    end: '18:00'
+                    daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
+                    startTime: '8:00',
+                    endTime: '20:00'
                 },
+                hiddenDays: [0],
+                minTime: "8:00",
+                maxTime: "20:00",
                 //editable: true,
                 navLinks: true, // can click day/week names to navigate views
                 navLinkDayClick: function (date, jsEvent){
@@ -1325,13 +1350,14 @@ function validar_inputs(input, div_error){
                 events: {
                     url: url,
                     method: 'GET'
-                },
+                },                
                 nowIndicator: true,
                 //defaultView: 'agendaDay',                
                 locale : "es",
                 responsive: true,
-                selectable: true,
-                hiddenDays: [0],
+                contentHeight: 500,
+                selectable: true, 
+                longPressDelay: true,
                 select : function (arg){
                   
                     //Primero nos fijamos si el evento es de todo el dia. De ser asi solo se tomará la fecha inicial
@@ -1340,9 +1366,7 @@ function validar_inputs(input, div_error){
                     var fecha_seleccionada_b    =   arg.start.getFullYear()+"-"+(arg.start.getMonth()+1)+"-"+arg.start.getDate();                  
                     var hora_seleccionada       =   arg.start.getHours()+":"+arg.start.getMinutes()+":"+arg.start.getSeconds();
                     var hora_seleccionada_b     =   arg.end.getHours()+":"+arg.end.getMinutes()+":"+arg.end.getSeconds();                    
-                    var hoy                     =   new Date();
-                    /*alert (hoy);
-                    alert (arg.start);//*/
+                    var hoy                     =   new Date();                    
                     if (arg.allDay){                        
 //                        $("#fecha_a").val(fecha_seleccionada);
 //                        $("#hora_a").val(hora_seleccionada);
@@ -1355,25 +1379,24 @@ function validar_inputs(input, div_error){
                     else{//Sino procedemos a colocar las dos fechas juntas
                         //Asegurarse que no se seleccionen horas no laborables
                         //alert (arg.start.getHours());
-                        var condicion_1, condicion_2;
+                        var condicion_1, condicion_2, condicion_3;
                         //var hoy = $.fullCalendar.formatDate(new Date(), 'yyyy-MM-dd');
                         //alert (hoy);
                         if (!(arg.start.getHours()>=9)&&!(arg.start.getHours()<17)){
                             condicion_1 = false;                         
                         }
                         else {
-                            condicion_1 = true;
-                            
+                            condicion_1 = true;                            
                         }
                         if (arg.start<hoy){
                             condicion_2 = false;                            
                         }
-                        else{
-                            
+                        else{                            
                             condicion_2 = true;
-                        }
-                        //alert (condicion_1 + " - - - " + condicion_2);
-                        if (condicion_1 && condicion_2){//Si la fecha no está en horario de oficina
+                        }                        
+                        condicion_3 = arg.start.getDate() == arg.end.getDate() ? true : false;
+                        //alert (condicion_3+"START:"+arg.start.getDate()+",END:"+arg.end.getDate());
+                        if (condicion_1 && condicion_2 && condicion_3){//Si la fecha no está en horario de oficina
                             $("#fecha_a").val(fecha_seleccionada);
                             $("#hora_a").val(hora_seleccionada);
                         
@@ -1387,21 +1410,34 @@ function validar_inputs(input, div_error){
                         
                             $("#fecha_b").val("");
                             $("#hora_b").val("");
-                        }
-                        
+                        }                        
                     }
                 }
             });        
             
-            $("#contenedor_calendario").hide(); 
+            $("#contenedor_calendario").hide();             
             calendar.render();
       }
     
     function actualizar_eventos_medicos(){                      
         //var calendarEl = document.getElementById('calendario'); // grab element reference
         //calendar.destroy();
-        $("#calendario").html(" ");
-        inicializar_calendario();
+        if ($("#medicos").val()!=""){
+            $("#calendario").html(" ");
+            inicializar_calendario();
+            $("#dc").attr('disabled', false);            
+            //alert ("a");
+        }
+        else{
+            $("#calendario").html(" ");
+            inicializar_calendario();
+            $("#dc").attr('disabled', true);
+            $("#fecha_a").val("");
+            $("#hora_a").val("");
+            $("#hora_b").val("");
+            //alert ("b");
+        }
+        
         //calendar.refetchEvents();
         //alert (calendarEl.fullCalendar('refetchEvents'));
         
@@ -1442,14 +1478,19 @@ function validar_inputs(input, div_error){
                     $("#hora_b").val(respuesta[1].hora_fin);
                     $("#metodo_pago").val(respuesta[1].id_mp);//prop("disabled", true);
                     $("#referencia").val(respuesta[1].ref)
+                    //alert ("a");
                     $("#estado_pago").val(respuesta[1].estado_pago);
                     var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
                     //alert (n_opcion);
                     $("#terapias_individual").append(n_opcion);   //*/
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
-                    $("#terapias_individual").trigger('change').prop("disabled","true");
+                    if (respuesta[1].estado_pago != 1){
+                        $("#terapias_individual").trigger('change').prop("disabled","true");
+                    }                    
                     //$("#pago").hide();
+                    set_terapia(false);
                     $("#chequeo").hide();
+                    
                 }
                 else{
                     
@@ -1476,7 +1517,7 @@ function validar_inputs(input, div_error){
             function (result){
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado==1){
-                    alert ("Exito");
+                    //alert ("Exito");
                     window.location = "citas.php?opcion=1";
                 }
                 else{
@@ -1531,9 +1572,9 @@ function validar_inputs(input, div_error){
             });
         }
         
-    function set_terapia(){
+    function set_terapia(val = true){
         
-        terapia_seteada = true;
+        terapia_seteada = val;
     }
   </script>
   <script src="../vendor/select2/js/select2.full.min.js"></script>

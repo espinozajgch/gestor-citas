@@ -84,7 +84,7 @@ class calendario {
         return $json;
     }
     
-    public static function devolver_eventos_medicos_json($id_medico=false){
+    public static function devolver_eventos_medicos_json($id_medico=false, $url = false, $feriados = false){
         //Una variable donde almacenaremos los resultados con el formato requerido
         //$json;
         $str_debug="";
@@ -94,30 +94,43 @@ class calendario {
         $bd = connection::getInstance()->getDb();
         //Consulta para obtener los dias feriados
         if ($id_medico){
-            $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-                . "FROM `admin` \n"
-                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-                    WHERE ".$id_medico." 
-                        AND reserva_medica.estado = 1
-                        AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
-                        GROUP BY reserva_medica.id_rm";
-                    }
-                    else{
-                        $sql = "SELECT id_admin, reserva_medica.id_rm, group_concat(admin.nombre) as nombre_medico, paciente.nombre, paciente.apellidop, paciente. rut, reserva_medica.fecha_inicio,\n"
-                . "reserva_medica.hora_inicio, reserva_medica.hora_fin\n"
-                . "FROM `admin` \n"
-                . "INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin \n"
-                . "INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm \n"
-                . "INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
-                    AND reserva_medica.estado = 1
-                    AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
-                    GROUP BY reserva_medica.id_rm";
-                    }
+            $sql = "SELECT id_admin, 
+                reserva_medica.id_rm,
+                group_concat(admin.nombre) as nombre_medico,
+                paciente.nombre as nombre_p,
+                paciente.apellidop as apellido_p,
+                paciente. rut,
+                reserva_medica.fecha_inicio,
+                reserva_medica.hora_inicio,
+                reserva_medica.hora_fin
+                FROM `admin`
+                INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
+                INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                WHERE ".$id_medico." 
+                AND reserva_medica.estado = 1 OR reserva_medica.estado = 2  OR reserva_medica.estado = 6
+                AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
+                GROUP BY reserva_medica.id_rm";
+        }
+        else{
+            $sql = "SELECT id_admin,
+                reserva_medica.id_rm, 
+                group_concat(admin.nombre) as nombre_medico, 
+                paciente.nombre as nombre_p,
+                paciente.apellidop as apellido_p,
+                paciente. rut, 
+                reserva_medica.fecha_inicio,
+                reserva_medica.hora_inicio, reserva_medica.hora_fin
+                FROM `admin` 
+                INNER JOIN medico_tiene_reserva ON medico_tiene_reserva.admin_id_admin=admin.id_admin 
+                INNER JOIN reserva_medica ON medico_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm 
+                INNER JOIN paciente ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
+                WHERE reserva_medica.estado = 1 OR reserva_medica.estado = 2 OR reserva_medica.estado = 6
+                AND admin.id_eu = 1 and (id_rol = 3 or id_rol = 4)
+                GROUP BY reserva_medica.id_rm";
+            }
         
         $pdo = $bd->prepare($sql);
         //echo $sql;
@@ -138,23 +151,38 @@ class calendario {
         $json[0]['url']    = "";
 
         for ($i=0; $i<$longitud; $i++){
-            $json[$i]['title']  = strtoupper($resultados[$i]["nombre_medico"]);
+            $json[$i]['title']  = strtoupper($resultados[$i]["apellido_p"].",".$resultados[$i]["nombre_p"]);
             $json[$i]['start']  = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_inicio"];
             $json[$i]['end']    = $resultados[$i]["fecha_inicio"]."T".$resultados[$i]["hora_fin"];
             $json[$i]['id']     = $resultados[$i]["id_rm"];
-            $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            if ($url){
+                $json[$i]['url']    = "agregar_citas.php?cita=".$resultados[$i]['id_rm'];
+            }            
         }
-        //FORMATO de json
-        //descripcion, fecha inicio, fecha fin
-        //if (!$longitud<1){
-            $json = json_encode($json);
-            
-        //}        
-        //$json[0]['str_debug']   =  $str_debug;
-        //echo $str_debug;
+        //Si la variable feriados es verdadera, debemos cruzar con los dias feriados
+        if ($feriados){
+            $sql = "SELECT * FROM feriados";
+            $pdo = $bd->prepare($sql);
+            $pdo->execute();
+            $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+            $feriados = count($resultados);
+            for ($i=0;$i<$feriados;$i++){
+                $json[$i+$longitud]['title']          = strtoupper($resultados[$i]["descripcion_feriados"]);
+                $json[$i+$longitud]['start']          = $resultados[$i]["fecha_feriados"]."T00:00:00";
+                $json[$i+$longitud]['end']            = $resultados[$i]["fecha_feriados"]."T23:59:59";
+                $json[$i+$longitud]['id']             = $resultados[$i]["id_feriados"];
+                $json[$i+$longitud]['backgroundColor']     = "#5cb85c";
+            }
+        }
+        $json = json_encode($json);
+        
         return $json;
     }
     
+    public static function devolver_eventos_feriados(){
+        
+    }
+
     public static function genera_codigo_eventos($eventos){     
         
         $string_codigo ="
@@ -208,14 +236,29 @@ class calendario {
         $longitud = count($resultados);
         //echo $longitud;        
         if ($longitud<1){
+            $json[0]['Acciones'] = "";
             $json[0]['Descripcion'] = "";
             $json[0]['Fecha'] = "";
             $json[0]['N'] = "No hay información que mostrar";
         }
-        for ($i=0; $i<$longitud; $i++){
+        for ($i=0; $i<$longitud; $i++){            
             $json[$i]['Descripcion'] = $resultados[$i]["descripcion_feriados"];
             $json[$i]['Fecha'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_feriados"]);
-            $json[$i]['N'] = "<a href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\">".($i+1)."</a>";
+            $json[$i]['N'] = ($i+1);
+            $str_btn=" <a title=\"Editar\" 
+                            class=\"btn btn-sm btn-info\"  
+                            href=\"calendarios.php?opcion=1&dia=".$resultados[$i]["id_feriados"]."\"
+                        >
+                        <i class=\"fa fa-edit\"></i>
+                        </a>
+                        <button title='Eliminar'
+                            class='btn btn-sm btn-danger eliminar'
+                            onclick ='eliminar_dia_modal(".$resultados[$i]["id_feriados"].")'>
+                            <i class=\"fa fa-trash\"></i>
+                        </button>
+                        ";
+            $json[$i]['Acciones'] = $str_btn;
+            
         }
         //FORMATO de json
         //descripcion, fecha inicio, fecha fin
@@ -343,8 +386,9 @@ class calendario {
             }            
             $str_brn.="\" >
                     <i class=\"fa fa-eye\"></i>
-                </a>
-                <!--a class='btn btn-sm btn-danger eliminar_cod' cod='".$resultados[$i]["id_rm"]."' data-toggle='modal' data-target='#modal_trash' href='#' title='eliminar_cod'><i class='fa fa-trash'></i></a-->
+                </a> 
+                
+                
                 <button title='Cancelar' class='btn btn-sm btn-danger eliminar' onclick ='cancelar_cita(".$resultados[$i]["id_rm"].",".$id_programa.", $id_terapia)'";
 
             if ($resultados[$i]["estado_rm"]=="2"){

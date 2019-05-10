@@ -27,7 +27,8 @@ if (!isset($_SESSION["pagina"])){
                             <tr>
                                 <th>N°</th>
                                 <th>Fecha</th>
-                                <th>Descripcion</th>                
+                                <th>Descripcion</th>     
+                                <th>Acciones</th>                                     
                             </tr>
                         </thead>                        
                         <tbody > 
@@ -37,7 +38,27 @@ if (!isset($_SESSION["pagina"])){
 
                 <br>
             </div>
-
+<!-- Modal Generico-->
+    <div class="modal fade" id="modal_generico" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h5 class="modal-title">ADVERTENCIA</h5>
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <p class="modal-title" id="texto_modal"></p>
+          </div>
+          <div class="modal-footer">
+              <button id="btn_sec" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
                 <script>
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
 //     $.post("../assets/class/calendario_controlador.php",
@@ -55,7 +76,8 @@ if (!isset($_SESSION["pagina"])){
                 "columns": [
                     {"data": "N"},
                     {"data": "Fecha"},
-                    {"data": "Descripcion"}
+                    {"data": "Descripcion"},
+                    {"data": "Acciones"}
                 ]
             });
     });

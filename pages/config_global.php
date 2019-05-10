@@ -232,7 +232,7 @@ $foto = "";
                     $("#filas_ok").show();
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });

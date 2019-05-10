@@ -187,7 +187,7 @@ if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a mod
                 ?>
             },function(result){
                 var respuesta = JSON.parse(result);
-                console.log(respuesta[0].str_debug);
+                //console.log(respuesta[0].str_debug);
                 if (respuesta[0].estado == 1){
                     $("#nombre").val(respuesta[1].nombre_terapia);
                     $("#precio").val(respuesta[1].precio_terapia);

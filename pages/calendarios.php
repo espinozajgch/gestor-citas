@@ -146,7 +146,39 @@ $bd;
 
 
     <script>
+        function eliminar_dia_modal(dia){
+            $("#texto_modal").html("¿Está seguro de querer eliminar el día feriado seleccionado? Esta operación es irreversible");
+            $("#boton_modal").attr("onclick","eliminar_dia("+dia+")");
+            $('#modal_generico').modal({
+                    backdrop: 'static',
+                    keyboard: false
+            });
+        }
         
+        function eliminar_dia(dia){        
+            $.post("../assets/class/calendario_controlador.php",
+            {
+                id_operacion: 8,
+                dia : dia
+            },
+            function (result){
+                var respuesta = JSON.parse(result);
+                if (respuesta[0].estado==1){                    
+                    window.location = "calendarios.php?opcion=2";
+                    $("#texto_modal").html("Procesado");
+                    $("#btn_sec").html("Continuar");
+                    $('#modal_generico').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    $("#boton_modal").hide();
+                }
+                else{
+                    //console.log (respuesta[0].debug_string);
+                }
+            }
+            );
+    }
     </script>
 </body>
 

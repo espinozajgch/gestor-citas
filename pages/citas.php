@@ -98,7 +98,7 @@ $usuario  = "";
                     if (isset($_GET["opcion"])){
                         if ($_GET["opcion"]==1){
                             if ($_GET["vista"]==1){
-                                include_once("citas/citas_tabla.php");
+                                include_once("citas/citas_tabla.php"); 
                             }
                             else if ($_GET["vista"]==-1){
                                 include_once("citas/citas_calendario.php");
@@ -139,7 +139,8 @@ $usuario  = "";
     </div>    
 
 
-    <script>//  
+    <script>
+
         var id_cita = 0;
         var id_programa = 0;
         var id_terapia = 0;
@@ -159,7 +160,7 @@ $usuario  = "";
 
         $('#erase').click(function(e){
             //eliminar(id);
-            console.log(id_cita);
+            //console.log(id_cita);
 
             $.post("citas/citas_controlador.php",
             {
@@ -235,7 +236,7 @@ $usuario  = "";
 
         function suspender(codigo,estado){
 
-            console.log(estado);
+            //console.log(estado);
             hash = $("#hash").val();
 
             $.ajax({
@@ -256,7 +257,7 @@ $usuario  = "";
                     }*/
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                     window.location.href="citas.php?success=no";
                 }
             });/**/
@@ -265,20 +266,20 @@ $usuario  = "";
         $('.ocultar').click(function() {
             codigo = $(this).attr("cod");
 
-            console.log(codigo);
+            //console.log(codigo);
             cambiar_estatus(codigo,0);
         });
 
         $('.restart').click(function() {
             codigo = $(this).attr("cod");
 
-            console.log(codigo);
+            //console.log(codigo);
             cambiar_estatus(codigo,1);
         });
 
         function cambiar_estatus(codigo,estado){
 
-            console.log(estado);
+            //console.log(estado);
             hash = $("#hash").val();
 
             $.ajax({
@@ -299,7 +300,7 @@ $usuario  = "";
                     }*/
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                     window.location.href="citas.php?success=no";
                 }
             });/**/
@@ -311,9 +312,24 @@ $usuario  = "";
 
 <script type="text/javascript"> 
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
-            $('#tabla_dinamica').DataTable({  
+            cargar_tabla_dinamica (1, "pendientes");
+    });
+    
+    function cargar_tabla_dinamica(estado = 1, id = false){
+        $("#tabla_dinamica").DataTable().destroy();
+        if (id){
+            $("#pestagnas li").removeClass();
+            $("#"+id).attr('class','active');
+        }
+        
+        $('#tabla_dinamica').DataTable({  
                 responsive: true,
-                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6",
+                "ajax":"../assets/class/calendario_controlador.php?id_operacion=6&estado="+estado,
+                "columnDefs": [
+                { "width": "10%", "targets": 1 },
+                { "width": "10%", "targets": 2 },
+                { "width": "15%", "targets": 6 }
+                ],
                 "columns": [
                     {"data": "N"},
                     /*{"data": "Creacion"},*/
@@ -322,25 +338,28 @@ $usuario  = "";
                     {"data": "Paciente"},
                     {"data": "Medico"},    
                     {"data": "Terapia"},                    
-                    {"data": "Estado"},                    
+                    //{"data": "Estado"},                    
                     {"data": "Acciones"}
                 ]
             });
-    });
+        $("#tabla_dinamica").fadeOut(150);    
+        $("#tabla_dinamica").fadeIn(150);
+    }
     
-    function validar_cita(id_cita, id_programa, id_terapia){
+    function validar_cita(id_cita, id_programa, id_terapia, id_ptt){
         $.post("citas/citas_controlador.php",
         {
             id_operacion: 11,
             id_cita: id_cita,
             id_programa: id_programa,
-            id_terapia: id_terapia
+            id_terapia: id_terapia,
+            id_ptt: id_ptt
         },function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){
                 //Validado con exito
                 alert ("Validado con exito");
-                window.location = "citas.php?opcion=1";
+                window.location = "index.php";
             }
             else{
                 alert ("Ocurrio un error");

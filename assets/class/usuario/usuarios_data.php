@@ -574,10 +574,79 @@
 				return $e;
 			}
 		}
+		public static function eliminar_documento($bd, $id_documento)
+		{
+			// Sentencia INSERT
+		   	$consulta = "DELETE FROM anexos WHERE id_anexos = ". $id_documento;
+		   	//echo $consulta;
+		   	
+		   	try {
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute();
 
+				if($resultado){
+					return 1;       	
+				}
+				return 0;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			}
+		}
+                
+                
 		/**
 		retorna 
 		*/
+                public static function cargar_tabla_documentos_historia_medica($id_hm){
+                    //Establecer la conexion con la base de datos
+                    $bd = connection::getInstance()->getDb();
+                    //Consulta para obtener los dias feriados
+                    $sql = "  
+                        SELECT * FROM `anexos` WHERE id_hm = $id_hm
+                        ";
+                    $pdo = $bd->prepare($sql);                            
+                    $pdo->execute();                    
+                    $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+                    $longitud = count($resultados);                    
+                    
+                    if ($resultados){
+                        if ($longitud<1){
+                            $json[0]['N']           = "No hay información que mostrar";                                                 
+                            $json[0]['Documento']      = "";
+                            $json[0]['Acciones']      = "";
+                        }
+                        else{                    
+                            $json[0]['Estado']      = 1;                                   
+                            for ($i=0; $i<$longitud;$i++){                                
+                                $json[$i]['N']              = $i+1;                        
+                                $json[$i]['Documento']      = "<a href=\"../assets/documentos/".$resultados[$i]["imagen"]."\">".$resultados[$i]["imagen"]."</a>";
+                                $json[$i]['Acciones']       = "
+                                    
+                                    <button 
+                                        title=\"Eliminar documento\" 
+                                        class=\"btn btn-danger\"
+                                        onclick=\"modal_eliminar_documento(".$resultados[$i]["id_anexos"].")\"
+                                    >                                        
+                                    <i class=\"fa fa-times-circle\"></i>
+                                    </button>";                                
+                            }                               
+                        }
+                    }
+                    else{                        
+                        $json[0]['N']           = "No hay información que mostrar";                                                
+                        $json[0]['Documento']      = "";
+                        $json[0]['Acciones']      = "";
+                    }                    
+
+                    return json_encode($json);
+                }
+                
+                
 		public static function cambiar_contraseña($bd, $email, $password, $id_paciente){
 			
 			// Sentencia INSERT
@@ -762,6 +831,25 @@
 
 		}
 
+		public static function obtener_lista_terapias_pacientes($bd, $id_paciente){
+
+			$consulta = "SELECT id_programa_terapeutico, descripcion_programa_terapeutico dpt, pt.estado, count(programa_terapeutico_id_programa_terapeutico) as cant FROM programa_terapeutico pt INNER JOIN programa_tiene_terapia ptt ON pt.id_programa_terapeutico = ptt.programa_terapeutico_id_programa_terapeutico WHERE pt.paciente_id_paciente = ". $id_paciente ."
+				GROUP BY (ptt.programa_terapeutico_id_programa_terapeutico) ORDER BY id_programa_terapeutico DESC";
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute();
+	            $row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+	            return $row;
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+			}
+
+		}
+
 		public static function obtener_lista_pacientes($bd){
 
 			$consulta = "SELECT u.id_paciente, u.RUT, u.nombre, u.apellidop, u.apellidom, u.email, u.celular, u.id_paciente, estado_paciente FROM paciente u ORDER BY id_paciente DESC";
@@ -779,6 +867,48 @@
 			}
 
 		}
+
+		/**
+		retorna 
+		*/
+		public static function obtener_fotos_prop($bd, $codigo, $ruta){
+
+			$consulta = "SELECT * FROM anexos WHERE id_hm = " . $codigo;
+
+			try {
+				$comando = $bd->prepare($consulta);
+				$comando->execute();
+				$row = $comando->fetchAll(PDO::FETCH_ASSOC);
+
+				$datos = "";
+
+				foreach ($row as $foto) {
+					/*$info = pathinfo($ruta.'prop/'.$codigo ."/". $foto["foto"] );
+				    $extension = $info['extension'];
+				    $file_name = $info['filename'];
+				    file_name="'.$file_name.'" ext="'.$extension.'" */
+
+					$datos .=  '<div id="'. $foto["id_anexos"] .'" file="'. $foto["imagen"] .'" class="col-sm-4 col-md-3 col-lg-3 divPhotoItem ">';
+					$datos .=  '<img class = " imgPhotoItem" cod="'.$codigo.'" src = "'.$ruta.'anexos/'.$codigo ."/". $foto["imagen"] .'" />';
+					$datos .=  '<a href ="#" class="cvf_delete_image" title="Eliminar"><img class = "delete-btn" src = "'.$ruta.'../../img/delete-btn.png" /></a>';
+					//$datos .=  '<img src="'. $foto["foto"] .'">';
+					//$datos .='<a href ="#" class="der_btn" title="Girar a la derecha"><img class = "der-btn" src = "img/der.png" /></a>';
+                    //$datos .='<a href ="#" class="izq_btn" title="Girar a la izquierda"><img class = "izq-btn" src = "img/izq.png" /></a>';
+                    //$datos .='<a href ="#" class="update_btn" title="Recargar"><img class = "update-btn" src = "img/update.png" /></a>';
+					//$datos .=  '<img class = "der-btn" src = "img/der.png" />';
+                    //$datos .=  '<img class = "izq-btn" src = "img/izq.png" />';
+					$datos .=  '</div>';
+				}
+
+				return $datos;
+
+			} catch (Exception $e) {
+				echo $e;
+				return false;
+
+			}
+		} //FIN FUNCION 
+
 
 
 		public static function obtener_lista_mensajes_contacto($bd, $id_paciente){

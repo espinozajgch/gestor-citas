@@ -35,11 +35,19 @@ $id_hm = "";
         if(isset($_GET["id_paciente"]))
             $id_paciente = $_GET["id_paciente"];
 
+        $nombre = Pacientes::obtener_nombre($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id_paciente);
+
     }
     else{
     if(isset($_GET["id_paciente"]))
         $id_paciente = $_GET["id_paciente"];
         $accion = 8;
+
+        $nombre = Pacientes::obtener_nombre($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id_paciente);
 
     }
 
@@ -92,6 +100,7 @@ $id_hm = "";
                 <div class="col-lg-12">
                     <br>
                     <a class="btn btn-sm btn-success shared" href="historia_medica_de_paciente.php?id=<?php echo $id_paciente ?>" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
+                    <?php echo $nombre ?>
                     <h1 class="page-header">Historia Medica</h1>
 
                 </div>
@@ -203,7 +212,7 @@ $id_hm = "";
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
                     
@@ -212,7 +221,7 @@ $id_hm = "";
                 error: function(data){
                     $("#msgerror_danger").show();
                     $("#msg_ok").hide();
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });

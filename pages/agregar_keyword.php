@@ -151,7 +151,7 @@ $accion = 10;
 
             if(accion == 11){
                 id = $("#id_keyword").val();
-                console.log(id);
+                //console.log(id);
             }
 
             $.ajax({
@@ -160,7 +160,7 @@ $accion = 10;
                 type:  'post',
                 dataType: "json",
                 success:  function (data){
-                    console.log(data);
+                    //console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
                     window.location.href="keywords.php";
@@ -168,7 +168,7 @@ $accion = 10;
                 error: function(data){
                     $("#msgerror_danger").show();
                     $("#msg_ok").hide();
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });

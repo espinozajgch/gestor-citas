@@ -63,9 +63,9 @@ require_once '../assets/class/calendario.php';
                     right: 'month,agendaWeek,agendaDay'
                 },                  
                 businessHours:{
-                    dow: [1,2,3,4,5],
-                    start: '8:00',
-                    end: '18:00'
+                    daysOfWeek: [1,2,3,4,5,6],
+                    startTime: '8:00',
+                    endTime: '20:00'
                 },
                 defaultView: 'month',
                 editable: false,
@@ -81,9 +81,13 @@ require_once '../assets/class/calendario.php';
                     url: url,
                     method: 'GET'
                 },
-                locale : "es-us",
+                minTime: "8:00",
+                maxTime: "20:00",
+                hiddenDays: [0],
+                locale : "es-es",
                 responsive: true,
                 navLinks: true,
+                longPressDelay: true,
                 selectable: true
             });        
             calendar.render();

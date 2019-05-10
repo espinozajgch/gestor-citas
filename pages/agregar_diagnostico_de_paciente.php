@@ -178,7 +178,7 @@ $id_hm = "";
                 type:  'post',
                 dataType: "json",
                 success:  function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $("#msg_ok").show();
                     $("#msgerror_danger").hide();
                     
@@ -187,7 +187,7 @@ $id_hm = "";
                 error: function(data){
                     $("#msgerror_danger").show();
                     $("#msg_ok").hide();
-                    console.log(data);
+                    //console.log(data);
                 }
             });/**/
         });

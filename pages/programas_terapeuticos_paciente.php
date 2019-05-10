@@ -20,11 +20,12 @@ $usuario  = "";
     }
 
     if(isset($_GET["id"])){
-        $id = $_GET["id"];
+        $id_paciente = $_GET["id"];
 
-        $nombre = Pacientes::obtener_nombre($bd,$id);
-        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id);
-        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id);
+        $rut = Pacientes::obtener_identificacion($bd,$id_paciente);
+        $nombre = Pacientes::obtener_nombre($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidop($bd,$id_paciente);
+        $nombre .= " " . Pacientes::obtener_apellidom($bd,$id_paciente);
         //$historia = pacientes::obtener_historia($bd,$id_hm);
         //$accion = 9;
 
@@ -62,10 +63,8 @@ $usuario  = "";
 
     <!-- DataTables Responsive CSS -->
     <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
-    
-    <link href="../vendor/dropzone/dropzone.css" type="text/css" rel="stylesheet" />
     <style type="text/css">
-        
+
     </style>
 </head>
 
@@ -79,12 +78,12 @@ $usuario  = "";
             <div class="row">
                 <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Historial</h1>
+                    <h1 class="page-header">Historial de Programas Terapeuticos</h1>
                     <a class="btn btn-sm btn-success shared" href="pacientes.php" title="Regresar"><i class="fa fa-arrow-left fa-bg"></i></a>
                     <?php echo $nombre ?>
                 </div>
                 <div class="col-lg-12 text-right pull-right">
-                   <a class="btn btn-sm btn-success " href="agregar_historia_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
+                   <a class="btn btn-sm btn-success " href="terapias.php?opcion=1&rut_paciente=<?php echo $rut ?>" title="Agregar"><i class="fa fa-plus-circle fa-bg"></i></a>
                    <!--a class="btn btn-sm btn-warning shared" href="agregar_diagnostico_de_paciente.php?id_paciente=<?php echo $id ?>" title="Agregar Indicaciones"><i class="fa fa-plus-circle fa-bg"></i></a-->
                 </div>
                 <!-- /.col-lg-12 -->
@@ -95,7 +94,8 @@ $usuario  = "";
                 <br>
                 <div class="col-lg-12 mx-4">
                 <br>
-                    <?php include_once("historia_medica/lista_historia_medica_de_paciente.php") ?>
+
+                    <?php include_once("terapias/lista_programas_terapeuticos.php") ?>
                 </div>
             </div>
 
@@ -143,40 +143,13 @@ $usuario  = "";
     <script src="../vendor/datatables/js/jquery.dataTables.js"></script>
     <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
-    <script src="../vendor/dropzone/dropzone.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function() {
             $('#dataTables-example').DataTable({
                 responsive: true
             });
-            $("#myDropZone").prop("class","dropzone");
-            $("#myDropZone").dropzone({
-                url : "../assets/class/usuario/usuario_acciones.php?accion_alterna=1",
-                addRemoveLinks : true,
-                autoDiscover: false,
-                autoProcessQueue: false,
-                parallelUploads: 1,
-                maxFiles : 1,
-                error: function (file, errorMessage){
-                    errors = true;
-                    console.log("Error al subir el archivo:"+ errorMessage);
-                    this.removeFile(file);
-                    //this.options.autoProcessQueue =true;
-                },
-                success: function (file){
-                    errors = false;
-                    console.log("Archivo cargado con éxito");
-                    this.removeFile(file);
-                    //this.options.autoProcessQueue =true;
-                },
-                queuecomplete: function(){
-                    this.options.autoProcessQueue = false;                
-                    $("#modal_generico").modal('hide');
-                }
-            });
-            
-            
         });
 
         var id_pregunta = 0;
@@ -216,7 +189,6 @@ $usuario  = "";
             });/**/
             
         });
-        
 
     </script>
 </body>

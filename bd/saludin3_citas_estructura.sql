@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
+-- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 06-01-2019 a las 21:53:32
--- Versión del servidor: 10.1.21-MariaDB
+-- Servidor: localhost:3306
+-- Tiempo de generación: 07-01-2019 a las 21:47:49
+-- Versión del servidor: 5.6.39-cll-lve
 -- Versión de PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -265,6 +267,19 @@ CREATE TABLE `paciente_tiene_tratamiento` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `pagos_parciales`
+--
+
+CREATE TABLE `pagos_parciales` (
+  `id_pagos_parciales` int(10) UNSIGNED NOT NULL,
+  `metodos_pago_id_mp` int(11) NOT NULL,
+  `programa_terapeutico_id_programa_terapeutico` int(10) UNSIGNED NOT NULL,
+  `referencia` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `programa_terapeutico`
 --
 
@@ -276,7 +291,9 @@ CREATE TABLE `programa_terapeutico` (
   `porcentaje_descuento` varchar(10) NOT NULL DEFAULT '10',
   `estado` varchar(45) DEFAULT 'activo',
   `estatus_pago_id_ep` int(11) DEFAULT '1',
-  `especial` tinyint(1) NOT NULL DEFAULT '0'
+  `referencia` varchar(150) NOT NULL,
+  `especial` tinyint(1) NOT NULL DEFAULT '0',
+  `metodos_pago_id_mp` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -310,7 +327,8 @@ CREATE TABLE `reserva_medica` (
   `hora_inicio` time NOT NULL,
   `hora_fin` time NOT NULL,
   `metodos_pago_id_mp` int(11) DEFAULT NULL,
-  `referencia` varchar(150) NOT NULL
+  `referencia` varchar(150) NOT NULL,
+  `estatus_pago_id_ep` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -485,12 +503,21 @@ ALTER TABLE `paciente_tiene_tratamiento`
   ADD KEY `fk_paciente_tiene_tratamiento_paciente1_idx` (`paciente_id_paciente`);
 
 --
+-- Indices de la tabla `pagos_parciales`
+--
+ALTER TABLE `pagos_parciales`
+  ADD PRIMARY KEY (`id_pagos_parciales`),
+  ADD KEY `fk_pagos_parciales_metodos_pago1_idx` (`metodos_pago_id_mp`),
+  ADD KEY `fk_pagos_parciales_programa_terapeutico1_idx` (`programa_terapeutico_id_programa_terapeutico`);
+
+--
 -- Indices de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
   ADD PRIMARY KEY (`id_programa_terapeutico`),
   ADD KEY `fk_programa_terapeutico_paciente1_idx` (`paciente_id_paciente`),
-  ADD KEY `fk_programa_terapeutico_estatus_pago1_idx` (`estatus_pago_id_ep`);
+  ADD KEY `fk_programa_terapeutico_estatus_pago1_idx` (`estatus_pago_id_ep`),
+  ADD KEY `fk_programa_terapeutico_metodos_pago1_idx` (`metodos_pago_id_mp`);
 
 --
 -- Indices de la tabla `programa_tiene_terapia`
@@ -507,7 +534,8 @@ ALTER TABLE `programa_tiene_terapia`
 ALTER TABLE `reserva_medica`
   ADD PRIMARY KEY (`id_rm`),
   ADD KEY `fk_reserva_medica_medio_contacto1_idx` (`medio_contacto_id_mc`),
-  ADD KEY `fk_reserva_medica_metodos_pago1_idx` (`metodos_pago_id_mp`);
+  ADD KEY `fk_reserva_medica_metodos_pago1_idx` (`metodos_pago_id_mp`),
+  ADD KEY `fk_reserva_medica_estatus_pago1_idx` (`estatus_pago_id_ep`);
 
 --
 -- Indices de la tabla `rol`
@@ -542,126 +570,157 @@ ALTER TABLE `tratamientos`
 --
 ALTER TABLE `acciones`
   MODIFY `id_accion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT de la tabla `entrada_historico`
 --
 ALTER TABLE `entrada_historico`
-  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_entrada_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
 ALTER TABLE `especialidad`
   MODIFY `id_especialidad` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `estatus_pago`
 --
 ALTER TABLE `estatus_pago`
-  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_ep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- AUTO_INCREMENT de la tabla `estatus_usuario`
 --
 ALTER TABLE `estatus_usuario`
   MODIFY `id_eu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `facturacion`
 --
 ALTER TABLE `facturacion`
   MODIFY `id_facturacion` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `feriados`
 --
 ALTER TABLE `feriados`
-  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_feriados` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `historias_medicas`
 --
 ALTER TABLE `historias_medicas`
-  MODIFY `id_hm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_hm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT de la tabla `historico`
 --
 ALTER TABLE `historico`
-  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_historico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_especialidad`
 --
 ALTER TABLE `medico_tiene_especialidad`
   MODIFY `id_medico_tiene_especialidad` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `medico_tiene_reserva`
 --
 ALTER TABLE `medico_tiene_reserva`
-  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_medico_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
 --
 -- AUTO_INCREMENT de la tabla `medio_contacto`
 --
 ALTER TABLE `medio_contacto`
   MODIFY `id_mc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
 --
 ALTER TABLE `metodos_pago`
   MODIFY `id_mp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
   MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_reserva`
 --
 ALTER TABLE `paciente_tiene_reserva`
-  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_paciente_tiene_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
 --
 -- AUTO_INCREMENT de la tabla `paciente_tiene_tratamiento`
 --
 ALTER TABLE `paciente_tiene_tratamiento`
   MODIFY `id_paciente_tiene_tratamiento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_parciales`
+--
+ALTER TABLE `pagos_parciales`
+  MODIFY `id_pagos_parciales` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT de la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
-  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_programa_terapeutico` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
 --
 -- AUTO_INCREMENT de la tabla `programa_tiene_terapia`
 --
 ALTER TABLE `programa_tiene_terapia`
-  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id_programa_tiene_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+
 --
 -- AUTO_INCREMENT de la tabla `reserva_medica`
 --
 ALTER TABLE `reserva_medica`
-  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_rm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
   MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT de la tabla `rol_accion`
 --
 ALTER TABLE `rol_accion`
-  MODIFY `id_ra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_ra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
 --
 -- AUTO_INCREMENT de la tabla `terapia`
 --
 ALTER TABLE `terapia`
   MODIFY `id_terapia` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
 --
 -- AUTO_INCREMENT de la tabla `tratamientos`
 --
 ALTER TABLE `tratamientos`
   MODIFY `id_tratamiento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- Restricciones para tablas volcadas
 --
@@ -674,10 +733,25 @@ ALTER TABLE `medico_tiene_especialidad`
   ADD CONSTRAINT `fk_medico_tiene_especialidad_especialidad1` FOREIGN KEY (`especialidad_id_especialidad`) REFERENCES `especialidad` (`id_especialidad`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Filtros para la tabla `pagos_parciales`
+--
+ALTER TABLE `pagos_parciales`
+  ADD CONSTRAINT `fk_pagos_parciales_metodos_pago1` FOREIGN KEY (`metodos_pago_id_mp`) REFERENCES `metodos_pago` (`id_mp`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_pagos_parciales_programa_terapeutico1` FOREIGN KEY (`programa_terapeutico_id_programa_terapeutico`) REFERENCES `programa_terapeutico` (`id_programa_terapeutico`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Filtros para la tabla `programa_terapeutico`
 --
 ALTER TABLE `programa_terapeutico`
-  ADD CONSTRAINT `fk_programa_terapeutico_estatus_pago1` FOREIGN KEY (`estatus_pago_id_ep`) REFERENCES `estatus_pago` (`id_ep`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_programa_terapeutico_estatus_pago1` FOREIGN KEY (`estatus_pago_id_ep`) REFERENCES `estatus_pago` (`id_ep`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_programa_terapeutico_metodos_pago1` FOREIGN KEY (`metodos_pago_id_mp`) REFERENCES `metodos_pago` (`id_mp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `reserva_medica`
+--
+ALTER TABLE `reserva_medica`
+  ADD CONSTRAINT `fk_reserva_medica_estatus_pago1` FOREIGN KEY (`estatus_pago_id_ep`) REFERENCES `estatus_pago` (`id_ep`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

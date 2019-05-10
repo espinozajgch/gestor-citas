@@ -56,7 +56,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
          */
         $id_medicos = $_GET["medicos"];
         if ($id_medicos == ""){
-            $eventos_json = calendario::devolver_eventos_medicos_json(false, false);
+            $eventos_json = calendario::devolver_eventos_medicos_json(false, false, true);
         }
         else{//Hay médicos en la consulta
             $array_medicos = explode(",", $id_medicos);
@@ -68,7 +68,7 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
                 }
                 $str_condicion.=" id_admin=".$array_medicos[$i];
             }
-            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false);
+            $eventos_json = calendario::devolver_eventos_medicos_json($str_condicion, false, true);
         }        
         if (is_string($eventos_json)){
             echo $eventos_json;
@@ -77,18 +77,21 @@ if (isset($_POST["id_operacion"])||(isset($_GET["id_operacion"]))){
         
     }
     else if (($_POST["id_operacion"]==6)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==6))){
-        //Devolver eventos para medicos para formato de tabla
-        $json_temp = json_decode(citas::tabla_dias_citas());        
+        //Devolver eventos para medicos para formato de tabla                
+        $estado_cita    = isset($_GET["estado"]) ? $_GET["estado"] : false;
+        $fecha_inicio   = isset($_GET["fecha_inicio"]) && $_GET["fecha_inicio"]!="false" ? $_GET["fecha_inicio"] : false;
+        $fecha_fin      = isset($_GET["fecha_fin"]) && $_GET["fecha_fin"]!="false" ? $_GET["fecha_fin"] : false;
+        $validar        = isset($_GET["validar"]) && $_GET["validar"]!="false" ? true : false;
+        $json_temp = json_decode(citas::tabla_dias_citas($estado_cita, $fecha_inicio, $fecha_fin, $validar));        
         //print_r($json_temp);
         $json_final["data"]=$json_temp;
-        $json_listo= json_encode($json_final);
-        //echo "<br>";
+        $json_listo= json_encode($json_final);        
        
         echo $json_listo;
     }
     else if (($_POST["id_operacion"]==7)||(isset ($_GET["id_operacion"])&&($_GET["id_operacion"]==7))){
     //Devolver eventos medicos   
-        $eventos_json = calendario::devolver_eventos_medicos_json();
+        $eventos_json = calendario::devolver_eventos_medicos_json(false, true, true);
         echo $eventos_json;
         //var_dump($eventos_json);
         //echo json_encode($eventos_json);

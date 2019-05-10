@@ -154,7 +154,7 @@ $usuario  = "";
 
         $("#estado_pago").change(function () {
             tipo_pago = $("#estado_pago").val();
-            console.log(tipo_pago);
+            //console.log(tipo_pago);
 
             if(tipo_pago == 3){
                 $("#contenedor_descuento").hide();
@@ -164,6 +164,7 @@ $usuario  = "";
                 $("#contenedor_metodo_pago_2").show();
                 $("#contenedor_ref_pago_2").show();
                 $("#contenedor_boton_pago").show();
+                $("#descuento_aplicado").val(0);
             }
             else
             if(tipo_pago ==4){
@@ -174,6 +175,19 @@ $usuario  = "";
                 $("#contenedor_metodo_pago_2").hide();
                 $("#contenedor_ref_pago_2").hide();
                 $("#contenedor_boton_pago").show();
+                $("#descuento_aplicado").val(10);
+                //console.log("WUA!!!");
+                
+            }
+            else{
+                $("#contenedor_descuento").hide();
+                //$("#contenedor_estado_pago").show();
+                $("#contenedor_metodo_pago_1").hide();
+                $("#contenedor_ref_pago_1").hide();
+                $("#contenedor_metodo_pago_2").hide();
+                $("#contenedor_ref_pago_2").hide();
+                $("#contenedor_boton_pago").hide();
+                $("#descuento_aplicado").val(0);
             }
 
 
@@ -302,11 +316,11 @@ $usuario  = "";
                     }
                     else{
                         //$("#alert_ok").show();
-                        window.location.href="mensajes.php";
+                        //window.location.href="mensajes.php";
                     }
                 },
                 error: function(data){
-                    console.log(data);
+                    //console.log(data);
                    // window.location.href="cuenta.php?success=no";
                 }
             });/**/
@@ -331,10 +345,10 @@ $usuario  = "";
                 },
                 function(result){
                     if (result == "1"){
-                        alert ("Modificado con éxito");
+                        //console.log("Modificado con éxito");
                     }
                     else{
-                        alert ("Ha ocurrido un error");
+                        //console.log("Ha ocurrido un error");
                     }
                     window.location = "terapias.php?opcion=5";
                 });
@@ -358,6 +372,7 @@ $usuario  = "";
                     {"data": "N"},
                     {"data": "Paciente"},                    
                     {"data": "Terapias"},
+                    {"data": "Estado"},
                     {"data": "Acciones"}
                 ]
             });
@@ -379,19 +394,31 @@ $usuario  = "";
     });
     
     function cargar_tabla_terapias(referer){
-        
+        var programa = <?php if (isset($_GET["id_programa"])){echo $_GET["id_programa"];}else echo "false";?>;        
+        var str_prog="";
+        if (programa){
+            str_prog = "&id_programa="+programa;
+        }        
         $('#tabla_paciente').DataTable({  
                 responsive: true,
-                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer,
+                "ajax":"terapias/terapias_controlador.php?id_operacion=12&id_paciente="+$("#id_oculto").val()+"&referer="+referer+""+str_prog,
                 "columns": [
                     {"data": "N"},
                     {"data": "Terapias"},                    
+                    {"data": "Fecha"},                    
                     {"data": "Precio"},                    
-                    {"data": "Estado"},
-                    {"data": "Acciones"}
+                    {"data": "Estado"}
+                    <?php 
+                    if (!isset($_GET["id_paciente"])){
+                        echo ',{"data": "Acciones"}';
+                    }
+                    ?>
+                    
                 ],
                 "initComplete": function (settings, json){
                     $("#texto_programa").html(json.data[0].desc_prt);
+                    $("#tipo_pago").html(json.data[0].tipo_pago);
+                    $("#detalles_pago").html(json.data[0].detalle_pago);
                     $("#botones_dinamicos").html(" ");
                     $("#botones_dinamicos").html(json.data[0].btn_validar_prg);
                     $("#botones_dinamicos").append(json.data[0].otros_botones);
@@ -409,15 +436,15 @@ $usuario  = "";
         }, function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){//Exito
-                alert ("Metodo de pago establecido");
+                //console.log("Metodo de pago establecido");
             }
             else{
-                alert ("Ocurrió un error, contacte al admin");
+                //console.log("Ocurrió un error, contacte al admin");
             }
         });
     }
     
-    function seleccionar_terapia(id_terapia, estado, modificar = false){
+    function seleccionar_terapia(id_terapia, estado, modificar = false, estado_alterno = false){
         terapia_seleccionada = id_terapia;        
         //href=\"terapias.php?opcion=2&terapia=".$resultado[$i]["id_terapia"]."\"        
         if (estado == 1){
@@ -425,7 +452,11 @@ $usuario  = "";
         }
         else{
             if (modificar==true){
-                window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
+                var cadena_location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val()+"&mod=true";
+                if (estado_alterno!=false){
+                    cadena_location+="&id_alterno="+estado_alterno;
+                }
+                window.location = cadena_location;
             }
             else{
                 window.location = "agregar_citas.php?id_ptt="+id_terapia+"&ref=terapias.php?opcion=4&rut_paciente="+$("#rut_paciente").val();
@@ -437,7 +468,6 @@ $usuario  = "";
     function generar_invoice(id_paciente){
         window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
     }
-    
     function generar_invoice_individual(id_reserva){
         window.open("terapias/terapias_controlador.php?id_operacion=15&reserva="+id_reserva, "_newtab");
     }
@@ -452,13 +482,13 @@ $usuario  = "";
         },function (result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){//Exito
-                alert ("La cita ha sido validada");
-                console.log (respuesta[0].str_debug);
+                //console.log("La cita ha sido validada");
+                //console.log (respuesta[0].str_debug);
                 $("#btn_buscar").trigger("click");
             }
             else{
-                alert ("Ocurrió un error al validar la terapia");
-                console.log (respuesta[0].str_debug);
+                //console.log("Ocurrió un error al validar la terapia");
+                //console.log (respuesta[0].str_debug);
                 
             }
         });
@@ -472,9 +502,72 @@ $usuario  = "";
         }, function(result){
             var respuesta = JSON.parse(result);
             if (respuesta[0].estado == 1){
-                alert ("Programa validado con exito");
+                //console.log("Programa validado con exito");
+                location.reload();
             }
         });
+    }
+//    function modal_cancelar(){
+//            $('#modal_cancelar').modal({
+//                backdrop: 'static',
+//                keyboard: false
+//            })
+//        }
+        
+    function modal_cita_terapia(id_cita,id_ptt){
+        $("#texto_modal").html("¿Está seguro de querer eliminar la cita? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","eliminar_cita_terapia("+id_cita+","+id_ptt+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function eliminar_terapia_modal(id_programa,id_terapia){
+        $("#texto_modal").html("¿Está seguro de querer eliminar la terapia seleccionada? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","eliminar_terapia("+id_programa+","+id_terapia+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function modal_cancelar(){
+        $("#texto_modal").html("¿Está seguro de querer cancelar el programa? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","cancelar_programa()");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function modal_cancelar_programa(id_pt, definitivo = false){
+        $("#texto_modal").html("¿Está seguro de querer eliminar el programa? Esta operación es irreversible");
+        $("#boton_modal").attr("onclick","cancelar_programa("+id_pt+","+definitivo+")");
+        $('#modal_generico').modal({
+                backdrop: 'static',
+                keyboard: false
+        })
+    }
+    
+    function eliminar_cita_terapia(id_cita,id_ptt){        
+            $.post("citas/citas_controlador.php",
+            {
+                id_operacion: 8.1,
+                id_cita: id_cita,
+                id_ptt: id_ptt
+            }, function(result){
+                var respuesta = JSON.parse(result);
+                //console.log("Cita eliminada");
+                location.reload();
+                if (respuesta[0].estado == 1){
+
+                    //console.log("Cita eliminada");
+                }
+                else{
+                    //console.log("ERROR");
+                }
+            });        
     }
 </script>
 

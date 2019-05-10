@@ -21,7 +21,17 @@ else if (isset($_GET["id_operacion"])){
 
 if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $rut = $_POST["rut"];
-    $sql = "SELECT DISTINCT `id_paciente`, `nombre`, `apellidop`, apellidom , `celular`, `fijo`, `email`, `direccion` FROM `paciente` WHERE `RUT` = \"$rut\"";
+    $sql = "SELECT DISTINCT 
+        `id_paciente`,
+        `nombre`, 
+        `apellidop`, 
+        apellidom , 
+        `celular`,
+        `fijo`,
+        `email`,
+        `direccion`
+        FROM 
+        `paciente` WHERE `RUT` = \"$rut\"";
     
     $bd = connection::getInstance()->getDb();
     
@@ -31,15 +41,31 @@ if ($id_operacion == 1){//Devolver información del paciente en base al RUT
     $longitud = count ($resultado);
     if ($resultado){
         $resultado[0]['estado'] = true;
+        //Si el identificador de la cita fue pasado, asegurar que la cita esté dentro de ese programa
         $resultado[0]["programa"] = terapias::obtener_id_programa_paciente($resultado[0]["id_paciente"]);
         if ($resultado[0]["programa"]!=false){
-            $resultado[0]["descuento"] = terapias::obtener_descuento_programa($resultado[0]["programa"]);
-            $resultado[0]["id_t"] = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
+            $resultado[0]["descuento"]              = terapias::obtener_descuento_programa($resultado[0]["programa"]);
+            $resultado[0]["nombre_programa"]        = terapias::obtener_nombre_programa($resultado[0]["programa"]);
+            $resultado[0]["id_t"]                   = terapias::obtener_id_terapia_cita($resultado[0]["programa"]);
+            $resultado[0]["tipo_pago"]              = terapias::obtener_id_tipo_pago($resultado[0]["programa"]);
+            $estado_programa                        = terapias::obtener_estado_programa($resultado[0]["programa"]);
+            $resultado[0]["estado_programa"]        = $estado_programa == "deshabilitado" ? 1:0;
+            
+            if ($resultado[0]["tipo_pago"] != false){
+                $resultado[0]["metodo_1"]           = terapias::obtener_id_metodo_pago($resultado[0]["programa"]);
+                $resultado[0]["referencia_1"]       = terapias::obtener_referencia_pago($resultado[0]["programa"]);
+                $aux                                = terapias::obtener_metodo_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["metodo_2"]           = $aux ? $aux : " ";
+                $aux                                = terapias::obtener_referencia_pago_parcial($resultado[0]["programa"]);
+                $resultado[0]["referencia_2"]       = $aux ? $aux : " " ;
+            }
           //  $resultado[0]["nombre_t"] = terapias::obtener_nombre_terapia_cita($resultado[0]["programa"]);
             
         }
         else{
             $resultado[0]["descuento"] = 0;
+            //$resultado[0]["estatus_pago_id_ep"];
+            $resultado[0]["tipo_pago"] = 7;
         }
         
         
@@ -108,10 +134,10 @@ else if ($id_operacion == 2 || $id_operacion == "2"){//Agregar citas
     $bd = connection::getInstance()->getDb();
     
     $sql = "INSERT INTO reserva_medica 
-        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado , referencia) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        (fecha_inicio, medio_contacto_id_mc, metodos_pago_id_mp, observaciones, hora_inicio, hora_fin, estado , referencia, estatus_pago_id_ep) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $pdo = $bd->prepare($sql);
-    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref));
+    $resultado = $pdo->execute(array($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref, 7));
     
     if ($resultado){
         //Insertamos el registro de que el paciente tiene una reserva
@@ -164,9 +190,10 @@ else if ($id_operacion == 2.5){//Agregar historico nuevo
     }
 }
 else if($id_operacion == 3){//Devolver los médiocos para el pillbox
-    $sql = "SELECT id_admin, nombre FROM admin WHERE (id_rol = 3 or id_rol = 4) AND id_eu > 0";
+    $condicion = isset($_GET["search"]) ? " AND nombre LIKE \"%".$_GET["search"]."%\"" : " ";
+    $sql = "SELECT id_admin, nombre FROM admin WHERE (id_rol = 3 or id_rol = 4) AND id_eu > 0 ".$condicion;
     $bd = connection::getInstance()->getDb();
-    
+    //echo $sql;
     $pdo = $bd->prepare($sql);
     $pdo->execute();
     $resultado = $pdo->fetchall(PDO::FETCH_ASSOC);
@@ -230,12 +257,14 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         reserva_medica.referencia, 
         reserva_medica.estado,
         ptt.terapia_id_terapia as terapia_id,
-        t.nombre_terapia as terapia_nombre
+        t.nombre_terapia as terapia_nombre,
+        pt.estatus_pago_id_ep as tipo_pago
         FROM `paciente`         
         INNER JOIN paciente_tiene_reserva ON paciente_tiene_reserva.paciente_id_paciente=paciente.id_paciente
         INNER JOIN reserva_medica ON paciente_tiene_reserva.reserva_medica_id_rm=reserva_medica.id_rm
         LEFT JOIN programa_tiene_terapia as ptt ON ptt.reserva_medica_id_rm = id_rm
         LEFT JOIN terapia t ON ptt.terapia_id_terapia = t.id_terapia
+        INNER JOIN programa_terapeutico pt ON pt.id_programa_terapeutico=ptt.programa_terapeutico_id_programa_terapeutico
 	WHERE id_rm = '.$id_cita;
     $pdo = $bd->prepare($sql);        
     //echo $sql;
@@ -259,6 +288,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
         $json[$i+1]['id_terapia']     =   strtoupper($resultados[$i]["terapia_id"]);
         $json[$i+1]['nombre_terapia'] =   strtoupper($resultados[$i]["terapia_nombre"]);
+        $json[$i+1]['tipo_pago']      =   ($resultados[$i]["tipo_pago"]);
         
         
     }
@@ -316,7 +346,7 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     $id_cita= $_POST["cita"];    
     $id_programa = terapias::obtener_id_programa_paciente($_POST["id_paciente"]);
     $json_retorno[0]["estado"]=1;
-    //Colocamos el estado de la cita en "CANCELADO"
+    //Colocamos el estado de la cita en "ANULADO"
     if (citas::cancelar_cita($id_cita)){
         if (terapias::cancelar_cita($id_programa, $id_cita)){
             //NADA
@@ -328,6 +358,24 @@ else if ($id_operacion == 8){//CANCELAR UNA CITA
     else{
         $json_retorno[0]["estado"]=0;        
     }
+    echo json_encode($json_retorno);
+}
+else if ($id_operacion==8.1){//Eliminar una cita
+    $id_cita = $_POST["id_cita"];
+    $id_ptt= $_POST["id_ptt"];
+    $json_retorno[0]["estado"]=1;
+    //Primero eliminamos la reserva medica
+    if (!citas::remover_cita($id_cita)){
+        $json_retorno[0]["estado"]=0;
+    }
+    else{
+        if (!terapias::desvincular_cita($id_ptt)){
+            $json_retorno[0]["estado"]=0;
+        }
+        else{
+            $json_retorno[0]["estado"]=1;
+        }
+    }  
     echo json_encode($json_retorno);
 }
 else if ($id_operacion == 9){ //TODO, LISTA DE EVENTOS EN BITACORA, mover a un controlador de bitacora
@@ -394,10 +442,11 @@ else if ($id_operacion == 11){//VALIDAR UNA CITA INDIVIDUAL, SIN PROGRAMA
     $id_cita = $_POST["id_cita"];
     $id_programa = $_POST["id_programa"];
     $id_terapia = $_POST["id_terapia"];
+    $id_ptt = $_POST["id_ptt"];
     $json;
     if (citas::validar_cita($id_cita)){        
         if ($id_programa!=false){
-            if (terapias::validar_terapia($id_programa, $id_terapia)){
+            if (terapias::validar_terapia($id_ptt)){
                 $json[0]["estado"]=1;
                 $json[0]["str_debug"]="Cita validad con exito";
             }

@@ -1,5 +1,5 @@
 <?php
-$etiqueta = "Programas terapeuticos";
+$etiqueta = "Programas terapéuticos";
 $id_terapia;
 if (isset($_GET["terapia"])){//Si existe la variable cita, es porque vamos a modificar
     $etiqueta = "Programas terapéutico";
@@ -39,9 +39,13 @@ if(isset($_GET["rut_paciente"])){
     <div class="row">
         <div class="col-lg-12 ">
             <h1 class="page-header"><?php echo $etiqueta; ?></h1>
-            <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="cancelar_programa()"><i class="fa fa-trash fa-bg"></i></button>
-            <button class="btn btn-sm btn-info shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+            <button class="btn btn-sm btn-danger shared" id="btn_cancelar" style="display: none" title="Cancelar programa" onclick="modal_cancelar()"><i class="fa fa-trash fa-bg"></i></button>
+            <button class="btn btn-sm btn-success shared" id="btn_invoice" style="display: none" title="Ver Factura" onclick="generar_invoice_programa()"><i class="fa fa-file-text-o"></i></button>
+            <!--<button class="btn btn-sm btn-success shared" id="btn_habilitar" style="display: none" title="Habilitar programa" onclick="cancelar_programa()"><i class="fa fa-check"></i></button>-->            
+            <button class="btn btn-sm btn-info shared" id="btn_previsualizar" style="display: none" title="Previsualizar Factura" onclick="previsualizar_invoice()"><i class="fa fa-file-text-o"></i></button>
+            <span id="botones_dinamicos"></span> 
         </div>   
+        
         <div class="form-group col-4 col-sm-4 col-md-4">
             <!--small><strong><label for="medico">Estatus Pago</label></strong></small-->
             
@@ -51,9 +55,17 @@ if(isset($_GET["rut_paciente"])){
         </div-->
         <!-- /.col-lg-12 -->
     </div>
+    <div class="row">
+        
+    </div>
 
     <div class="row">
-             
+        <div id="notificacion_programa" class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div id="programa_notificacion">                
+                <div id="texto_notificacion_programa"></div><a href="#" class="alert-link"></a>.
+             </div>                    
+        </div>
+        
         <div class="form-group col-12 col-sm-12 col-md-12 mt-5">
             <small><strong><label for=name_>RUT</label></strong></small>
             <div class="input-group col-3 col-sm-3 col-md-3">
@@ -71,6 +83,8 @@ if(isset($_GET["rut_paciente"])){
             <input id="id_oculto" type="text" hidden="">
             <input id="id_programa_oculto" type="text" hidden="">
         </div>
+        
+        
         
         <div id="advertencia_general" class="col-lg-12 col-md-12 col-xs-12 col-sm-12" hidden="true">
             <div id="alerta">
@@ -110,7 +124,7 @@ if(isset($_GET["rut_paciente"])){
             </div>
         </div>
         
-        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago">
+        <div class="form-group col-xs-4 col-sm-4 col-md-4 " style="display: none;" id="contenedor_estado_pago" onchange="guardar_pago()">
             <small><strong><label for="estado_pago">Tipo de Pago</label></strong></small>
             <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="">
                  <option value="7">INDIVIDUAL</option>
@@ -121,14 +135,12 @@ if(isset($_GET["rut_paciente"])){
             <div id="error_estado_pago" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
-                                    
-            <!--div id="botones_dinamicos"></div--> 
         </div> 
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " id="contenedor_descuento" style="display: none;">
             <small><strong><label for="medico">% Descuento</label></strong></small>
             <div class="input-group">
-                <input type="text" class="form-control" id="descuento_aplicado" value="10">
+                <input type="text" class="form-control" id="descuento_aplicado">
                 <span class="input-group-addon" id="basic-addon2">%</span>
             </div>
         </div> 
@@ -173,7 +185,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2 " style="display: none;" id="contenedor_metodo_pago_2" >
             <small><strong><label for="metodo_pago">Método de pago</label></strong></small>
-            <select class="form-control" id="metodo_pago">
+            <select class="form-control" id="metodo_pago_2">
                 <?php
                 $bd = connection::getInstance()->getDb();
                 $sql = "SELECT * FROM `metodos_pago`";
@@ -200,7 +212,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-3 col-sm-3 col-md-3" style="display: none;" id="contenedor_ref_pago_2">                                        
             <small><strong><label for="referencia">Referencia</label></strong></small>
-            <input id="referencia" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
+            <input id="referencia_2" type="text" class="form-control" placeholder="referencia" value="<?php //echo Usuarios::obtener_telefonos($bd,$hash); ?>" aria-describedby="basic-addon1">
             <div id="error_email" class="text-danger" style="display:none">
                 <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
             </div>
@@ -208,7 +220,7 @@ if(isset($_GET["rut_paciente"])){
 
         <div class="form-group col-xs-2 col-sm-2 col-md-2" style="display: none;" id="contenedor_boton_pago">
              <small><strong><label for="medico" style="visibility: hidden">Guardar</label></strong></small>
-            <button type="button" id="btnguardar_pago" class="btn btn-success" onclick="redirigir_terapia()" style="display: block;"><i class="fa fa-save"></i></button>
+            <button type="button" id="btnguardar_pago" class="btn btn-success" onclick="establecer_tipo_pago()" style="display: block;"><i class="fa fa-save"></i></button>
         </div> 
 
         </div>    
@@ -226,7 +238,7 @@ if(isset($_GET["rut_paciente"])){
         </div>        
         <div class="form-group col-xs-2 col-sm-2 col-md-2">
             <small><strong><label for="medico">Cantidad</label></strong></small>
-            <input type="text" class="form-control" id="cantidad" value="1" disabled>
+            <input type="number" class="form-control" id="cantidad" value="1" disabled>
         </div>
 
         
@@ -263,6 +275,7 @@ if(isset($_GET["rut_paciente"])){
                 <tr>
                     <th>N</th>
                     <th>Terapias</th>
+                    <th>Fecha</th>
                     <th>Precio</th>                                
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -273,6 +286,97 @@ if(isset($_GET["rut_paciente"])){
             </tbody>
        </table>
     </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modal_cancelar" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h5 class="modal-title" id="modal_trash">¿Está seguro de querer cancelar el programa? Esta operación es irreversible</small></h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="cancelar_programa" type="button" onclick="cancelar_programa()" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Pago -->
+    <div class="modal fade" id="modal_pago" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h5 class="modal-title" id="modal_trash">ADVERTENCIA <small></small></h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <p class="modal-title"> ¿Está seguro de proceder con esta operación? Esta operación es irreversible</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="guardar_pago" type="button" onclick="guardar_pago()" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Generico-->
+    <div class="modal fade" id="modal_generico" tabindex="-1" role="dialog" aria-labelledby="modal_pago" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              <h5 class="modal-title">ADVERTENCIA</h5>
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            <p class="modal-title" id="texto_modal"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="boton_modal" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal_trash" tabindex="-1" role="dialog" aria-labelledby="modal_trash" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="modal_trash">Esta seguro de eliminar el elemento seleccionado?</h5>
+
+          </div>
+          <div id="body_trash" class="modal-body">
+            <input type="hidden" id="code">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button id="erase" type="button" class="btn btn-danger">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     
 <script type="text/javascript">
 
@@ -301,37 +405,124 @@ if(isset($_GET["rut_paciente"])){
                         
                         //alert (json[0].id_paciente);
                         if (json[0].estado == true){
+                            //Verificar que tiene programa
                             $("#name").val(json[0].nombre.toUpperCase());
                             $("#last_name").val(json[0].apellidop.toUpperCase()); 
                             $("#second_name").val(json[0].apellidom.toUpperCase());                            
                             $("#id_oculto").val(json[0].id_paciente); 
                             $("#descuento_aplicado").val(json[0].descuento);
-                            //Verificar si el paciente ya tiene terapias asignadas 
-                            //alert ($("#id_oculto").val());
-                            $("#tabla_paciente").DataTable().destroy();
-                            agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
-                            cargar_tabla_terapias(1);
-                            //operacion = 11;
-                            $("#contenedor_nombre_programa").show();
-                            //$("#contenedor_descuento").show();
-                            //$("#contenedor_estado_pago").show();
-                            //$("#contenedor_metodo_pago_1").show();
-                            //$("#contenedor_ref_pago_1").show();
-                            //$("#contenedor_metodo_pago_2").show();
-                            //$("#contenedor_ref_pago_2").show();
-                            //$("#contenedor_boton_pago").show();
-                            //$("#alerta").prop("class","alert-success alert-dismissable");
-                            //$("#texto_advertencia_general").html("Paciente encontrado, se puede proceder");
-                            //$("#advertencia_general").fadeIn(100).fadeOut(5000);
-                            $("#btnguardar").show();
-                            //$("#btn_invoice").show();
-                            //$("#btn_cancelar").show();
+                            $("#estado_pago").val(json[0].tipo_pago);
+                            $("#metodo_pago").val(json[0].metodo_1);
+                            $("#referencia").val(json[0].referencia_1);
+                            $("#metodo_pago_2").val(json[0].metodo_2);
+                            $("#referencia_2").val(json[0].referencia_2);
+                            if (json[0].programa){//En caso de tener programa terapeutico activo
+                                //alert ("Si programa");                                
+                                var check = 0;       
+                                //alert (check+"-"+json[0].tipo_pago);
+                                if ((json[0].tipo_pago != 7) && (json[0].tipo_pago != null)){//Si el tipo es distinto de individual y tiene un tipo de pago asignado
+                                    if ((json[0].metodo_1 != null) && ((json[0].metodo_1).trim())!= ""){//Si el metodo 1 fue establecido
+                                        $("#metodo_pago").prop("disabled","true");
+                                        $("#referencia").prop("disabled","true");          
+                                        //Mostramos los inputs del metodo de pago 2, pero el tipo de pago debe de ser distinto a 4
+                                        if (json[0].tipo_pago != 4){
+                                            $("#contenedor_metodo_pago_2").show();
+                                            $("#contenedor_ref_pago_2").show();    
+                                        }                                        
+                                        check++;
+                                    }                                
+                                    if ((json[0].metodo_2 != null) && ((json[0].metodo_2).trim())!= ""){//Si el metodo 2 fue establecido
 
+                                        $("#metodo_pago_2").prop("disabled","true");
+                                        $("#referencia_2").prop("disabled","true");                                                                        
+                                        check++;
+                                    }           
+                                    if (json[0].tipo_pago == 4){//Si el tipo de pago es total
+                                        check++;
+                                        $("#contenedor_metodo_pago_1").show();
+                                        $("#contenedor_ref_pago_1").show();
+                                        $("#contenedor_descuento").show();
+                                    }
+                                    else if (json[0].tipo_pago == 3){//Si el tipo de pago es parcial
+                                        $("#contenedor_metodo_pago_1").show();
+                                        $("#contenedor_ref_pago_1").show();
+                                    }                                    
+                                    if (check>=2){//Se han guardado todos los pagos que se pueden guardar
+                                        $("#btnguardar_pago").prop("disabled","true");    
+                                        $("#descuento_aplicado").prop("disabled","true");   
+                                        $("#estado_pago").prop("disabled","true");
+                                    }                                
+                                    if (check >= 1 && (json[0].tipo_pago != 4 || json[0].metodo_1 != null)){//Se ha guardado al menos un pago
+                                        $("#terapias_individual").attr("disabled","true");
+                                        $("#btnguardar").prop("disabled","true");    
+                                        $("#name_programa").prop('disabled', "true");
+                                        $("#estado_pago").prop('disabled', true);
+                                        //alert ("a");
+                                    }
+                                    else{//No se han guardado pagos
+                                        $("#terapias_individual").prop('disabled', false);
+                                        $("#cantidad").prop('disabled', false);
+                                        $("#btnguardar").prop('disabled', false);
+                                    }
+                                    //alert (check);
+                                    $("#contenedor_boton_pago").show();
+                                }
+                                else{//Es individual
+                                    $("#terapias_individual").prop('disabled', false);
+                                    $("#cantidad").prop('disabled', false);
+                                    $("#btnguardar").prop('disabled', false);
+                                }
+                                
+                                $("#name_programa").val(json[0].nombre_programa);
+                                
+                                //Verificar si el paciente ya tiene terapias asignadas                             
+                                $("#tabla_paciente").DataTable().destroy();
+                                agregar_terapias_existentes($("#id_oculto").val(),notificaciones);                                                        
+                                cargar_tabla_terapias(1);                            
+                                $("#contenedor_nombre_programa").show();                            
+                                $("#btnguardar").show();  
+                                //Si el programa está deshabilitado, todos los botones quedan deshabilitados, excepto la barra de botones superior
+                                if (json[0].estado_programa == 1){
+                                    $("#rut_paciente").prop("disabled", true);
+                                    $("#btn_buscar").prop("disabled", true);
+                                    $("#name").prop("disabled", true);
+                                    $("#last_name").prop("disabled", true);
+                                    $("#second_name").prop("disabled", true);
+                                    $("#name_programa").prop("disabled", true);
+                                    $("#metodo_pago").prop("disabled", true);
+                                    $("#referencia").prop("disabled", true);
+                                    $("#metodo_pago_2").prop("disabled", true);
+                                    $("#referencia_2").prop("disabled", true);
+                                    $("#btnguardar").prop("disabled", true);
+                                    $("#cantidad").prop("disabled", true);
+                                    $("#estado_pago").prop("disabled", true);
+                                    $("#descuento_aplicado").prop("disabled", true);
+                                    $("#terapias_individual").prop("disabled", true);
+                                    $("#tabla_paciente").find('a').prop("disabled", true);
+                                    $("#btn_cancelar").show();                                    
+                                    $("#btn_previsualizar").show();
+                                    $("#btn_habilitar").show();                                                                   
+                                    clase = "alert alert-warning alert-dismissable";
+                                    msj = "Este programa se encuentra <strong>deshabilitado</strong>";
                             
-
-                            $("#terapias_individual").prop('disabled', false);
-                            $("#cantidad").prop('disabled', false);
-                            $("#btnguardar").prop('disabled', false);
+                                    $("#programa_notificacion").prop("class",clase);
+                                    $("#texto_notificacion_programa").html(msj);                    
+                                    $("#notificacion_programa").fadeIn(100);  
+                                    //alert (json[0].tipo_pago );                                    
+                                }
+                                $("#btn_cancelar").show();                                    
+                                    //$("#btn_previsualizar").show();
+                            }
+                            else{        
+                                //alert ("No programa");
+                                $("#terapias_individual").prop('disabled', false);
+                                $("#cantidad").prop('disabled', false);
+                                $("#btnguardar").prop('disabled', false)
+                                $("#contenedor_nombre_programa").show();                            
+                                $("#btnguardar").show(); 
+                                $("#tabla_paciente").hide();
+                                
+                            }                                                     
                         }
                         else{
                             $("#terapias_individual").prop('disabled', true);
@@ -345,6 +536,7 @@ if(isset($_GET["rut_paciente"])){
                             $("#name_programa").val("");
                             $("#btn_cancelar").hide();
                             $("#btn_invoice").hide();
+                            $("#btn_previsualizar").hide();
                             $("#contenedor_nombre_programa").hide();
                             $("#contenedor_estado_pago").hide();
                             $("#contenedor_metodo_pago_1").hide();
@@ -353,7 +545,7 @@ if(isset($_GET["rut_paciente"])){
                             $("#contenedor_ref_pago_2").hide();
                             $("#contenedor_descuento").hide();
                             $("#contenedor_boton_pago").hide();
-                            $("#descuento_aplicado").val("10");
+                            //$("#descuento_aplicado").html(10);
                             //alert ("No hay registros de este paciente");      
                             $("#alerta").prop("class","alert-warning alert-dismissable");
                             $("#texto_advertencia_general").html("No hay registros del paciente");
@@ -378,15 +570,26 @@ if(isset($_GET["rut_paciente"])){
             $("#error_rut").hide(5000);
             //alert ($("#name").val());
         }     
-
+        if (!regex.test($("#name_programa").val())){
+            bandera = false;
+            $("#error_name_pt").show(500);
+            $("#error_name_pt").hide(5000);
+            //alert ($("#name").val());
+        }     
 
         //console.log($("#terapias").val());
         if ($("#cantidad").val()==""){
             if ($("#descuento_aplicado").val()==""){
                 bandera = false;            
-                //alert ("Verifique los campos");
-            }
+                //alert ("Verifique los campos");                
+            }            
         }        
+        
+        if ($("#terapias_individual").val()== null){
+            bandera = false;
+            $("#error_terapias").show();
+            $("#error_terapias").fadeOut(5000);   
+        }
         
         if (bandera){
             $("#alert_ok").hide();
@@ -405,17 +608,24 @@ if(isset($_GET["rut_paciente"])){
                 id:                 $("#id_oculto").val(),
                 nombre_programa:    $("#name_programa").val(),
                 cantidad:           $("#cantidad").val(),
-                descuento:          $("#descuento_aplicado").val()
+                descuento:          $("#descuento_aplicado").val(),
+                tipo_pago:          $("#estado_pago").val(),
+                /*metodo_pago_1:      $("#metodo_pago").val(),
+                referencia_1:       $("#referencia").val(),
+                metodo_pago_2:      $("#metodo_pago_2").val(),
+                referencia_2:       $("#referencia_2").val()//*/
+                
             },function (result){                
                 var respuesta = JSON.parse(result);
                 if (respuesta[0].estado == 1){
                     $("#alert_ok").show(500);                
                     buscar_info_paciente(false);    
+                    setTimeout(function(){window.location.reload(),1500});
                 }
                 else{
                     $("#alert_fail").show();            
                 }                
-                console.log(respuesta[0].str_debug);
+                //console.log(respuesta[0].str_debug);
             });
         }
     }
@@ -475,6 +685,7 @@ if(isset($_GET["rut_paciente"])){
 
             //if($("#name_programa").val()!=""){
                 var bandera_confirm=true;
+                
                     $.post("terapias/terapias_controlador.php",
                     {
                         id_operacion :  7,
@@ -497,11 +708,22 @@ if(isset($_GET["rut_paciente"])){
                                     }                            
                                     $("#terapias").trigger('change');
                                     preseleccion = $("#terapias").val();
-                                    $("#name_programa").val(json[0].desc_pt);
+                                    //$("#name_programa").val(json[0].desc_pt);
                                     
                                     $("#id_programa_oculto").val(json[0].id_programa);
                                     $("#btn_cancelar").show();
-                                    $("#btn_invoice").show();
+                                    //alert ("a"+json[0].estado_programa);
+                                    if (json[0].estado_programa){
+                                        $("#btn_invoice").show();
+                                        
+                                    }
+                                    else{
+                                        if (<?php if (isset($_GET["crear"])){ echo "true";} else {echo "false";}?>){
+                                            cancelar_programa();
+                                        }
+                                        //alert ("b");
+                                    }
+                                    $("#btn_previsualizar").show();
                                     //$("#contenedor_descuento").show();
                                     $("#contenedor_estado_pago").show();
                                     
@@ -534,7 +756,7 @@ if(isset($_GET["rut_paciente"])){
         }
         
         function generar_invoice_programa(){
-            id_paciente = $("#id_oculto").val();
+            id_paciente = $("#id_oculto").val();            
             if (id_paciente){
                 window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente, "_newtab");
             }
@@ -542,6 +764,28 @@ if(isset($_GET["rut_paciente"])){
                 //alert ("Procedimiento inválido");
             }
         }
+        
+        function previsualizar_invoice(){
+            id_paciente = $("#id_oculto").val();
+            var descuento_actual = $("#descuento_aplicado").val();
+            if (id_paciente){
+                window.open("terapias/terapias_controlador.php?id_operacion=15&id_paciente="+id_paciente+"&descuento="+descuento_actual+"&temporal=true", "_newtab");
+            }
+            else{
+                //alert ("Procedimiento inválido");
+            }
+        }
+        
+        function establecer_tipo_pago(){
+            $('#modal_pago').modal({
+                backdrop: 'static',
+                keyboard: false
+            }) /**/
+
+            //console.log("asdas");           
+        }
+        
+        
         
         function cancelar_programa(){
             $.post("terapias/terapias_controlador.php",
@@ -555,7 +799,7 @@ if(isset($_GET["rut_paciente"])){
                     operacion = 11;                            
                     if(json[0].estado == 1){   
                         //alert ("Procesado con exito");
-                        window.location = "terapias.php?opcion=1";
+                        setTimeout(function(){window.location.reload(),1500});
                     }
                     else{
                         alert ("Ocurrió un error");
@@ -566,7 +810,8 @@ if(isset($_GET["rut_paciente"])){
         }
         
         function eliminar_terapia(id_programa, id_terapia){
-            if (confirm("¿Está seguro que desea eliminar esta terapia? Esta acción no puede deshacerse.")){
+            //if (confirm("¿Está seguro que desea eliminar esta terapia? Esta acción no puede deshacerse.")){
+            if (true){
                 $.post("terapias/terapias_controlador.php",
                 {
                     id_operacion: 18,
@@ -579,6 +824,7 @@ if(isset($_GET["rut_paciente"])){
                         operacion = 11;                            
                         if(json[0].estado == 1){   
                             //alert ("Procesado con exito");
+                            setTimeout(function(){window.location.reload(),1500});
                         }
                         else{
                             alert ("Ocurrió un error");
@@ -590,5 +836,62 @@ if(isset($_GET["rut_paciente"])){
             }
             
         }
+
+        function guardar_pago(){
+            //if (bandera){
+                $.post("terapias/terapias_controlador.php",
+                {
+                    id_operacion : 20,
+                    id_paciente:        $("#id_oculto").val(),
+                    tipo_pago:          $("#estado_pago").val(),
+                    metodo_pago_1:      $("#metodo_pago").val(),
+                    referencia_1:       $("#referencia").val(),
+                    metodo_pago_2:      $("#metodo_pago_2").val(),
+                    referencia_2:       $("#referencia_2").val(),
+                    descuento:          $("#descuento_aplicado").val()
+                },
+                function (result){
+                    var respuesta = JSON.parse(result);
+                    if (respuesta[0].estado == 1 ){//EXITO
+                        $("#alert_ok").show(500);
+                        setTimeout(function(){window.location.reload(),1500});
+                    }
+                    else{
+                        $("#alert_error").show(500);
+                    }
+                });
+            //}
+            
+        }
+
+        
+        
+        function habilitar_programa(){
+            $.post("terapias/terapias_controlador.php",
+            {
+                id_operacion: 21,
+                id_programa : $("#id_programa_oculto").val()
+            },function (result){
+                var json = JSON.parse(result);       
+                if (json[0]["estado"]==1){//EXITO
+                    setTimeout(function(){window.location.reload(),1500});
+                }
+                else{
+                    alert ("OCURRIO UN ERROR INESPERADO");
+                }
+                
+            }
+            );
+        }
+        /*$("#btn_guardar_pago").click(function(e){
+                id = $(this).attr("cod");
+                //console.log("dd"+id);
+                $('#modal_trash').find(".modal-body").html("<strong> N# "+ id+"</strong>");
+            });
+
+            $('#erase').click(function(e){
+                eliminar(id);
+            });
+        //*/
 </script>
 

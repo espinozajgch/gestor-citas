@@ -164,13 +164,14 @@ function addSociete( $nom, $adresse )
 	//$this->MultiCell($length, 4, $adresse);
 }
 function agregar_rectangulo_circular_texto ($x, $y, $ancho, $alto, $r, $g, $b, $texto, $txt_r = 0, $txt_g = 0, $txt_b = 0, $multilinea = false){
-    $this->SetLineWidth(0.1);
-    $this->SetFillColor($r,$g,$b);
-    $this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');    
+    //$this->SetLineWidth(0.1);
+    //$this->SetFillColor($r,$g,$b);
+    //$this->RoundedRect($x, $y, $ancho, $alto, 2.5, 'DF');    
     
     $this->SetXY(($x), ($y));
     $this->SetFont( "Arial", "", 10);
-    $this->SetTextColor($txt_r, $txt_g, $txt_b);
+    //$this->SetTextColor($txt_r, $txt_g, $txt_b);
+    $this->SetTextColor($r,$g,$b);
     if ($multilinea){
         $this->MultiCell($ancho, $alto/3, utf8_decode($texto), 0, "J");
     }
@@ -193,7 +194,7 @@ function agregar_rectangulo_circular_texto_etiqueta ($x, $y, $ancho, $alto, $r, 
     $this->Line(($x), $y+($alto/2), $x+$ancho, $y+($alto/2));
     
     $this->SetXY(($x), ($y+($alto/4)));
-    $this->SetFont( "Arial", "B", 11);
+    $this->SetFont( "Arial", "", 11);
     $this->Cell($ancho,$y/2, utf8_decode($etiqueta), 0, 0, "C");
     
     $this->SetXY(($x), ($y+($alto/1.5)));
@@ -381,7 +382,7 @@ function addCols( $tab )
 	
 	$r1  = 10;
 	$r2  = $this->w - ($r1 * 2) ;
-	$y1  = 100;
+	$y1  = 110;
 	$y2  = $this->h - 50 - $y1;
 	$this->SetXY( $r1, $y1 );
 	$this->Rect( $r1, $y1, $r2, $y2, "D");
@@ -726,10 +727,10 @@ function addTVAs( $params, $tab_tva, $invoice )
 // call this method first
 function temporaire( $texte )
 {
-	$this->SetFont('Arial','B',50);
+	$this->SetFont('Arial','B',30);
 	$this->SetTextColor(203,203,203);
 	$this->Rotate(45,55,190);
-	$this->Text(55,190,$texte);
+	$this->Text(40,210,$texte);
 	$this->Rotate(0);
 	$this->SetTextColor(0,0,0);
 }
