@@ -574,10 +574,79 @@
 				return $e;
 			}
 		}
+		public static function eliminar_documento($bd, $id_documento)
+		{
+			// Sentencia INSERT
+		   	$consulta = "DELETE FROM anexos WHERE id_anexos = ". $id_documento;
+		   	//echo $consulta;
+		   	
+		   	try {
+				// Preparar la sentencia
+				$comando = $bd->prepare($consulta);
+				$resultado = $comando->execute();
 
+				if($resultado){
+					return 1;       	
+				}
+				return 0;
+
+			} catch (PDOException $e) {
+				// Aquí puedes clasificar el error dependiendo de la excepción
+				// para presentarlo en la respuesta Json
+				//echo $e;
+				return $e;
+			}
+		}
+                
+                
 		/**
 		retorna 
 		*/
+                public static function cargar_tabla_documentos_historia_medica($id_hm){
+                    //Establecer la conexion con la base de datos
+                    $bd = connection::getInstance()->getDb();
+                    //Consulta para obtener los dias feriados
+                    $sql = "  
+                        SELECT * FROM `anexos` WHERE id_hm = $id_hm
+                        ";
+                    $pdo = $bd->prepare($sql);                            
+                    $pdo->execute();                    
+                    $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+                    $longitud = count($resultados);                    
+                    
+                    if ($resultados){
+                        if ($longitud<1){
+                            $json[0]['N']           = "No hay información que mostrar";                                                 
+                            $json[0]['Documento']      = "";
+                            $json[0]['Acciones']      = "";
+                        }
+                        else{                    
+                            $json[0]['Estado']      = 1;                                   
+                            for ($i=0; $i<$longitud;$i++){                                
+                                $json[$i]['N']              = $i+1;                        
+                                $json[$i]['Documento']              = $resultados[$i]["imagen"];
+                                $json[$i]['Acciones']       = "
+                                    
+                                    <button 
+                                        title=\"Eliminar documento\" 
+                                        class=\"btn btn-danger\"
+                                        onclick=\"modal_eliminar_documento(".$resultados[$i]["id_anexos"].")\"
+                                    >                                        
+                                    <i class=\"fa fa-times-circle\"></i>
+                                    </button>";                                
+                            }                               
+                        }
+                    }
+                    else{                        
+                        $json[0]['N']           = "No hay información que mostrar";                                                
+                        $json[0]['Documento']      = "";
+                        $json[0]['Acciones']      = "";
+                    }                    
+
+                    return json_encode($json);
+                }
+                
+                
 		public static function cambiar_contraseña($bd, $email, $password, $id_paciente){
 			
 			// Sentencia INSERT

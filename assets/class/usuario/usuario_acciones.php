@@ -201,6 +201,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$res=pacientes::eliminar($bd, $id_paciente);
 			$estado = 1;
 		}
+                else if ($accion == 12){
+                    $id_doc = $_POST["id_doc"];
+                    if (pacientes::eliminar_documento($bd, $id_doc)){
+                        $estado = 1;
+                        $res = "Documento eliminado";
+                    }
+                    else{
+                        $estado = 0;
+                        $res = "Error al eliminar documento";
+                    }
+                }
         else if ($accion==-1){
             $estado = 0.1;
             $id_hm  = 0;
@@ -210,5 +221,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	
     		
 	}
-	
-}
+        else if (isset($_GET["accion_alterna"])){
+            $accion = $_GET["accion_alterna"];
+            $bd = connection::getInstance()->getDb();
+            if ($accion == 1){//Cargar documento a la historia medica
+                if(!empty($_FILES)){                
+
+                    $targetDir = "../../documentos/";                
+                    $fileName = $_FILES['file']['name'];
+                    $targetFile = $targetDir.$fileName;
+                    //Verificar que la imagen no exista
+                    $i=0;
+                    $nombre_archivo_final=$fileName;
+                        while(file_exists($targetFile)){
+                            $nombre_temporal = explode(".", $fileName);
+                            $num_splits = count($nombre_temporal);
+                            $nombre_sin_extension=$nombre_temporal[0];
+                            for ($j=1; $j<$num_splits-1;$j++){
+                                $nombre_sin_extension.=".".$nombre_temporal[$j];
+                            }
+                            $nombre_sin_extension.="_".$i;
+                            $targetFile=$targetDir.$nombre_sin_extension.".".$nombre_temporal[$num_splits-1];   
+                            $nombre_archivo_final = $nombre_sin_extension.".".$nombre_temporal[$num_splits-1];
+                            $i++;
+                        }                        
+                        if(move_uploaded_file($_FILES['file']['tmp_name'],$targetFile)){
+                            //insert file information into db table
+                            // Sentencia INSERT
+                            $consulta = "
+                                INSERT INTO anexos ( id_hm, imagen, tipo) 
+                                VALUES(?,?,?)";
+
+                           try {
+                                // Preparar la sentencia
+                                $comando = $bd->prepare($consulta);
+                                $resultado = $comando->execute(array($_GET["id_hm"], $nombre_archivo_final, 2));
+                                if($resultado){
+                                    $estado = 1;
+                                    $res = "Insertado a la BD con exito";
+                                    //return pacientes::obtener_max_id($bd,"id_paciente","paciente");                   
+                                }
+
+
+                            } catch (PDOException $e) {
+                                // Aquí puedes clasificar el error dependiendo de la excepción
+                                // para presentarlo en la respuesta Json
+                                $estado = 0;
+                                $res = "Error al guardar el indice en la BD";
+                                //return $e;
+                            }
+                        }
+                        else{
+                            $estado = 0;
+                            $res = "Error al mover el archivo";
+                            echo $targetFile;
+                        }
+                    }                    
+                }
+                echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	
+            }            
+        }	
+        else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $bd = connection::getInstance()->getDb();
+            $accion = $_GET["accion"];
+            if ($accion == 1){//Cargar la lista de documentos
+                $json_temp = json_decode (pacientes::cargar_tabla_documentos_historia_medica($_GET["id_hm"]));
+                $json_final ["data"]=$json_temp;
+                echo json_encode($json_final);
+            }
+        }
+
