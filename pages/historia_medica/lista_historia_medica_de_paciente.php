@@ -128,7 +128,7 @@
     }
     
     function procesar_documento(id_hm){
-        var enlaceDropZone = $("#myDropZone").prop("dropzone");
+      var enlaceDropZone = $("#myDropZone").prop("dropzone");
        enlaceDropZone.options.url = "../assets/class/usuario/usuario_acciones.php?accion_alterna=1&id_hm="+id_hm;
        enlaceDropZone.processQueue();
        enlaceDropZone.options.autoProcessQueue = true;       

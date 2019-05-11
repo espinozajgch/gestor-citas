@@ -225,9 +225,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $accion = $_GET["accion_alterna"];
             $bd = connection::getInstance()->getDb();
             if ($accion == 1){//Cargar documento a la historia medica
-                if(!empty($_FILES)){                
+                if(!empty($_FILES) && ($_FILES['file']['size']<8388608)){                
 
-                    $targetDir = "../../documentos/";                
+                    $targetDir = "../../../pages/historia_medica/anexos/";                
                     $fileName = $_FILES['file']['name'];
                     $targetFile = $targetDir.$fileName;
                     //Verificar que la imagen no exista
@@ -276,7 +276,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $res = "Error al mover el archivo";
                             echo $targetFile;
                         }
-                    }                    
+                    } 
+                    else{
+                        $estado = 2;
+                        $res = "El archivo no es aceptado, contacte al admin";
+                    }
                 }
                 echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	
             }            

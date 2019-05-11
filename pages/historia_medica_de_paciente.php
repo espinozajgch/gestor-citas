@@ -157,7 +157,7 @@ $usuario  = "";
                 autoDiscover: false,
                 autoProcessQueue: false,
                 parallelUploads: 1,
-                maxFiles : 1,
+                maxFiles : 1,                
                 error: function (file, errorMessage){
                     errors = true;
                     console.log("Error al subir el archivo:"+ errorMessage);
