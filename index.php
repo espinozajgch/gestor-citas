@@ -40,7 +40,7 @@ $recuerdame=0;
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Login Administardor</title>
+    <title>Login Administardor - BuscaHogar</title>
     
     <link rel="icon" href="img/desing/favicon.ico">
 
