@@ -902,7 +902,7 @@
 		*/
 		public static function obtener_fotos_prop($bd, $codigo, $ruta){
 
-			$consulta = "SELECT * FROM anexos WHERE id_hm = " . $codigo. " AND tipo = 1";
+			$consulta = "SELECT * FROM anexos WHERE id_hm = " . $codigo . " and tipo = 1 order by id_anexos DESC ";
 
 			try {
 				$comando = $bd->prepare($consulta);

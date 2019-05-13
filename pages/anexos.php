@@ -417,7 +417,7 @@ $id_hm = "";
                                 fname = fname +"."+extension;
                                 
                                 //str.replace(/blue/g, "red");
-                                $('.cvf_uploaded_files').append('<div id="'+ file.lastModified+file.size +'" file="'+ fname +'" class="col-sm-4 col-md-3 col-lg-3 divPhotoItem border-right border-bottom">'+
+                                $('.cvf_uploaded_files').prepend('<div id="'+ file.lastModified+file.size +'" file="'+ fname +'" class="col-sm-4 col-md-3 col-lg-3 divPhotoItem border-right border-bottom">'+
                                 '</a><input type="text" value="0" data-width="70" data-height="70"'+
                                 'data-fgColor="#66CC66" data-readOnly="1" data-bgColor="#88A9A3" data-skin="tron" data-thickness=".3" data-displayPrevious=true data-linecap=round/></div>');
                                 $('#'+file.lastModified+file.size).find('input').knob();
