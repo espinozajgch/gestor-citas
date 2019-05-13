@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $id_doc = $_POST["id_doc"];
                     if (pacientes::eliminar_documento($bd, $id_doc)){
                         $estado = 1;
-                        $res = "Documento eliminado";
+                        $res = "Documento eliminado";                        
                     }
                     else{
                         $estado = 0;
@@ -268,12 +268,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 // para presentarlo en la respuesta Json
                                 $estado = 0;
                                 $res = "Error al guardar el indice en la BD";
+                                echo $_FILES['file']['error'];
                                 //return $e;
                             }
                         }
                         else{
                             $estado = 0;
                             $res = "Error al mover el archivo";
+                            echo "Error: ".$_FILES['file']['error'];
+                            if ($_FILES['file']['error'] == 1){
+                                echo "<br>Tamaño archivo: ".$_FILES['file']['size']." / ".  ini_get("post_max_size")."<br> - TMP NAME: ".$_FILES['file']['tmp_name'];
+                                print_r($_FILES['file']);
+                            }
                             echo $targetFile;
                         }
                     } 
@@ -282,6 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $res = "El archivo no es aceptado, contacte al admin";
                     }
                 }
+                print_r($_FILES['file']);
                 echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	
             }            
         }	

@@ -576,16 +576,30 @@
 		}
 		public static function eliminar_documento($bd, $id_documento)
 		{
+                        $sql = "SELECT DISTINCT imagen FROM anexos WHERE id_anexos = ". $id_documento;
+                        $pdo = $bd->prepare($sql);                            
+                        $pdo->execute();                    
+                        $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+                        $ruta = "";
+                        $bandera = false;
+                        if ($resultados){
+                            
+                            $ruta = $resultados[0]["imagen"];
+                            if (file_exists("../../../pages/historia_medica/anexos/".$ruta)){
+                                $bandera = unlink("../../../pages/historia_medica/anexos/".$ruta);
+                            }
+                        }
 			// Sentencia INSERT
 		   	$consulta = "DELETE FROM anexos WHERE id_anexos = ". $id_documento;
 		   	//echo $consulta;
-		   	
+		   	if ($bandera){
 		   	try {
 				// Preparar la sentencia
 				$comando = $bd->prepare($consulta);
 				$resultado = $comando->execute();
 
 				if($resultado){
+                                    //Eliminar el documento ahora del directorio
 					return 1;       	
 				}
 				return 0;
@@ -595,7 +609,7 @@
 				// para presentarlo en la respuesta Json
 				//echo $e;
 				return $e;
-			}
+			}}
 		}
                 
                 
@@ -607,7 +621,7 @@
                     $bd = connection::getInstance()->getDb();
                     //Consulta para obtener los dias feriados
                     $sql = "  
-                        SELECT * FROM `anexos` WHERE id_hm = $id_hm
+                        SELECT * FROM `anexos` WHERE id_hm = $id_hm AND tipo = 2
                         ";
                     $pdo = $bd->prepare($sql);                            
                     $pdo->execute();                    

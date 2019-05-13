@@ -26,7 +26,7 @@
                       </div>
                     </div>
                     <div>
-                        <h5>Nuevos documentos</h5>
+                        <h5>Nuevos documentos (Tamaño máximo de archivo <strong>8MB</strong>).<br> <small>La operación se cancela si se excede el tamaño.</small></h5>
                         <!--DROPZONE HERE-->
                         <div class="body-nest" id="drop">
                             <div id="myDropZone">
