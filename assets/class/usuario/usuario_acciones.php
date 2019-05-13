@@ -224,15 +224,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         else if (isset($_GET["accion_alterna"])){
             $accion = $_GET["accion_alterna"];
             $bd = connection::getInstance()->getDb();
+            $sql = "SELECT rut FROM historias_medicas hm INNER JOIN paciente p ON p.id_paciente=hm.id_paciente WHERE id_hm = ".$_GET["id_hm"];
+            $pdo = $bd->prepare($sql);                            
+            $pdo->execute();                    
+            $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultados){
+                $id_paciente = $resultados[0]["rut"];
+            }
+            else{
+                $accion = -1;
+            }
             if ($accion == 1){//Cargar documento a la historia medica
                 if(!empty($_FILES) && ($_FILES['file']['size']<8388608)){                
-
-                    $targetDir = "../../../pages/historia_medica/anexos/";                
+                    if (!file_exists("../../../pages/historia_medica/anexos/$id_paciente/")){
+                        mkdir("../../../pages/historia_medica/anexos/$id_paciente/");
+                    }
+                    $targetDir = "../../../pages/historia_medica/anexos/$id_paciente/";                
                     $fileName = $_FILES['file']['name'];
                     $targetFile = $targetDir.$fileName;
                     //Verificar que la imagen no exista
                     $i=0;
-                    $nombre_archivo_final=$fileName;
+                    $nombre_archivo_final=$fileName;                    
                         while(file_exists($targetFile)){
                             $nombre_temporal = explode(".", $fileName);
                             $num_splits = count($nombre_temporal);
@@ -287,6 +299,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $estado = 2;
                         $res = "El archivo no es aceptado, contacte al admin";
                     }
+                }
+                else{
+                    $estado = 0;
+                    $res = "Error al relacionar con el paciente";
                 }
                 print_r($_FILES['file']);
                 echo json_encode(array("estado"=>$estado, "res"=>$res), JSON_FORCE_OBJECT);	

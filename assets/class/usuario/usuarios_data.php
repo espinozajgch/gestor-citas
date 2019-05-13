@@ -576,17 +576,22 @@
 		}
 		public static function eliminar_documento($bd, $id_documento)
 		{
-                        $sql = "SELECT DISTINCT imagen FROM anexos WHERE id_anexos = ". $id_documento;
+                        $sql = "SELECT DISTINCT imagen, rut
+                            FROM anexos a
+                            INNER JOIN historias_medicas hm ON hm.id_hm = a.id_hm
+                            INNER JOIN paciente p ON p.id_paciente = hm.id_paciente
+                            WHERE id_anexos = ". $id_documento;
                         $pdo = $bd->prepare($sql);                            
                         $pdo->execute();                    
                         $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
                         $ruta = "";
+                        //echo $sql;
                         $bandera = false;
-                        if ($resultados){
-                            
+                        if ($resultados){                            
                             $ruta = $resultados[0]["imagen"];
-                            if (file_exists("../../../pages/historia_medica/anexos/".$ruta)){
-                                $bandera = unlink("../../../pages/historia_medica/anexos/".$ruta);
+                            $id_paciente = $resultados[0]["rut"];
+                            if (file_exists("../../../pages/historia_medica/anexos/$id_paciente/".$ruta)){
+                                $bandera = unlink("../../../pages/historia_medica/anexos/$id_paciente/".$ruta);                                                                
                             }
                         }
 			// Sentencia INSERT
@@ -619,6 +624,16 @@
                 public static function cargar_tabla_documentos_historia_medica($id_hm){
                     //Establecer la conexion con la base de datos
                     $bd = connection::getInstance()->getDb();
+                    $sql = "SELECT rut FROM historias_medicas hm INNER JOIN paciente p ON p.id_paciente=hm.id_paciente WHERE id_hm = ".$_GET["id_hm"];
+                    $pdo = $bd->prepare($sql);                            
+                    $pdo->execute();                    
+                    $resultados = $pdo->fetchAll(PDO::FETCH_ASSOC);
+                    if ($resultados){
+                        $id_paciente = $resultados[0]["rut"];
+                    }
+                    else{
+                        return false;
+                    }
                     //Consulta para obtener los dias feriados
                     $sql = "  
                         SELECT * FROM `anexos` WHERE id_hm = $id_hm AND tipo = 2
@@ -638,7 +653,7 @@
                             $json[0]['Estado']      = 1;                                   
                             for ($i=0; $i<$longitud;$i++){                                
                                 $json[$i]['N']              = $i+1;                        
-                                $json[$i]['Documento']      = "<a href=\"../pages/historia_medica/anexos/".$resultados[$i]["imagen"]."\">".$resultados[$i]["imagen"]."</a>";
+                                $json[$i]['Documento']      = "<a href=\"../pages/historia_medica/anexos/$id_paciente/".$resultados[$i]["imagen"]."\">".$resultados[$i]["imagen"]."</a>";
                                 $json[$i]['Acciones']       = "
                                     
                                     <button 
