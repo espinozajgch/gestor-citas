@@ -285,6 +285,7 @@ else if ($id_operacion ==5){//Obtener información de cita para modificación
         $json[$i+1]['observaciones']  =   strtoupper($resultados[$i]["observaciones"]);
         $json[$i+1]['id_mp']          =   $resultados[$i]["id_mp"];
         $json[$i+1]['ref']            =   strtoupper($resultados[$i]["referencia"]);
+        //$json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
         $json[$i+1]['estado_pago']    =   strtoupper($resultados[$i]["estado"]);
         $json[$i+1]['id_terapia']     =   strtoupper($resultados[$i]["terapia_id"]);
         $json[$i+1]['nombre_terapia'] =   strtoupper($resultados[$i]["terapia_nombre"]);

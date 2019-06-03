@@ -759,9 +759,12 @@ class terapias {
                     $bandera_validar_programa = false;
                 }
                 else if($resultado[$i]["estado_t"]=="pagado"){
-                    $id_cita = citas::obtener_id_cita_de_terapia($id_terapia, $id_programa);
+                    //AQUI FUE EL CAMBIO CAMBIAR LA LINEA COMENTADA POR LA QUE SIGUE
+                    //$id_cita = citas::obtener_id_cita_de_terapia($id_terapia, $id_programa);
+                    $id_cita =$resultado[$i]["id_rm"];
                     //Se puede modificar la cita que se habia reservado
                     $id_ptt =$resultado[$i]["ptt_id"];
+                    
                     $str_btn = "
                     <a title=\"Editar\" 
                         class=\"btn btn-info\"  

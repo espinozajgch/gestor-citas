@@ -1480,6 +1480,7 @@ function validar_inputs(input, div_error){
                     $("#referencia").val(respuesta[1].ref)
                     //alert ("a");
                     $("#estado_pago").val(respuesta[1].estado_pago);
+                    //$("#estado_pago").val(4);
                     var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
                     //alert (n_opcion);
                     $("#terapias_individual").append(n_opcion);   //*/
