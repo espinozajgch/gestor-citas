@@ -653,7 +653,7 @@
                             $json[0]['Estado']      = 1;                                   
                             for ($i=0; $i<$longitud;$i++){                                
                                 $json[$i]['N']              = $i+1;                        
-                                $json[$i]['Documento']      = "<a href=\"../pages/historia_medica/anexos/$id_paciente/".$resultados[$i]["imagen"]."\">".$resultados[$i]["imagen"]."</a>";
+                                $json[$i]['Documento']      = "<a href=\"../pages/historia_medica/anexos/$id_paciente/".$resultados[$i]["imagen"]."\" target=\"_blank\">".$resultados[$i]["imagen"]."</a>";
                                 $json[$i]['Acciones']       = "
                                     
                                     <button 

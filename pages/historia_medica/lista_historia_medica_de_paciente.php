@@ -93,9 +93,9 @@
                                 <a class="btn btn-sm btn-info shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=1" target="_Blank" title="Descargar Historial"><i class="fa fa-download"></i></a>
                                 <a class="btn btn-sm btn-warning shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=2" target="_Blank" title="Descargar Indicaciones Generales"><i class="fa fa-download"></i></a>
                                 </div>
+                                <br>
                                 <div class="form-group">
-                                <a class="btn btn-sm btn-success shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=3" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>
-                                <a class="btn btn-sm btn-primary shared" href="anexos.php?id_hm='.  $historia['id_hm'] .'&id_paciente='.  $id .'" target="_Blank" title="Agregar Imagenes"><i class="fa fa-camera"></i></a>
+                                <a class="btn btn-sm btn-success shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=3" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>                                
                                 <button class="btn btn-sm btn-primary shared" onclick="modal_documentos('.$historia['id_hm'].')" title="Agregar documentos"><i class="fa fa-upload"></i></button>
 
                                 <btn class="btn btn-sm btn-danger delete" cod="'.  $historia['id_hm'] .'" title="Eliminar"><i class="fa fa-trash"></i></btn>

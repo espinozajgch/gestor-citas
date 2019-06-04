@@ -159,7 +159,7 @@ $usuario  = "";
                 parallelUploads: 1,
                 maxFiles : 8,     
                 maxFilesize: 8,
-                acceptedFiles: ".pdf, .doc, .docx",
+                acceptedFiles: ".pdf, .doc, .docx, .jpg, .jpeg, .bmp, .gif",
                 error: function (file, errorMessage){
                     errors = true;
                     console.log("Error al subir el archivo:"+ errorMessage);
