@@ -643,7 +643,8 @@ class terapias {
             prt.referencia                                  as referencia_pt,
             pp.metodos_pago_id_mp                           as id_mp_pp,
             pp.referencia                                   as referencia_pp,
-            prt.estado                                      as estado_pr
+            prt.estado                                      as estado_pr,
+            e2.nombre                                       as estado_terapia_nombre
             FROM terapia            
             INNER JOIN programa_tiene_terapia       ON terapia.id_terapia=programa_tiene_terapia.terapia_id_terapia
             INNER JOIN programa_terapeutico     prt ON prt.id_programa_terapeutico = programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico
@@ -651,6 +652,7 @@ class terapias {
             LEFT JOIN estatus_pago              ep  ON prt.estatus_pago_id_ep = ep.id_ep
             LEFT JOIN pagos_parciales           pp  ON pp.programa_terapeutico_id_programa_terapeutico = prt.id_programa_terapeutico
             LEFT JOIN metodos_pago              mp  ON mp.id_mp = prt.metodos_pago_id_mp
+            LEFT JOIN estatus_pago              e2  ON rm.estado = e2.id_ep
             WHERE programa_tiene_terapia.programa_terapeutico_id_programa_terapeutico =$id_programa
             ORDER BY programa_tiene_terapia.id_programa_tiene_terapia";
         
@@ -814,7 +816,7 @@ class terapias {
                 $json[$i]['N']          = ($i+1);
                 $json[$i]['Terapias']   = strtoupper($resultado[$i]["nombre_t"]);
                 $json[$i]['Precio']     = number_format($resultado[$i]["precio_t"],"0",",",".");
-                $json[$i]['Estado']     = strtoupper($resultado[$i]["estado_t"]);                
+                $json[$i]['Estado']     = $resultado[$i]["estado_terapia_nombre"]!=""? strtoupper($resultado[$i]["estado_terapia_nombre"]) : "SIN RESERVA";                
                 if ($resultado[$i]['fecha_t']== ""){
                     $json[$i]['Fecha']     = strtoupper("PENDIENTE");                    
                 }

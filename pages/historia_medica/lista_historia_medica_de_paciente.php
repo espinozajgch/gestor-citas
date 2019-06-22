@@ -97,7 +97,6 @@
                                 <div class="form-group">
                                 <a class="btn btn-sm btn-success shared" href="historia_medica/historia_paciente.php?id_hm='.  $historia['id_hm'] .'&tipo=3" target="_Blank" title="Descargar Indicaciones"><i class="fa fa-download"></i></a>                                
                                 <button class="btn btn-sm btn-primary shared" onclick="modal_documentos('.$historia['id_hm'].')" title="Agregar documentos"><i class="fa fa-upload"></i></button>
-
                                 <btn class="btn btn-sm btn-danger delete" cod="'.  $historia['id_hm'] .'" title="Eliminar"><i class="fa fa-trash"></i></btn>
                                 </div>
                             </td>
