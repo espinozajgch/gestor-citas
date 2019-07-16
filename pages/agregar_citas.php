@@ -490,11 +490,21 @@ input:checked + .slider:before {
 
                                 <div class="form-row">    
                                     
-                                    <div class="form-group col-4 col-md-4" id="contenedor_estatus">
-                                        <small><strong><label for="estado_pago">Estatus Pago</label></strong></small>
+                                    <div class="form-group col-6 col-md-6" id="contenedor_estatus">
+                                        <small><strong><label for="estado_pago">Estatus de Pago</label></strong></small>
                                         <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
                                             <option value="1">PENDIENTE</option>
-                                            <option value="2">PAGADO</option>
+                                            <option value="2">PAGADO</option>                                            
+                                        </select>
+                                        <div id="error_email" class="text-danger" style="display:none">
+                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-6 col-md-6" id="contenedor_estatus_atencion">
+                                        <small><strong><label for="estado_pago">Estatus de Atención</label></strong></small>
+                                        <select id="estado_atencion" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">                                            
+                                            <option value="1">PENDIENTE</option>
                                             <option value="6">ATENDIDO</option>
                                             <option value="5">ANULADO</option>
                                         </select>
@@ -1238,6 +1248,7 @@ function validar_inputs(input, div_error){
             observaciones   : $("#observaciones").val(),                            
             medicos         : bandera = $("#medicos").val(),
             estado_pago     : $("#estado_pago").val(),
+            estado_atencion : $("#estado_atencion").val(),
             referencia      : $("#referencia").val(),
             tipo_pago       : $("#estado_pago").val()
             }, 
@@ -1480,13 +1491,14 @@ function validar_inputs(input, div_error){
                     $("#referencia").val(respuesta[1].ref)
                     //alert ("a");
                     $("#estado_pago").val(respuesta[1].estado_pago);
+                    $("#estado_atencion").val(respuesta[1].estado_atencion);
                     //$("#estado_pago").val(4);
                     var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
                     //alert (n_opcion);
                     $("#terapias_individual").append(n_opcion);   //*/
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
                     if (respuesta[1].estado_pago != 1){
-                        $("#terapias_individual").trigger('change').prop("disabled","true");
+                        $("#terapias_individual").trigger('change').prop("disabled","true");                        
                     }                    
                     //$("#pago").hide();
                     set_terapia(false);

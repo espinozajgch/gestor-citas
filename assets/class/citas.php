@@ -161,14 +161,14 @@ class citas {
         return $pdo->execute(array($paciente, $id_cita));        
     }
     
-    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin , $pagado, $ref, $id_cita){
+    public static function actualizar_cita_basicos($fecha_inicio, $medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin , $atencion, $ref, $id_cita, $pago){
         $bd = connection::getInstance()->getDb();
         $sql = "UPDATE reserva_medica
         SET fecha_inicio=?, medio_contacto_id_mc=?, metodos_pago_id_mp=?,
-            observaciones=? , hora_inicio = ?, hora_fin = ? , estado = ? , referencia = ? 
+            observaciones=? , hora_inicio = ?, hora_fin = ? , estado = ? , referencia = ? , estatus_pago_id_ep = ?
             WHERE id_rm = ".$id_cita;
         $pdo = $bd->prepare($sql);        
-        return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $pagado, $ref));
+        return $pdo->execute(array($fecha_inicio,$medio_contac, $medio_pago, $observaciones, $hora_inicio, $hora_fin, $atencion, $ref, $pago));
     }
     
     public static function asignar_reserva_terapia($id_programa_t_t, $id_reserva){
@@ -192,6 +192,11 @@ class citas {
         //echo "<br>".$sql;
         return $pdo->execute(array($estado_nuevo));
     }    
+    
+    public static function devolver_estado_pago_bool($id_cita){
+        $estado_pago = false;
+        
+    }
     
     public static function obtener_estado_cita($id_cita){
         $sql = "SELECT DISTINCT * 
@@ -303,8 +308,18 @@ class citas {
         
         public static function tabla_dias_citas($estado = false, $fecha_inicio=false, $fecha_fin=false, $validar = false){
         //Establecer la conexion con la base de datos
-        $bd = connection::getInstance()->getDb();
-        $condicion_estado = !$estado ? $condicion_estado = "<> 5 AND rm.estado <> 6 " : $condicion_estado = "= $estado";
+        $bd = connection::getInstance()->getDb();        
+        
+        if ($estado == 1){
+            $condicion_estado = " rm.estado = 1 OR rm.estatus_pago_id_ep = 1 AND rm.estado <> 5";
+        }                
+        else if ($estado == 2){
+            $condicion_estado = " rm.estatus_pago_id_ep = 2";
+        }
+        else{
+            $condicion_estado = !$estado ? $condicion_estado = "rm.estado <> 5 AND rm.estado <> 6 " : $condicion_estado = " rm.estado = $estado";
+        }
+        
         $condicion_estado.= $fecha_inicio!=false ? " AND fecha_inicio >= \"$fecha_inicio\" " : "";
         $condicion_estado.= $fecha_fin!=false ? " AND fecha_inicio <= \"$fecha_fin\" " : "";
         $sql ='SELECT 
@@ -314,6 +329,7 @@ class citas {
             rm.hora_inicio                      as  hora_inicio,
             rm.hora_fin                         as  hora_fin,
             rm.estado                           as  estado_rm, 
+            rm.estatus_pago_id_ep               as  estado_pago,
             p.nombre                            as  nombre,
             p.apellidop                         as  apellidop, 
             p.apellidom,
@@ -333,7 +349,7 @@ class citas {
             LEFT  JOIN programa_tiene_terapia   ptt     ON ptt.reserva_medica_id_rm                         =   rm.id_rm
             LEFT  JOIN programa_terapeutico     pt      ON ptt.programa_terapeutico_id_programa_terapeutico =   pt.id_programa_terapeutico
             INNER JOIN terapia                  t       ON t.id_terapia                                     =   ptt.terapia_id_terapia
-            WHERE rm.estado  '.$condicion_estado.'
+            WHERE '.$condicion_estado.'
             GROUP BY rm.id_rm
             order by fecha_inicio DESC, hora_inicio DESC';
         //echo $sql;
@@ -378,8 +394,19 @@ class citas {
             }
             $json[$i]['Terapia'] = strtoupper($nombre_terapia);
             $json[$i]['Estado'] = strtoupper($resultados[$i]["estado_ep"]);
-            //$json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);
-            $json[$i]['N'] = ($i+1);           
+            //$json[$i]['Creacion'] = calendario::formatear_fecha(1,$resultados[$i]["fecha_r"]);            
+            $bandera_pendiente = false;
+            $str_pendiente = "(";
+            if ($resultados[$i]["estado_pago"] == 1){
+                $str_pendiente.=" <strong>P</strong>";
+                $bandera_pendiente = true;
+            }
+            if ($resultados[$i]["estado_rm"] == 1){
+                $str_pendiente = $bandera_pendiente ? $str_pendiente.=" y <strong>A</strong>" : $str_pendiente.="<strong>A</strong>";                
+                $bandera_pendiente = true;
+            }
+            $str_pendiente.=")";            
+            $json[$i]['N'] = $bandera_pendiente && $estado == 1 ? ($i+1)." - $str_pendiente ": ($i+1) ;
             $estado_cita = $resultados[$i]["estado_rm"];
             //Agregar el boton de validar cuando la cita esté pendiente o pagada
             //echo "ESTADO :$estado_cita ++ $validar <br>";
