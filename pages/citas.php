@@ -64,7 +64,7 @@ $usuario  = "";
     <link rel='stylesheet' type='text/css' href='../vendor/fullcalendar/fullcalendar.css' />
     <!--Full calendar js-->
     <!--<script type='text/javascript' src='../vendor/fullcalendar/jquery.js'></script>-->
-    <script src="../vendor/fullcalendar/demos/js/superagent.js"> </script>
+    <script src="../vendor/fullcalendar/superagent.js"> </script>
     <script src='../vendor/fullcalendar/fullcalendar.js'></script>
     <script src='../vendor/fullcalendar/locales/es.js'></script>
     <!-- /#wrapper -->
