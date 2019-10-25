@@ -99,7 +99,7 @@ $rut_paciente = "";
     <link rel='stylesheet' type='text/css' href='../vendor/fullcalendar/fullcalendar.css' />
     <!--Full calendar js-->
     <!--<script type='text/javascript' src='../vendor/fullcalendar/jquery.js'></script>-->
-    <script src="../vendor/fullcalendar/demos/js/superagent.js"> </script>
+    <script src="../vendor/fullcalendar/superagent.js"> </script>
     <script src='../vendor/fullcalendar/fullcalendar.js'></script>
     <script src='../vendor/fullcalendar/locales/es.js'></script>
     
@@ -359,62 +359,62 @@ input:checked + .slider:before {
 
                                 <div id="div_par" class="form-row" >
                                     
-                                    <div class="form-row">    
-                                    <div class="form-group col-10 col-sm-10 col-md-10">
-                                        
-                                        <small><strong><label for="medico">Seleccione los médicos</label></strong></small>
-                                        <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="medicos" onchange="actualizar_eventos_medicos()">  
-                                            
-                                        </select>
-                                            
-                                        <div id="error_medicos" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group col-3 col-sm-3 col-md-3">
-                                        <small><strong><label for=name_>Fecha Inicio</label></strong></small>
-                                        <input id="fecha_a" disabled="true" id="fecha_feriado" type="text" class="form-control" value="" placeholder="Seleccione una fecha del caldendario" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">                                        
-                                    </div>
+                                    <div class="form-row">  
+                                            <div class="row">
+                                                <div class="form-group col-10 col-sm-10 col-md-10">
+                                                    <small><strong><label for="medico">Seleccione los médicos</label></strong></small>
+                                                    <select class="form-control js-example-basic-multiple" name="states[]" multiple="multiple" id="medicos" onchange="actualizar_eventos_medicos()">  
 
-                                    <div class="form-group col-3 col-sm-3 col-md-3">
-                                        <small><strong><label for=name_>Hora Inicio</label></strong></small>
-                                        <input id="hora_a" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
-                                        <div id="error_inicia" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Hora</small>
-                                        </div>                                        
-                                    </div>
+                                                    </select>
 
-                                    <div class="form-group col-3 col-sm-3 col-md-3">
-                                        <small><strong><label for=name_>Hora Fin</label></strong></small>
-                                        <input id="hora_b" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
-                                        <div id="error_fin" class="text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Hora</small>
-                                        </div>                                        
-                                    </div>
+                                                    <div id="error_medicos" class="text-danger" style="display:none">
+                                                        <i class="fa fa-exclamation"></i><small> Campo Obligatorio</small>
+                                                    </div>
+                                                </div>
 
+                                                <div class="form-group col-3 col-sm-3 col-md-3">
+                                                    <small><strong><label for=name_>Fecha Inicio</label></strong></small>
+                                                    <input id="fecha_a" disabled="true" id="fecha_feriado" type="text" class="form-control" value="" placeholder="Seleccione una fecha del caldendario" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">                                        
+                                                </div>
 
-                                    <div class="form-group col-2 col-sm-2 col-md-2">
-                                        <small><strong><label for=name_>Mostrar</label></strong></small><br>
-                                        <button class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></button>
-                                    </div>
+                                                <div class="form-group col-3 col-sm-3 col-md-3">
+                                                    <small><strong><label for=name_>Hora Inicio</label></strong></small>
+                                                    <input id="hora_a" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
+                                                    <div id="error_inicia" class="text-danger" style="display:none">
+                                                        <i class="fa fa-exclamation"></i><small> Hora</small>
+                                                    </div>                                        
+                                                </div>
+
+                                                <div class="form-group col-3 col-sm-3 col-md-3">
+                                                    <small><strong><label for=name_>Hora Fin</label></strong></small>
+                                                    <input id="hora_b" disabled="true" type="text" class="form-control" name="hora" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}" placeholder="Selecciona hora en el calendario">
+                                                    <div id="error_fin" class="text-danger" style="display:none">
+                                                        <i class="fa fa-exclamation"></i><small> Hora</small>
+                                                    </div>                                        
+                                                </div>
 
 
-                                    <div  id="error_fechas" class="col-sm-12 col-md-12 my-3 text-danger" style="display:none">
-                                            <i class="fa fa-exclamation"></i><small> Selecciona fechas y horas válidas</small>
-                                    </div>
-<!--                                    <div class="form-group col-2 col-sm-2 col-md-2">
-                                        <small><strong><label for=name_>Presiona </label></strong></small><br>
-                                        <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('b')"><i class="fa fa-calendar fa-bg"></i></a>
-                                    </div>-->
-                                    <div class="form-group col-sm-12 col-md-12 my-3">
-                                        <div id="contenedor_calendario"> 
-                                            <div id="calendario">
-                                            </div>
-                                        </div>                                    
-                                    </div>
+                                                <div class="form-group col-2 col-sm-2 col-md-2">
+                                                    <small><strong><label for=name_>Mostrar</label></strong></small><br>
+                                                    <button class="btn btn-sm btn-success shared" title="Despliega calendario" id="dc" onclick="mostrar_calendario('a')"><i class="fa fa-calendar fa-bg"></i></button>
+                                                </div>
 
-                                </div>
+
+                                                <div  id="error_fechas" class="col-sm-12 col-md-12 my-3 text-danger" style="display:none">
+                                                        <i class="fa fa-exclamation"></i><small> Selecciona fechas y horas válidas</small>
+                                                </div>
+        <!--                                    <div class="form-group col-2 col-sm-2 col-md-2">
+                                                <small><strong><label for=name_>Presiona </label></strong></small><br>
+                                                <a class="btn btn-sm btn-success shared" title="Despliega calendario" onclick="mostrar_calendario('b')"><i class="fa fa-calendar fa-bg"></i></a>
+                                            </div>-->
+                                                <div class="form-group col-sm-12 col-md-12 my-3">
+                                                    <div id="contenedor_calendario"> 
+                                                        <div id="calendario">
+                                                        </div>
+                                                    </div>                                    
+                                                </div>
+                                            </div>      
+                                    </div>
 
                                 <div class="form-row">                                   
                                     <div class="form-group col-10 col-sm-10 col-md-10">

@@ -64,7 +64,7 @@ $usuario  = "";
     <link rel='stylesheet' type='text/css' href='../vendor/fullcalendar/fullcalendar.css' />
     <!--Full calendar js-->
     <!--<script type='text/javascript' src='../vendor/fullcalendar/jquery.js'></script>-->
-    <script src="../vendor/fullcalendar/demos/js/superagent.js"> </script>
+    <script src="../vendor/fullcalendar/superagent.js"> </script>
     <script src='../vendor/fullcalendar/fullcalendar.js'></script>
     <script src='../vendor/fullcalendar/locales/es.js'></script>
     <!-- /#wrapper -->
@@ -84,6 +84,8 @@ $usuario  = "";
     <!-- DataTables JavaScript -->
     <script src="../vendor/datatables/js/jquery.dataTables.js"></script>
     <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="../vendor/datatables-plugins/moment.min.js"></script>
+    <script src="../vendor/datatables-plugins/datetime-moment.js"></script>
     <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
 </head>
 
@@ -312,6 +314,7 @@ $usuario  = "";
 
 <script type="text/javascript"> 
  document.addEventListener('DOMContentLoaded', function() { // page is now ready...
+            $.fn.dataTable.moment('DD-MM-YYYY');
             cargar_tabla_dinamica (1, "pendientes");
     });
     
