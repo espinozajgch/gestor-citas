@@ -493,7 +493,7 @@ input:checked + .slider:before {
                                     <div class="form-group col-6 col-md-6" id="contenedor_estatus">
                                         <small><strong><label for="estado_pago">Estatus de Pago</label></strong></small>
                                         <select id="estado_pago" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">
-                                            <option value="1">PENDIENTE</option>
+                                            <option value="1" selected>PENDIENTE</option>
                                             <option value="2">PAGADO</option>                                            
                                         </select>
                                         <div id="error_email" class="text-danger" style="display:none">
@@ -503,7 +503,7 @@ input:checked + .slider:before {
                                     
                                     <div class="form-group col-6 col-md-6" id="contenedor_estatus_atencion">
                                         <small><strong><label for="estado_pago">Estatus de Atención</label></strong></small>
-                                        <select id="estado_atencion" name="estado_pago" class="custom-select form-control col-2" aria-label="tipo operacion">                                            
+                                        <select id="estado_atencion" name="estado_atencion" class="custom-select form-control col-2" aria-label="tipo operacion">                                            
                                             <option value="1">PENDIENTE</option>
                                             <option value="6">ATENDIDO</option>
                                             <option value="5">ANULADO</option>
@@ -527,7 +527,7 @@ input:checked + .slider:before {
                                                     $longitud = count($resultado);
                                                     $string = "";                                                            
                                                     for ($i=0; $i < $longitud; $i++){
-                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\" selected>". strtoupper
+                                                        $string .="<option value=\"".$resultado[$i]["id_mp"]."\" >". strtoupper
                                                         ($resultado[$i]["nombre"])."</option>";
                                                     }
                                                     echo $string;
@@ -1490,10 +1490,11 @@ function validar_inputs(input, div_error){
                     $("#metodo_pago").val(respuesta[1].id_mp);//prop("disabled", true);
                     $("#referencia").val(respuesta[1].ref)
                     //alert ("a");
-                    $("#estado_pago").val(respuesta[1].estado_pago);
+                    console.log(respuesta[1].estado_pago);
+                    $("#estado_pago").val(respuesta[1].estado_pago > 2  ? 1 : respuesta[1].estado_pago);
                     $("#estado_atencion").val(respuesta[1].estado_atencion);
                     //$("#estado_pago").val(4);
-                    var n_opcion = new Option(respuesta[1].nombre_terapia, respuesta[1].id_terapia, true, true);
+                    var n_opcion = new Option(respuesta[1].nombre_terapia , respuesta[1].id_terapia, true, true);
                     //alert (n_opcion);
                     $("#terapias_individual").append(n_opcion);   //*/
                     //$("#terapias_individual").val(respuesta[1].terapia_id);
